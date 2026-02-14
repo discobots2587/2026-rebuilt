@@ -5,6 +5,7 @@ import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.config.AbsoluteEncoderConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
+import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import frc.robot.Constants.ModuleConstants;
 
 public final class Configs {
@@ -59,4 +60,15 @@ public final class Configs {
                     .positionWrappingInputRange(0, turningFactor);
         }
     }
+    public static final class IntakeSubsystem {
+        public static final SparkMaxConfig intakeMotorConfig = new SparkMaxConfig();
+        public static final SparkMaxConfig intakeArmMotorConfig = new SparkMaxConfig();
+
+        static {
+                intakeMotorConfig.inverted(true).idleMode(IdleMode.kBrake).smartCurrentLimit(20); //change later
+                intakeArmMotorConfig.inverted(false).idleMode(IdleMode.kBrake).smartCurrentLimit(20); //change later
+        }
+    }
+            
+
 }

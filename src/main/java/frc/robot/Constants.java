@@ -21,8 +21,15 @@ import edu.wpi.first.math.util.Units;
  * wherever the
  * constants are needed, to reduce verbosity.
  */
+
+
+ 
 public final class Constants {
+
+ 
+
   public static final class DriveConstants {
+
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
     public static final double kMaxSpeedMetersPerSecond = 4.8;
@@ -46,15 +53,33 @@ public final class Constants {
     public static final double kBackRightChassisAngularOffset = Math.PI / 2;
 
     // SPARK MAX CAN IDs
-    public static final int kFrontLeftDrivingCanId = 10;
-    public static final int kRearLeftDrivingCanId = 40;
-    public static final int kFrontRightDrivingCanId = 20;
-    public static final int kRearRightDrivingCanId = 30;
+    public static int year = 2026;
 
-    public static final int kFrontLeftTurningCanId = 11;
-    public static final int kRearLeftTurningCanId = 41;
-    public static final int kFrontRightTurningCanId = 21;
-    public static final int kRearRightTurningCanId = 31;
+    public static int kFrontLeftDrivingCanId = 30;
+    public static int kRearLeftDrivingCanId = 40;
+    public static int kFrontRightDrivingCanId = 20;
+    public static int kRearRightDrivingCanId = 10;
+
+    public static int kFrontLeftTurningCanId = 31;
+    public static int kRearLeftTurningCanId = 41;
+    public static int kFrontRightTurningCanId = 21;
+    public static int kRearRightTurningCanId = 11;
+
+    static {
+      if (year == 2025) {
+        kFrontLeftDrivingCanId = 30;
+        kRearLeftDrivingCanId = 40;
+        kFrontRightDrivingCanId = 20;
+        kRearRightDrivingCanId = 10;
+
+        kFrontLeftTurningCanId = 31;
+        kRearLeftTurningCanId = 41;
+        kFrontRightTurningCanId = 21;
+        kRearRightTurningCanId = 11;
+      }
+    }
+
+
 
     public static final boolean kGyroReversed = false;
   }
@@ -98,5 +123,10 @@ public final class Constants {
 
   public static final class NeoMotorConstants {
     public static final double kFreeSpeedRpm = 5676;
+  }
+
+  public static final class IntakeConstants {
+    public static final int kIntakeMotorCanId = 50; //change later
+    public static final int kIntakeArmMotorCanId = 51; //change later
   }
 }
