@@ -25,7 +25,6 @@ import edu.wpi.first.math.util.Units;
 
  
 public final class Constants {
-
  
 
   public static final class DriveConstants {
@@ -128,5 +127,14 @@ public final class Constants {
   public static final class IntakeConstants {
     public static final int kIntakeMotorCanId = 50; //change later
     public static final int kIntakeArmMotorCanId = 51; //change later
+
+    public static final class IntakeSetPoints{
+      public static final double kIntake = .6; //adjust motor speed later
+      public static final double kExtake = -.6; //adjust motor speed later
+    }
+    public static final class IntakeArmSetPoints{
+      public static final double kIntake = .6; //adjust motor speed later
+      public static final double kExtake = -.6; //adjust motor speed later
+    }
   }
 }
