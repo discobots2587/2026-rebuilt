@@ -20,6 +20,7 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.Intake;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -38,6 +39,7 @@ public class RobotContainer {
   // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
   private final Intake m_intake = new Intake();
+  private final ShooterSubsystem m_shooter = new ShooterSubsystem();
 
   // The driver's controller
   XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
@@ -84,11 +86,19 @@ public class RobotContainer {
 
     //This is the intake button (L1) so you can test if it works or change it. 
     //Also this should work on the driver controller and we can maybe change it later to the operator controller if we have one.
-    new JoystickButton(m_driverController, Button.kL1.value)
+    // new JoystickButton(m_driverController, Button.kL1.value)
+    new JoystickButton(m_driverController, XboxController.Button.kLeftBumper.value)
         .whileTrue(new RunCommand(
             () -> m_intake.runIntakeCommand(),
             m_intake));
+    new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value)
+        .whileTrue(new RunCommand(
+            () -> m_intake.runOuttakeCommand(),
+            m_intake));
+    new JoystickButton(m_driverController, XboxController.Button.kY.value).toggleOnTrue(m_shooter.runShooterCommand());
+    // new JoystickButton(m_driverController, XboxController.Button.kY.value).toggleOnTrue(m_shooter.runShooterCommand().alongWith(m_intake.runIntakeCommand()));
   }
+      
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

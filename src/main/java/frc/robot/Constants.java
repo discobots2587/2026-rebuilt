@@ -126,7 +126,7 @@ public final class Constants {
   }
 
   public static final class IntakeConstants {
-    public static final int kIntakeMotorCanId = 50; //change later
+    public static final int kIntakeMotorCanId = 55; //change later
     public static final int kIntakeArmMotorCanId = 51; //change later
 
     public static final class IntakeSetPoints{
