@@ -29,7 +29,7 @@ public class Intake extends SubsystemBase {
     intakeArmMotor.configure(Configs.IntakeSubsystem.intakeArmMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
   }
-  //Everything below this should by my (Brandon's) changes, feel free to do whatever you want with it since im not sure if it even works.
+  //Everything below this, feel free to do whatever you want with it since im not sure if it even works.
   //set speed for the intake motor 
   private void setIntakePower(double power){
     intakeMotor.set(power);
@@ -45,10 +45,8 @@ public class Intake extends SubsystemBase {
     return this.startEnd(
       () -> {
       this.setIntakePower(IntakeSetPoints.kIntake);
-      this.setIntakeArmPower(IntakeArmSetPoints.kIntake);
       }, () ->{
         this.setIntakePower(0);
-        this.setIntakeArmPower(0);
       }).withName("Intaking");
   }
   //command to run the motors in (if command interrupted the motors will stop)
@@ -56,17 +54,32 @@ public class Intake extends SubsystemBase {
     return this.startEnd(
       () -> {
       this.setIntakePower(IntakeSetPoints.kExtake);
-      this.setIntakeArmPower(IntakeArmSetPoints.kExtake);
       }, () ->{
         this.setIntakePower(0);
-        this.setIntakeArmPower(0);
       }).withName("Outtaking");
   }
+  public Command runRaiseCommand(){
+      return this.startEnd(
+        () -> {
+        this.setIntakeArmPower(IntakeArmSetPoints.kRaise);
+        }, () ->{
+          this.setIntakeArmPower(0);
+        }).withName("Raising Arm");
+    }
+  public Command runLowerCommand(){
+      return this.startEnd(
+        () -> {
+        this.setIntakeArmPower(IntakeArmSetPoints.kLower);
+        }, () ->{
+          this.setIntakeArmPower(0);
+        }).withName("Lowering Arm");
+    }
+
+  //add command to raise and lower arm
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    //diaplaying the subsystem values, not sure why im using "getAppliedOutput" but it was in the example code so here we are
     SmartDashboard.putNumber("Intake/ Applied Output", intakeMotor.getAppliedOutput());
     SmartDashboard.putNumber("IntakeArm/Applied Output", intakeArmMotor.getAppliedOutput());
   }

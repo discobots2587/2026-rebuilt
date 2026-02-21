@@ -143,6 +143,7 @@ public class ShooterSubsystem extends SubsystemBase {
    * the desired speed it starts the Feeder.
    */
   public Command runShooterCommand() {
+    //add period to wait for shooter to spin up
     return this.startEnd(
       () -> this.setFlywheelVelocity(FlywheelSetpoints.kShootRpm),
       () -> flywheelMotor.stopMotor()

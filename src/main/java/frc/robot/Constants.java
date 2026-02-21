@@ -8,6 +8,16 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
+import frc.robot.subsystems.AprilTagPhotonCamera.PhotonCameraConstants;
+import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Meters;
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.geometry.Rotation3d;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -22,11 +32,7 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 
-
- 
 public final class Constants {
-
- 
 
   public static final class DriveConstants {
 
@@ -79,8 +85,6 @@ public final class Constants {
       }
     }
 
-
-
     public static final boolean kGyroReversed = false;
   }
 
@@ -104,6 +108,7 @@ public final class Constants {
   public static final class OIConstants {
     public static final int kDriverControllerPort = 0;
     public static final double kDriveDeadband = 0.05;
+    public static final double kTriggerButtonThreshold = 0.2;
   }
 
   public static final class AutoConstants {
@@ -126,23 +131,24 @@ public final class Constants {
   }
 
   public static final class IntakeConstants {
-    public static final int kIntakeMotorCanId = 55; //change later
-    public static final int kIntakeArmMotorCanId = 51; //change later
+    public static final int kIntakeMotorCanId = 55; // change later
+    public static final int kIntakeArmMotorCanId = 51; // change later
 
-    public static final class IntakeSetPoints{
-      public static final double kIntake = .6; //adjust motor speed later
-      public static final double kExtake = -.6; //adjust motor speed later
+    public static final class IntakeSetPoints {
+      public static final double kIntake = .6; // adjust motor speed later
+      public static final double kExtake = -.6; // adjust motor speed later
     }
-    public static final class IntakeArmSetPoints{
-      public static final double kIntake = .6; //adjust motor speed later
-      public static final double kExtake = -.6; //adjust motor speed later
+
+    public static final class IntakeArmSetPoints {
+      public static final double kRaise = .6; // adjust motor speed later
+      public static final double kLower = -.6; // adjust motor speed later
     }
   }
 
   public static final class ShooterSubsystemConstants {
-    public static final int kFeederMotorCanId = 5;    // SPARK Flex CAN ID
-    public static final int kFlywheelMotorCanId = 6;  // SPARK Flex CAN ID (Right)
-    public static final int kFlywheelFollowerMotorCanId = 7;  // SPARK Flex CAN ID (Left)
+    public static final int kFeederMotorCanId = 5; // SPARK Flex CAN ID
+    public static final int kFlywheelMotorCanId = 6; // SPARK Flex CAN ID (Right)
+    public static final int kFlywheelFollowerMotorCanId = 7; // SPARK Flex CAN ID (Left)
 
     public static final class FeederSetpoints {
       public static final double kFeed = 0.95;
@@ -152,5 +158,58 @@ public final class Constants {
       public static final double kShootRpm = 5000;
       public static final double kVelocityTolerance = 100;
     }
+  }
+
+  public static final class ClimberSubsystemConstants {
+    public static final int kClimberMotorCanId = 60; // change later
+
+    public static final class ClimberSetPoints {
+      public static final double kClimb = 0.8; // adjust motor speed later
+      public static final double kDescend = -0.8; // adjust motor speed later
+    }
+  }
+
+  public static final class Vision {
+    public static final Matrix<N3, N1> SINGLE_TAG_STD_DEVS = VecBuilder.fill(0.5, 0.5, Double.MAX_VALUE);
+    public static final Matrix<N3, N1> MULTI_TAG_STD_DEVS = VecBuilder.fill(0.1, 0.1, Double.MAX_VALUE);
+    public static final Matrix<N3, N1> MULTI_TAG_TELEOP_STD_DEVS = VecBuilder.fill(0.01, 0.01, Double.MAX_VALUE);
+    public static final Matrix<N3, N1> SINGLE_TAG_PRECISE_STD_DEVS = VecBuilder.fill(0.05, 0.05, Double.MAX_VALUE);
+
+    public static final PhotonCameraConstants CAMERA_CONSTANTS = new PhotonCameraConstants();
+    static {
+      CAMERA_CONSTANTS.WIDTH = 1600;
+      CAMERA_CONSTANTS.HEIGHT = 1304;
+      CAMERA_CONSTANTS.FOV = 95.39;
+      CAMERA_CONSTANTS.FPS = 35;
+      CAMERA_CONSTANTS.AVG_LATENCY = 30;
+      CAMERA_CONSTANTS.STDDEV_LATENCY = 15;
+    }
+      // Camera names matching the PhotonVision UI
+    public static final String[] CAMERA_NAMES = {
+      "LeftCamera",
+      "RightCamera"
+    };
+
+    // Transformations relative to the robot center (Symmetric Front-Left / Front-Right config)
+    public static final Transform3d[] ROBOT_TO_CAMS = new Transform3d[] {
+      // Left Camera
+      new Transform3d(
+        new Translation3d(
+          Inches.of(6.0).in(Meters),  // X: +6 Front
+          Inches.of(9.0).in(Meters),  // Y: +9 Left
+          Inches.of(12.5).in(Meters)  // Z: Up
+        ),
+        new Rotation3d(0, 0, 0)
+      ),
+      // Right Camera
+      new Transform3d(
+        new Translation3d(
+          Inches.of(6.0).in(Meters),   // X: +6 Front
+          Inches.of(-9.0).in(Meters),  // Y: -9 Right (Negative)
+          Inches.of(12.5).in(Meters)   // Z: Up
+        ),
+        new Rotation3d(0, 0, 0)
+      ),
+    };
   }
 }

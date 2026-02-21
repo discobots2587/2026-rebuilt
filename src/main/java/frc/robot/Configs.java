@@ -69,6 +69,13 @@ public final class Configs {
                 intakeArmMotorConfig.inverted(false).idleMode(IdleMode.kBrake).smartCurrentLimit(20); //change later
         }
     }
+    public static final class ClimberSubsystem {
+        public static final SparkMaxConfig climberMotorConfig = new SparkMaxConfig();
+
+        static {
+                climberMotorConfig.inverted(false).idleMode(IdleMode.kBrake).smartCurrentLimit(40); //change later
+        }
+    }
     public static final class ShooterSubsystem {
         public static final SparkMaxConfig flywheelConfig = new SparkMaxConfig();
         public static final SparkMaxConfig flywheelFollowerConfig = new SparkMaxConfig();
