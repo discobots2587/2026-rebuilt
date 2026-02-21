@@ -132,7 +132,7 @@ public class RobotContainer {
         // () -> m_intake.runIntakeCommand(),
         // m_intake));
 
-        m_driverController.leftBumper().whileTrue(new RunCommand(
+        m_driverController.leftBumper().toggleOnTrue(new RunCommand(
                 () -> m_intake.runIntakeCommand(),
                 m_intake));
 
@@ -142,7 +142,7 @@ public class RobotContainer {
         // () -> m_intake.runOuttakeCommand(),
         // m_intake));
 
-        m_driverController.rightBumper().whileTrue(new RunCommand(
+        m_driverController.rightBumper().toggleOnTrue(new RunCommand(
                 () -> m_intake.runOuttakeCommand(),
                 m_intake));
 

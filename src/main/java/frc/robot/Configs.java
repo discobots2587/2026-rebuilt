@@ -80,6 +80,7 @@ public final class Configs {
         public static final SparkMaxConfig flywheelConfig = new SparkMaxConfig();
         public static final SparkMaxConfig flywheelFollowerConfig = new SparkMaxConfig();
         public static final SparkMaxConfig feederConfig = new SparkMaxConfig();
+        public static final SparkMaxConfig spindexerConfig = new SparkMaxConfig();
     
         static {
           // Configure basic setting of the flywheel motors

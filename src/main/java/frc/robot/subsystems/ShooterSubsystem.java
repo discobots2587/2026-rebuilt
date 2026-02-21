@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Configs;
 import frc.robot.Constants.ShooterSubsystemConstants.FeederSetpoints;
 import frc.robot.Constants.ShooterSubsystemConstants.FlywheelSetpoints;
+import frc.robot.Constants.ShooterSubsystemConstants.SpindexerSetpoints;
 import frc.robot.Constants.ShooterSubsystemConstants;
 
 public class ShooterSubsystem extends SubsystemBase {
@@ -38,6 +39,9 @@ public class ShooterSubsystem extends SubsystemBase {
   // controller like above.
   private SparkMax feederMotor =
       new SparkMax(ShooterSubsystemConstants.kFeederMotorCanId, MotorType.kBrushless);
+    
+  private SparkMax spindexerMotor =
+      new SparkMax(ShooterSubsystemConstants.kSpindexerCanID, MotorType.kBrushless);
 
   // Member variables for subsystem state management
   private double flywheelTargetVelocity = 0.0;
@@ -66,6 +70,10 @@ public class ShooterSubsystem extends SubsystemBase {
         Configs.ShooterSubsystem.feederConfig,
         ResetMode.kResetSafeParameters,
         PersistMode.kPersistParameters);
+    spindexerMotor.configure(
+      Configs.ShooterSubsystem.spindexerConfig,
+      ResetMode.kResetSafeParameters,
+      PersistMode.kPersistParameters);
 
     // Zero flywheel encoder on initialization
     flywheelEncoder.setPosition(0);
@@ -108,6 +116,10 @@ public class ShooterSubsystem extends SubsystemBase {
   private void setFeederPower(double power) {
     feederMotor.set(power);
   }
+
+  private void setSpindexerPower(double power) {
+    spindexerMotor.set(power);
+  }
   
   /**
    * Command to run the flywheel motors. When the command is interrupted, e.g. the button is released,
@@ -137,7 +149,14 @@ public class ShooterSubsystem extends SubsystemBase {
           this.setFeederPower(0.0);
         }).withName("Feeding");
   }
-
+   public Command runSpindexerCommand() {
+    return this.startEnd(
+        () -> {
+          this.setSpindexerPower(SpindexerSetpoints.kSpindex);
+        }, () -> {
+          this.setSpindexerPower(0.0);
+        }).withName("Spnindexing");
+  }
   /**
    * Meta-command to operate the shooter. The Flywheel starts spinning up and when it reaches
    * the desired speed it starts the Feeder.
@@ -152,9 +171,11 @@ public class ShooterSubsystem extends SubsystemBase {
         () -> {
           this.setFlywheelVelocity(FlywheelSetpoints.kShootRpm);
           this.setFeederPower(FeederSetpoints.kFeed);
+          this.setSpindexerPower(SpindexerSetpoints.kSpindex);
         }, () -> {
           flywheelMotor.stopMotor();
           feederMotor.stopMotor();
+          spindexerMotor.stopMotor();
         })
     ).withName("Shooting");
   }
