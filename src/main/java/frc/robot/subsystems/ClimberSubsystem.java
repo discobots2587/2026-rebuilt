@@ -30,16 +30,20 @@ public class ClimberSubsystem extends SubsystemBase {
 
   public Command runClimbCommand() {
     return this.startEnd(
-      () -> this.setClimberPower(ClimberSubsystemConstants.ClimberSetPoints.kClimb),
-      () -> this.setClimberPower(0)
-    ).withName("Climbing");
+      () -> {
+        this.setClimberPower(ClimberSubsystemConstants.ClimberSetPoints.kClimb);
+      }, () -> {
+        this.setClimberPower(0);
+    }).withName("Climbing");
   }
   
   public Command runDescendCommand() {
     return this.startEnd(
-      () -> this.setClimberPower(ClimberSubsystemConstants.ClimberSetPoints.kDescend),
-      () -> this.setClimberPower(0)
-    ).withName("Descending");
+      () -> {
+        this.setClimberPower(ClimberSubsystemConstants.ClimberSetPoints.kDescend);
+       },() -> {
+        this.setClimberPower(0);
+      }).withName("Descending");
   }
 
   @Override
