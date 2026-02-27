@@ -79,8 +79,18 @@ public class RobotContainer {
         NamedCommands.registerCommand("Shooter", m_shooter.runShooterCommand());
         // NamedCommands.registerCommand("Climb", m_shooter.runClimbCommand());
 
-        autoChooser = AutoBuilder.buildAutoChooser();
-        SmartDashboard.putData("Auto Chooser", autoChooser);
+                try {
+                        autoChooser = AutoBuilder.buildAutoChooser();
+                } catch (RuntimeException e) {
+                        // If AutoBuilder wasn't configured (e.g. PathPlanner GUI/settings unavailable),
+                        // fall back to a simple chooser to avoid crashing the robot program.
+                        e.printStackTrace();
+                        autoChooser = new SendableChooser<>();
+                        // Provide a safe default empty command
+                        autoChooser.setDefaultOption("None", new InstantCommand(() -> {
+                        }));
+                }
+                SmartDashboard.putData("Auto Chooser", autoChooser);
 
 
         // Configure default commands

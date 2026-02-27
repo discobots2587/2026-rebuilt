@@ -71,6 +71,8 @@ public final class Constants {
     public static int kFrontRightTurningCanId = 21;
     public static int kRearRightTurningCanId = 11;
 
+    
+
     static {
       if (year == 2025) {
         kFrontLeftDrivingCanId = 30;
@@ -146,8 +148,8 @@ public final class Constants {
   }
 
   public static final class ShooterSubsystemConstants {
-    public static final int kFeederMotorCanId = 5; // SPARK Flex CAN ID
-    public static final int kFlywheelMotorCanId = 6; // SPARK Flex CAN ID (Right)
+    public static final int kFeederMotorCanId = 6; // SPARK Flex CAN ID
+    public static final int kFlywheelMotorCanId = 5; // SPARK Flex CAN ID (Right)
     public static final int kFlywheelFollowerMotorCanId = 7; // SPARK Flex CAN ID (Left)
     public static final int kSpindexerCanID = 8; 
 
@@ -156,12 +158,12 @@ public final class Constants {
     }
 
     public static final class FlywheelSetpoints {
-      public static final double kShootRpm = 5000;
+      public static final double kShootRpm = -5000;
       public static final double kVelocityTolerance = 100;
     }
 
     public static final class SpindexerSetpoints {
-      public static final double kSpindex = 0.5; // adjust motor speed later
+      public static final double kSpindex = -0.3; // adjust motor speed later
     }
   }
 
@@ -191,29 +193,29 @@ public final class Constants {
     }
       // Camera names matching the PhotonVision UI
     public static final String[] CAMERA_NAMES = {
-      "LeftCamera",
-      "RightCamera"
+      "Front",
+      "LSide"
     };
 
     // Transformations relative to the robot center (Symmetric Front-Left / Front-Right config)
     public static final Transform3d[] ROBOT_TO_CAMS = new Transform3d[] {
-      // Left Camera
+      // Front Camera
       new Transform3d(
         new Translation3d(
-          Inches.of(6.0).in(Meters),  // X: +6 Front
-          Inches.of(9.0).in(Meters),  // Y: +9 Left
-          Inches.of(12.5).in(Meters)  // Z: Up
+          Inches.of(2.25).in(Meters),  // X: Front
+          Inches.of(-12.0).in(Meters),  // Y: Left
+          Inches.of(23.0).in(Meters)  // Z: Up
         ),
         new Rotation3d(0, 0, 0)
       ),
-      // Right Camera
+      // LSide Camera
       new Transform3d(
         new Translation3d(
-          Inches.of(6.0).in(Meters),   // X: +6 Front
-          Inches.of(-9.0).in(Meters),  // Y: -9 Right (Negative)
-          Inches.of(12.5).in(Meters)   // Z: Up
+          Inches.of(2.0).in(Meters),   // X:  Front
+          Inches.of(15.0).in(Meters),  // Y:  Right 
+          Inches.of(16).in(Meters)   // Z: Up
         ),
-        new Rotation3d(0, 0, 0)
+        new Rotation3d(0, 0, 90)
       ),
     };
   }

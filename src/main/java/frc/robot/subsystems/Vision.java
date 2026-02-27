@@ -86,10 +86,10 @@ public class Vision extends SubsystemBase {
 
         tagLayout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
 
-        houndeye01 = new AprilTagPhotonCamera("FrontL",
+        houndeye01 = new AprilTagPhotonCamera("Front",
                 ROBOT_TO_CAMS[0], CAMERA_CONSTANTS, 0.2, 0.1, tagLayout);
 
-        houndeye02 = new AprilTagPhotonCamera("FrontR",
+        houndeye02 = new AprilTagPhotonCamera("LSide",
                 ROBOT_TO_CAMS[1], CAMERA_CONSTANTS, 0.2, 0.1, tagLayout);
         cameras = new AprilTagPhotonCamera[] { houndeye01, houndeye02 };
 
