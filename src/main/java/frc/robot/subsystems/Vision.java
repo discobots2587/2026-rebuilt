@@ -11,7 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 import org.photonvision.EstimatedRobotPose;
+import org.photonvision.PhotonCamera;
 import org.photonvision.simulation.VisionSystemSim;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 import frc.robot.subsystems.AprilTagPhotonCamera;
 import frc.robot.subsystems.TriConsumer;
@@ -38,7 +40,8 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import static frc.robot.Constants.Vision.*;
+import static frc.robot.Constants.VisionConstants.*;
+import static frc.robot.Constants.ShooterSubsystemConstants.HubTarget.FIDUCIAL_IDS;
 
 // @LoggedObject
 public class Vision extends SubsystemBase {
@@ -78,6 +81,8 @@ public class Vision extends SubsystemBase {
     private final AprilTagPhotonCamera houndeye02;
 
     private final AprilTagPhotonCamera[] cameras;
+
+    public final  PhotonCamera lSideCamera = new PhotonCamera("LSide");
 
     private final Pose3d[] latestUsedPoses = new Pose3d[] { Pose3d.kZero, Pose3d.kZero };
     private final Pose3d[] latestUsedTrigPoses = new Pose3d[] { Pose3d.kZero, Pose3d.kZero };
@@ -172,6 +177,38 @@ public class Vision extends SubsystemBase {
                 }
             }
         }
+    }
+
+    public Transform3d getTargetPos() {
+        return updateCameraPositions(lSideCamera);
+    }
+    public Transform3d updateCameraPositions(PhotonCamera photonCamera) {
+        Transform3d  cameraToTarget = new Transform3d(100.,100.,0., new Rotation3d());
+        var photonResults = List.of(photonCamera.getLatestResult());
+        var lastTagResult = photonResults.stream()
+            .filter(result -> result.hasTargets())
+            .flatMap(result -> result.getTargets().stream())
+            .filter(target -> FIDUCIAL_IDS.contains(target.getFiducialId()))
+            .findFirst();
+        boolean tag_found = false;
+        if (lastTagResult.isPresent()) {
+        tag_found = true;
+        PhotonTrackedTarget tag = lastTagResult.get();
+        cameraToTarget = tag.bestCameraToTarget;
+        //Set Z cameraPose = cameraPose.set;
+        double yValue = cameraToTarget.getY();
+        double xValue = cameraToTarget.getX();
+        
+        SmartDashboard.putNumber("Coral/camera/getY", yValue);
+        SmartDashboard.putNumber("Coral/camera/getX", xValue);
+        SmartDashboard.putNumber("Coral/camera/tag", tag.getFiducialId());
+
+        }
+        SmartDashboard.putBoolean ("Coral/UpdateCameraPositions/found", tag_found);
+        SmartDashboard.putNumber("Coral/UpdateCameraPositions/getX", cameraToTarget.getX());
+        SmartDashboard.putNumber("Coral/UpdateCameraPositions/getY", cameraToTarget.getY());
+
+        return cameraToTarget;
     }
 
     /**

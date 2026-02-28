@@ -15,9 +15,15 @@ import edu.wpi.first.math.geometry.Translation3d;
 import frc.robot.subsystems.AprilTagPhotonCamera.PhotonCameraConstants;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
+
+import java.util.Set;
+import java.util.stream.Stream;
+
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Rotation3d;
+import static java.util.stream.Collectors.toUnmodifiableSet;
+
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -165,6 +171,15 @@ public final class Constants {
     public static final class SpindexerSetpoints {
       public static final double kSpindex = -0.3; // adjust motor speed later
     }
+
+    public static final class HubTarget {
+      public static final double kTargetX = 0.33; //was 0.024
+      public static final double kTargetY = 0.0;
+      public static final double kTargetYTol = 0.02; //Was 0.005
+      public static final double kTargetXTol = 0.02;
+
+      public static final Set<Integer> FIDUCIAL_IDS = Stream.of(17, 18, 19, 20, 21, 22, 6, 7, 8, 9, 10, 11).collect(toUnmodifiableSet());
+    }
   }
 
   public static final class ClimberSubsystemConstants {
@@ -176,7 +191,7 @@ public final class Constants {
     }
   }
 
-  public static final class Vision {
+  public static final class VisionConstants {
     public static final Matrix<N3, N1> SINGLE_TAG_STD_DEVS = VecBuilder.fill(0.5, 0.5, Double.MAX_VALUE);
     public static final Matrix<N3, N1> MULTI_TAG_STD_DEVS = VecBuilder.fill(0.1, 0.1, Double.MAX_VALUE);
     public static final Matrix<N3, N1> MULTI_TAG_TELEOP_STD_DEVS = VecBuilder.fill(0.01, 0.01, Double.MAX_VALUE);
