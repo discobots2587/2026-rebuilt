@@ -28,7 +28,6 @@ public class AlignToHub extends Command {
     private final DriveSubsystem m_drivetrain;
     private final ShooterSubsystem m_shooter;
     private final Vision m_vision;
-
     // Safety timer to stop if we lose the tag for too long
     private final Timer safetyTimer = new Timer();
 
@@ -60,7 +59,12 @@ public class AlignToHub extends Command {
     addRequirements(m_drivetrain);
   }
 
-  // Called when the command is initially scheduled.
+  
+
+
+
+
+// Called when the command is initially scheduled.
   @Override
   public void initialize() {
         safetyTimer.restart();
@@ -90,7 +94,7 @@ public class AlignToHub extends Command {
         SmartDashboard.putNumber("AlignToBranch/rot",currentYawError); 
         currentYawError=0;//ignore rotaition
         // 2. Safety Check: If data is "empty" (0.0), treat as invalid.
-        boolean validTarget = currentRange > 0.01 && currentRange < 4.0; 
+        boolean validTarget = currentRange > 0.01 && currentRange < 4.0; //could work for stopping command
 
         if (validTarget) {
             safetyTimer.reset(); // We saw a tag, reset safety timer

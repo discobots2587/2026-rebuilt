@@ -21,6 +21,7 @@ import frc.robot.Configs;
 import frc.robot.Constants.ShooterSubsystemConstants.FeederSetpoints;
 import frc.robot.Constants.ShooterSubsystemConstants.FlywheelSetpoints;
 import frc.robot.Constants.ShooterSubsystemConstants.SpindexerSetpoints;
+import frc.robot.Constants.IntakeConstants.IntakeSetPoints;
 import frc.robot.Constants.ShooterSubsystemConstants;
 
 public class ShooterSubsystem extends SubsystemBase {
@@ -171,13 +172,21 @@ public class ShooterSubsystem extends SubsystemBase {
         () -> {
           this.setFlywheelVelocity(FlywheelSetpoints.kShootRpm);
           this.setFeederPower(FeederSetpoints.kFeed);
-          this.setSpindexerPower(SpindexerSetpoints.kSpindex);
+          // this.setSpindexerPower(SpindexerSetpoints.kSpindex);
         }, () -> {
           flywheelMotor.stopMotor();
           feederMotor.stopMotor();
-          spindexerMotor.stopMotor();
+          //spindexerMotor.stopMotor();
         })
     ).withName("Shooting");
+  }
+public Command runIntakeCommand(){
+    return this.startEnd(
+      () -> {
+      this.setSpindexerPower(SpindexerSetpoints.kSpindex);
+      }, () ->{
+      this.setSpindexerPower(0);
+      }).withName("Intaking");
   }
 
   @Override

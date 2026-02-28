@@ -21,6 +21,7 @@ import frc.robot.Constants.AutoConstants;
 
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.AlignToHub;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.Intake;
@@ -51,6 +52,9 @@ public class RobotContainer {
     private final ClimberSubsystem m_climber = new ClimberSubsystem();
     Vision vision = new Vision();
     private SendableChooser<Command> autoChooser;
+
+    //test align
+    private final AlignToHub m_AlignToHub = new AlignToHub(m_robotDrive, m_shooter,  vision);
 
     // The driver's controller
     CommandXboxController m_driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
@@ -173,6 +177,7 @@ public class RobotContainer {
         //         .toggleOnTrue(m_shooter.runShooterCommand());
         
         m_driverController.y().toggleOnTrue(m_shooter.runShooterCommand());
+        m_driverController.b().toggleOnTrue(m_shooter.runSpindexerCommand());
         // new JoystickButton(m_driverController,
         // XboxController.Button.kY.value).toggleOnTrue(m_shooter.runShooterCommand().alongWith(m_intake.runIntakeCommand()));
         // new JoystickButton(m_driverController, CommandXboxController.Button.kB.value)
@@ -184,6 +189,8 @@ public class RobotContainer {
         //         .whileTrue(m_climber.runDescendCommand()); // change button later (if needed)
         
         m_driverController.pov(180).whileTrue(m_climber.runDescendCommand());
+
+        m_driverController.pov(90).whileTrue(m_AlignToHub);
 
     }
 

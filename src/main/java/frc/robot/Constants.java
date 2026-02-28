@@ -173,12 +173,12 @@ public final class Constants {
     }
 
     public static final class HubTarget {
-      public static final double kTargetX = 0.33; //was 0.024
-      public static final double kTargetY = 0.0;
+      public static final double kTargetX = 0.0; //was 0.024
+      public static final double kTargetY = 0; //change to 1.5
       public static final double kTargetYTol = 0.02; //Was 0.005
       public static final double kTargetXTol = 0.02;
 
-      public static final Set<Integer> FIDUCIAL_IDS = Stream.of(17, 18, 19, 20, 21, 22, 6, 7, 8, 9, 10, 11).collect(toUnmodifiableSet());
+      public static final Set<Integer> FIDUCIAL_IDS = Stream.of(25,26, 9,10).collect(toUnmodifiableSet());
     }
   }
 
@@ -214,24 +214,25 @@ public final class Constants {
 
     // Transformations relative to the robot center (Symmetric Front-Left / Front-Right config)
     public static final Transform3d[] ROBOT_TO_CAMS = new Transform3d[] {
-      // Front Camera
-      new Transform3d(
-        new Translation3d(
-          Inches.of(2.25).in(Meters),  // X: Front
-          Inches.of(-12.0).in(Meters),  // Y: Left
-          Inches.of(23.0).in(Meters)  // Z: Up
+        // Front Camera
+        new Transform3d(
+            new Translation3d(
+              Inches.of(2.25).in(Meters),  // X: Front
+              Inches.of(-12.0).in(Meters),  // Y: Left
+              Inches.of(23.0).in(Meters)  // Z: Up
+              
+            ),
+            new Rotation3d(0, 0, 0)
         ),
-        new Rotation3d(0, 0, 0)
-      ),
-      // LSide Camera
-      new Transform3d(
-        new Translation3d(
-          Inches.of(2.0).in(Meters),   // X:  Front
-          Inches.of(15.0).in(Meters),  // Y:  Right 
-          Inches.of(16).in(Meters)   // Z: Up
+        // LSide Camera
+        new Transform3d(
+          new Translation3d(
+            Inches.of(2.0).in(Meters),   // X:  Front
+            Inches.of(15.0).in(Meters),  // Y:  Right 
+            Inches.of(16).in(Meters)   // Z: Up
+          ),
+          new Rotation3d(0, 0, 90)
         ),
-        new Rotation3d(0, 0, 90)
-      ),
     };
   }
 }

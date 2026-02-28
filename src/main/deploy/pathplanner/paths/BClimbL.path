@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.2179084333638435,
-        "y": 5.098277378717304
+        "x": 2.347783201155782,
+        "y": 4.824024812065242
       },
       "isLocked": false,
       "linkedName": "ShootEndPos"
     },
     {
       "anchor": {
-        "x": 1.0993593026620374,
-        "y": 4.832299189814814
+        "x": 0.534,
+        "y": 4.9383914207175925
       },
       "prevControl": {
-        "x": 1.4821111791612593,
-        "y": 4.793396241877727
+        "x": 0.7732215186215385,
+        "y": 5.011007293833633
       },
       "nextControl": null,
       "isLocked": false,
@@ -42,7 +42,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "reversed": false,
   "folder": null,
