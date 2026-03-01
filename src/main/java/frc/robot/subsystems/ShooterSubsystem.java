@@ -136,6 +136,16 @@ public class ShooterSubsystem extends SubsystemBase {
         }).withName("Spinning Up Flywheel");
   }
 
+    public Command runFlywheelCommandHalfSpeed() {
+    return this.startEnd(
+        () -> {
+          this.setFlywheelVelocity(FlywheelSetpoints.kShootRpm/2);
+        },
+        () -> {
+          this.setFlywheelVelocity(0.0);
+        }).withName("Spinning Up Flywheel");
+  }
+
   /**
    * Command to run the feeder and flywheel motors. When the command is interrupted, e.g. the button is released,
    * the motors will stop.
