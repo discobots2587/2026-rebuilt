@@ -146,9 +146,12 @@ public class RobotContainer {
         // () -> m_intake.runIntakeCommand(),
         // m_intake));
 
-        m_driverController.leftBumper().toggleOnTrue(new RunCommand(
-                () -> m_intake.runIntakeCommand(),
-                m_intake));
+        // m_driverController.leftBumper().toggleOnTrue(new RunCommand(
+        //         () -> m_intake.runIntakeCommand(),
+        //         m_intake));
+        m_driverController.leftBumper().toggleOnTrue(m_intake.runIntakeCommand());
+
+
 
         // new JoystickButton(m_driverController,
         // CommandXboxController.Button.kRightBumper.value) //change the left trigger
@@ -156,9 +159,12 @@ public class RobotContainer {
         // () -> m_intake.runOuttakeCommand(),
         // m_intake));
 
-        m_driverController.rightBumper().toggleOnTrue(new RunCommand(
-                () -> m_intake.runOuttakeCommand(),
-                m_intake));
+        // m_driverController.rightBumper().toggleOnTrue(new RunCommand(
+        //         () -> m_intake.runOuttakeCommand(),
+        //         m_intake));
+
+        m_driverController.rightBumper().toggleOnTrue(m_intake.runOuttakeCommand());
+        
 
         // new JoystickButton(m_driverController,
         // XboxController.Button.kLeftTrigger.value)
