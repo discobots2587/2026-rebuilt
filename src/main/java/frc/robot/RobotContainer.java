@@ -146,9 +146,12 @@ public class RobotContainer {
         // () -> m_intake.runIntakeCommand(),
         // m_intake));
 
-        m_driverController.leftBumper().toggleOnTrue(new RunCommand(
-                () -> m_intake.runIntakeCommand(),
-                m_intake));
+        // m_driverController.leftBumper().toggleOnTrue(new RunCommand(
+        //         () -> m_intake.runIntakeCommand(),
+        //         m_intake));
+        m_driverController.leftBumper().toggleOnTrue(m_intake.runIntakeCommand());
+
+
 
         // new JoystickButton(m_driverController,
         // CommandXboxController.Button.kRightBumper.value) //change the left trigger
@@ -156,9 +159,12 @@ public class RobotContainer {
         // () -> m_intake.runOuttakeCommand(),
         // m_intake));
 
-        m_driverController.rightBumper().toggleOnTrue(new RunCommand(
-                () -> m_intake.runOuttakeCommand(),
-                m_intake));
+        // m_driverController.rightBumper().toggleOnTrue(new RunCommand(
+        //         () -> m_intake.runOuttakeCommand(),
+        //         m_intake));
+
+        m_driverController.rightBumper().toggleOnTrue(m_intake.runOuttakeCommand());
+        
 
         // new JoystickButton(m_driverController,
         // XboxController.Button.kLeftTrigger.value)
@@ -178,7 +184,8 @@ public class RobotContainer {
         
         m_driverController.y().toggleOnTrue(m_shooter.runShooterCommand());
         m_driverController.b().toggleOnTrue(m_shooter.runSpindexerCommand());
-        m_driverController.x().toggleOnTrue(m_shooter.runFlywheelCommand());
+        m_driverController.x().toggleOnTrue(m_shooter.runFlywheelCommandHalfSpeed());
+
         // new JoystickButton(m_driverController,
         // XboxController.Button.kY.value).toggleOnTrue(m_shooter.runShooterCommand().alongWith(m_intake.runIntakeCommand()));
         // new JoystickButton(m_driverController, CommandXboxController.Button.kB.value)
