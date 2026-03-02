@@ -143,8 +143,8 @@ public final class Constants {
     public static final int kIntakeArmMotorCanId = 51; // change later
 
     public static final class IntakeSetPoints {
-      public static final double kIntake = .6; // adjust motor speed later
-      public static final double kExtake = -.6; // adjust motor speed later
+      public static final double kIntake = .5; // adjust motor speed later
+      public static final double kExtake = -.5; // adjust motor speed later
     }
 
     public static final class IntakeArmSetPoints {
@@ -164,12 +164,12 @@ public final class Constants {
     }
 
     public static final class FlywheelSetpoints {
-      public static final double kShootRpm = -5000;
+      public static final double kShootRpm = -5000; //was -5000
       public static final double kVelocityTolerance = 100;
     }
 
     public static final class SpindexerSetpoints {
-      public static final double kSpindex = -0.3; // adjust motor speed later
+      public static final double kSpindex = -0.45; // adjust motor speed later
     }
 
     public static final class HubTarget {

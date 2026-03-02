@@ -178,6 +178,7 @@ public class RobotContainer {
         
         m_driverController.y().toggleOnTrue(m_shooter.runShooterCommand());
         m_driverController.b().toggleOnTrue(m_shooter.runSpindexerCommand());
+        m_driverController.x().toggleOnTrue(m_shooter.runFlywheelCommand());
         // new JoystickButton(m_driverController,
         // XboxController.Button.kY.value).toggleOnTrue(m_shooter.runShooterCommand().alongWith(m_intake.runIntakeCommand()));
         // new JoystickButton(m_driverController, CommandXboxController.Button.kB.value)
