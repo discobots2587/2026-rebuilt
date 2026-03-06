@@ -150,21 +150,23 @@ public class ShooterSubsystem extends SubsystemBase {
    * Command to run the feeder and flywheel motors. When the command is interrupted, e.g. the button is released,
    * the motors will stop.
    */
-  public Command runFeederCommand() {
-    return this.startEnd(
-        () -> {
-          this.setFlywheelVelocity(FlywheelSetpoints.kShootRpm);
-          this.setFeederPower(FeederSetpoints.kFeed);
-        }, () -> {
-          this.setFlywheelVelocity(0.0);
-          this.setFeederPower(0.0);
-        }).withName("Feeding");
-  }
+  // public Command runFeederCommand() {
+  //   return this.startEnd(
+  //       () -> {
+  //         // this.setFlywheelVelocity(FlywheelSetpoints.kShootRpm);
+  //         this.setFeederPower(FeederSetpoints.kFeed);
+  //       }, () -> {
+  //         // this.setFlywheelVelocity(0.0);
+  //         this.setFeederPower(0.0);
+  //       }).withName("Feeding");
+  // }
    public Command runSpindexerCommand() {
     return this.startEnd(
         () -> {
+          // this.setFeederPower(FeederSetpoints.kFeed);
           this.setSpindexerPower(SpindexerSetpoints.kSpindex);
         }, () -> {
+          // this.setFeederPower(0.0);
           this.setSpindexerPower(0.0);
         }).withName("Spnindexing");
   }
@@ -190,14 +192,16 @@ public class ShooterSubsystem extends SubsystemBase {
         })
     ).withName("Shooting");
   }
-public Command runIntakeCommand(){
-    return this.startEnd(
-      () -> {
-      this.setSpindexerPower(SpindexerSetpoints.kSpindex);
-      }, () ->{
-      this.setSpindexerPower(0);
-      }).withName("Intaking");
-  }
+
+
+  // public Command runIntakeCommand(){
+//     return this.startEnd(
+//       () -> {
+//       this.setSpindexerPower(SpindexerSetpoints.kSpindex);
+//       }, () ->{
+//       this.setSpindexerPower(0);
+//       }).withName("Intaking");
+//   }
 
 
   @Override
