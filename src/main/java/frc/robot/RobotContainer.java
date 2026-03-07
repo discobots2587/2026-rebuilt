@@ -23,7 +23,9 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.AlignToHub;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.HoodSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.SpindexerSubsystem;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.ClimberSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -49,6 +51,10 @@ public class RobotContainer {
     private final DriveSubsystem m_robotDrive = new DriveSubsystem();
     private final Intake m_intake = new Intake();
     private final ShooterSubsystem m_shooter = new ShooterSubsystem();
+    private final SpindexerSubsystem m_spindexer = new SpindexerSubsystem();
+    private final HoodSubsystem m_hood = new HoodSubsystem();
+
+
     private final ClimberSubsystem m_climber = new ClimberSubsystem();
     Vision vision = new Vision();
     private SendableChooser<Command> autoChooser;
@@ -183,8 +189,10 @@ public class RobotContainer {
         //         .toggleOnTrue(m_shooter.runShooterCommand());
         
         m_driverController.y().toggleOnTrue(m_shooter.runShooterCommand()); 
-        m_driverController.b().toggleOnTrue(m_shooter.runSpindexerCommand());
-        m_driverController.x().toggleOnTrue(m_shooter.runFlywheelCommandHalfSpeed());
+        m_driverController.b().toggleOnTrue(m_spindexer.runSpindexerCommand()); //runs the spinsdexer and the indexer(feeder) 
+        m_driverController.x().whileTrue(m_hood.runHoodCommand());
+        m_driverController.a().whileTrue(m_hood.runbackHoodCommand());
+
 
         // new JoystickButton(m_driverController,
         // XboxController.Button.kY.value).toggleOnTrue(m_shooter.runShooterCommand().alongWith(m_intake.runIntakeCommand()));
@@ -201,6 +209,7 @@ public class RobotContainer {
         m_driverController.pov(90).whileTrue(m_AlignToHub);
 
     }
+
 
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.

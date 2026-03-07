@@ -81,6 +81,7 @@ public final class Configs {
         public static final SparkMaxConfig flywheelFollowerConfig = new SparkMaxConfig();
         public static final SparkMaxConfig feederConfig = new SparkMaxConfig();
         public static final SparkMaxConfig spindexerConfig = new SparkMaxConfig();
+        public static final SparkMaxConfig hoodConfig = new SparkMaxConfig() ;
     
         static {
           // Configure basic setting of the flywheel motors
@@ -125,6 +126,11 @@ public final class Configs {
             .idleMode(IdleMode.kCoast)
             .openLoopRampRate(1.0)
             .smartCurrentLimit(60);
+          hoodConfig
+            .inverted(true)
+            .idleMode(IdleMode.kCoast)
+            .openLoopRampRate(1.0)
+            .smartCurrentLimit(60); // change later
         }
       }
 

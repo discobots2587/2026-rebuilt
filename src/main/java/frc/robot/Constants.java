@@ -152,19 +152,31 @@ public final class Constants {
       public static final double kLower = -.6; // adjust motor speed later
     }
   }
+  public static final class HoodSubsystemConstants{
+    public static final int kHoodCanID = 9; // SPARK Flex CAN ID
 
-  public static final class ShooterSubsystemConstants {
+
+    public static final class HoodMotorSetPoints {
+      public static final double kMove = 0.5;
+      public static final double kBackMove = -0.5;
+    }
+
+  }
+
+  public static final class ShooterSubsystemConstants { //shares constants with the Spindexer Subsystem
     public static final int kFeederMotorCanId = 6; // SPARK Flex CAN ID
     public static final int kFlywheelMotorCanId = 5; // SPARK Flex CAN ID (Right)
     public static final int kFlywheelFollowerMotorCanId = 7; // SPARK Flex CAN ID (Left)
-    public static final int kSpindexerCanID = 8; 
+    public static final int kSpindexerCanID = 8;
+    
+
 
     public static final class FeederSetpoints {
       public static final double kFeed = 0.95;
     }
 
     public static final class FlywheelSetpoints {
-      public static final double kShootRpm = -5000; //was -5000
+      public static final double kShootRpm = -100; //was -5000
       public static final double kVelocityTolerance = 100;
     }
 
@@ -180,6 +192,8 @@ public final class Constants {
 
       public static final Set<Integer> FIDUCIAL_IDS = Stream.of(25,26, 9,10).collect(toUnmodifiableSet());
     }
+
+    
   }
 
   public static final class ClimberSubsystemConstants {

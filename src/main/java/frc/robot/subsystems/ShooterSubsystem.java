@@ -35,18 +35,19 @@ public class ShooterSubsystem extends SubsystemBase {
 
   private SparkMax flywheelFollowerMotor =
       new SparkMax(ShooterSubsystemConstants.kFlywheelFollowerMotorCanId, MotorType.kBrushless);
+  
 
   // Initialize feeder SPARK. We will use open loop control for this so we don't need a closed loop
   // controller like above.
-  private SparkMax feederMotor =
-      new SparkMax(ShooterSubsystemConstants.kFeederMotorCanId, MotorType.kBrushless);
+  // private SparkMax feederMotor =
+  //     new SparkMax(ShooterSubsystemConstants.kFeederMotorCanId, MotorType.kBrushless);
     
-  private SparkMax spindexerMotor =
-      new SparkMax(ShooterSubsystemConstants.kSpindexerCanID, MotorType.kBrushless);
+  // private SparkMax spindexerMotor =
+  //     new SparkMax(ShooterSubsystemConstants.kSpindexerCanID, MotorType.kBrushless);
 
   // Member variables for subsystem state management
   private double flywheelTargetVelocity = 0.0;
-
+  private boolean runSpindexer =  false;
   /** Creates a new ShooterSubsystem. */
   public ShooterSubsystem() {
     /*
@@ -59,6 +60,7 @@ public class ShooterSubsystem extends SubsystemBase {
      * the SPARK loses power. This is useful for power cycles that may occur
      * mid-operation.
      */
+    
     flywheelMotor.configure(
         Configs.ShooterSubsystem.flywheelConfig,
         ResetMode.kResetSafeParameters,
@@ -67,14 +69,14 @@ public class ShooterSubsystem extends SubsystemBase {
         Configs.ShooterSubsystem.flywheelFollowerConfig,
         ResetMode.kResetSafeParameters,
         PersistMode.kPersistParameters);
-    feederMotor.configure(
-        Configs.ShooterSubsystem.feederConfig,
-        ResetMode.kResetSafeParameters,
-        PersistMode.kPersistParameters);
-    spindexerMotor.configure(
-      Configs.ShooterSubsystem.spindexerConfig,
-      ResetMode.kResetSafeParameters,
-      PersistMode.kPersistParameters);
+    // feederMotor.configure(
+    //     Configs.ShooterSubsystem.feederConfig,
+    //     ResetMode.kResetSafeParameters,
+    //     PersistMode.kPersistParameters);
+    // spindexerMotor.configure(
+    //   Configs.ShooterSubsystem.spindexerConfig,
+    //   ResetMode.kResetSafeParameters,
+    //   PersistMode.kPersistParameters);
 
     // Zero flywheel encoder on initialization
     flywheelEncoder.setPosition(0);
@@ -91,11 +93,11 @@ public class ShooterSubsystem extends SubsystemBase {
    * Trigger: Is the flywheel spinning at the required velocity?
    */
   public final Trigger isFlywheelSpinning = new Trigger(
-      () -> isFlywheelAt(-5000) || flywheelEncoder.getVelocity() > -5000
+      () -> isFlywheelAt(-100) || flywheelEncoder.getVelocity() > -100 // was -5000
   );
 
   public final Trigger isFlywheelSpinningBackwards = new Trigger(
-      () -> isFlywheelAt(5000) || flywheelEncoder.getVelocity() < 5000
+      () -> isFlywheelAt(100) || flywheelEncoder.getVelocity() < 100 // was 5000
   );
 
   /** 
@@ -112,15 +114,16 @@ public class ShooterSubsystem extends SubsystemBase {
     flywheelController.setSetpoint(velocity, ControlType.kMAXMotionVelocityControl);
     flywheelTargetVelocity = velocity;
   }
+  
 
   /** Set the feeder motor power in the range of [-1, 1]. */
-  private void setFeederPower(double power) {
-    feederMotor.set(power);
-  }
+  // private void setFeederPower(double power) {
+  //   feederMotor.set(power);
+  // }
 
-  private void setSpindexerPower(double power) {
-    spindexerMotor.set(power);
-  }
+  // private void setSpindexerPower(double power) {
+  //   spindexerMotor.set(power);
+  // }
   
   /**
    * Command to run the flywheel motors. When the command is interrupted, e.g. the button is released,
@@ -147,50 +150,59 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   /**
-   * Command to run the feeder and flywheel motors. When the command is interrupted, e.g. the button is released,
+   * Command to run the feeder and flywheel motors. When the command is interrupted, e.g. the button is relea
+   * sed,
    * the motors will stop.
    */
   // public Command runFeederCommand() {
   //   return this.startEnd(
+  //   () -> {
+  //          this.setFlywheelVelocity(FlywheelSetpoints.kShootRpm);
+  //          this.setFeederPower(FeederSetpoints.kFeed);
+  //        }, () -> {
+  //          this.setFlywheelVelocity(0.0);
+  //          this.setFeederPower(0.0);
+  //        }).withName("Feeding");
+  //  }
+  //  public Command runSpindexerCommand() {
+  //   return this.startEnd(
   //       () -> {
-  //         // this.setFlywheelVelocity(FlywheelSetpoints.kShootRpm);
-  //         this.setFeederPower(FeederSetpoints.kFeed);
+  //         // this.setFeederPower(FeederSetpoints.kFeed);
+  //         this.setSpindexerPower(SpindexerSetpoints.kSpindex);
   //       }, () -> {
-  //         // this.setFlywheelVelocity(0.0);
-  //         this.setFeederPower(0.0);
-  //       }).withName("Feeding");
+  //         // this.setFeederPower(0.0);
+  //         this.setSpindexerPower(0.0);
+  //       }).withName("Spnindexing");
   // }
-   public Command runSpindexerCommand() {
-    return this.startEnd(
-        () -> {
-          // this.setFeederPower(FeederSetpoints.kFeed);
-          this.setSpindexerPower(SpindexerSetpoints.kSpindex);
-        }, () -> {
-          // this.setFeederPower(0.0);
-          this.setSpindexerPower(0.0);
-        }).withName("Spnindexing");
-  }
   /**
    * Meta-command to operate the shooter. The Flywheel starts spinning up and when it reaches
    * the desired speed it starts the Feeder.
    */
   public Command runShooterCommand() {
+
     //add period to wait for shooter to spin up
+    
+    //  return this.startEnd(
+    //    () -> this.setFlywheelVelocity(FlywheelSetpoints.kShootRpm),
+    //    () -> flywheelMotor.stopMotor()
+    //  ).until(isFlywheelSpinning).andThen(
+    //    this.startEnd(
+    //      () -> {
+    //        this.setFlywheelVelocity(FlywheelSetpoints.kShootRpm);
+    //        this.setFeederPower(FeederSetpoints.kFeed);
+    //        // this.setSpindexerPower(SpindexerSetpoints.kSpindex);
+    //     }, () -> {
+    //        flywheelMotor.stopMotor();
+    //        feederMotor.stopMotor();
+    //        //spindexerMotor.stopMotor();
+    //     })
+    //  ).withName("Shooting");
+
     return this.startEnd(
-      () -> this.setFlywheelVelocity(FlywheelSetpoints.kShootRpm),
-      () -> flywheelMotor.stopMotor()
-    ).until(isFlywheelSpinning).andThen(
-      this.startEnd(
-        () -> {
-          this.setFlywheelVelocity(FlywheelSetpoints.kShootRpm);
-          this.setFeederPower(FeederSetpoints.kFeed);
-          // this.setSpindexerPower(SpindexerSetpoints.kSpindex);
-        }, () -> {
-          flywheelMotor.stopMotor();
-          feederMotor.stopMotor();
-          //spindexerMotor.stopMotor();
-        })
-    ).withName("Shooting");
+      () -> {this.setFlywheelVelocity(FlywheelSetpoints.kShootRpm);
+      },() -> {
+        this.setFlywheelVelocity(0.0);
+      }).withName("Shooting");
   }
 
 
@@ -207,7 +219,7 @@ public class ShooterSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // Display subsystem values
-    SmartDashboard.putNumber("Shooter | Feeder | Applied Output", feederMotor.getAppliedOutput());
+   // SmartDashboard.putNumber("Shooter | Feeder | Applied Output", feederMotor.getAppliedOutput());
     SmartDashboard.putNumber("Shooter | Flywheel | Applied Output", flywheelMotor.getAppliedOutput());
     SmartDashboard.putNumber("Shooter | Flywheel | Current", flywheelMotor.getOutputCurrent());
     SmartDashboard.putNumber("Shooter | Flywheel Follower | Applied Output", flywheelFollowerMotor.getAppliedOutput());
@@ -218,6 +230,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     SmartDashboard.putBoolean("Is Flywheel Spinning", isFlywheelSpinning.getAsBoolean());
     SmartDashboard.putBoolean("Is Flywheel Stopped", isFlywheelStopped.getAsBoolean());
+    SmartDashboard.putBoolean("Is Flywheel Spinning Backwards", runSpindexer);
   }
 
 }
