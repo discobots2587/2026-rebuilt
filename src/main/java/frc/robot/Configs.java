@@ -63,10 +63,13 @@ public final class Configs {
     public static final class IntakeSubsystem {
         public static final SparkMaxConfig intakeMotorConfig = new SparkMaxConfig();
         public static final SparkMaxConfig intakeArmMotorConfig = new SparkMaxConfig();
+        public static final SparkMaxConfig intakeArmFollowerMotorConfig = new SparkMaxConfig();
 
         static {
                 intakeMotorConfig.inverted(true).idleMode(IdleMode.kBrake).smartCurrentLimit(20); //change later
                 intakeArmMotorConfig.inverted(false).idleMode(IdleMode.kBrake).smartCurrentLimit(20); //change later
+                // intakeArmFollowerMotorConfig.inverted(true).idleMode(IdleMode.kBrake).smartCurrentLimit(20); //change later
+                intakeArmFollowerMotorConfig.apply(intakeArmMotorConfig).follow(Constants.IntakeConstants.kIntakeArmMotorCanId, true);
         }
     }
     public static final class ClimberSubsystem {

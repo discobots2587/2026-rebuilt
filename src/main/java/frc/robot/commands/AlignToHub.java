@@ -51,7 +51,7 @@ public class AlignToHub extends Command {
     // We want to be at kTargetX distance and 0.0 Y offset (centered)
     xController.setSetpoint(HubTarget.kTargetX);
     yController.setSetpoint(HubTarget.kTargetY); 
-    rotController.setSetpoint(0.0); // We want 0 degrees rotation error
+    rotController.setSetpoint(90.0); // We want 0 degrees rotation error
     
     // Allow rotation to wrap around 180 (so it takes the shortest path)
     rotController.enableContinuousInput(-180, 180);
@@ -84,14 +84,14 @@ public class AlignToHub extends Command {
         Transform3d targetPos = m_vision.getTargetPos();
         double currentRange = targetPos.getX();
        // currentRange = diff_x;   remove hack
-        SmartDashboard.putNumber("AlignToBranch/X",currentRange);
+        SmartDashboard.putNumber("AlignToHub/X",currentRange);
         double currentYOffset = targetPos.getY();
         // currentYOffset = diff_y;  remove hack
-        SmartDashboard.putNumber("AlignToBranch/Y",currentYOffset);
+        SmartDashboard.putNumber("AlignToHub/Y",currentYOffset);
         
         // IMPORTANT: Ensure your subsystem returns rotation in the Transform3d
         double currentYawError = Math.toDegrees(targetPos.getRotation().getZ());
-        SmartDashboard.putNumber("AlignToBranch/rot",currentYawError); 
+        SmartDashboard.putNumber("AlignToHub/rot",currentYawError); 
         currentYawError=0;//ignore rotaition
         // 2. Safety Check: If data is "empty" (0.0), treat as invalid.
         boolean validTarget = currentRange > 0.01 && currentRange < 4.0; //could work for stopping command
@@ -114,10 +114,10 @@ public class AlignToHub extends Command {
             m_drivetrain.drive(xSpeed, ySpeed, rotSpeed, false); 
 
             // Debug
-            SmartDashboard.putNumber("AlignToBranch/X_Speed", xSpeed);
-            SmartDashboard.putNumber("AlignToBranch/Y_Speed", ySpeed);
-            SmartDashboard.putNumber("AlignToBranch/Range", currentRange);
-            SmartDashboard.putNumber("AlignToBranch/YOffset", currentYOffset);
+            SmartDashboard.putNumber("AlignToHub/X_Speed", xSpeed);
+            SmartDashboard.putNumber("AlignToHub/Y_Speed", ySpeed);
+            SmartDashboard.putNumber("AlignToHub/Range", currentRange);
+            SmartDashboard.putNumber("AlignToHub/YOffset", currentYOffset);
         } else {
             // Target lost? Stop momentarily (or hunt if you prefer)
             m_drivetrain.drive(0, 0, 0, false); 

@@ -18,9 +18,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Configs;
+import frc.robot.Constants;
 import frc.robot.Constants.ShooterSubsystemConstants.FeederSetpoints;
 import frc.robot.Constants.ShooterSubsystemConstants.FlywheelSetpoints;
-import frc.robot.Constants.ShooterSubsystemConstants.SpindexerSetpoints;
 import frc.robot.Constants.IntakeConstants.IntakeSetPoints;
 import frc.robot.Constants.ShooterSubsystemConstants;
 
@@ -93,11 +93,11 @@ public class ShooterSubsystem extends SubsystemBase {
    * Trigger: Is the flywheel spinning at the required velocity?
    */
   public final Trigger isFlywheelSpinning = new Trigger(
-      () -> isFlywheelAt(-100) || flywheelEncoder.getVelocity() > -100 // was -5000
+      () -> isFlywheelAt(FlywheelSetpoints.kShootRpm) || flywheelEncoder.getVelocity() > FlywheelSetpoints.kShootRpm 
   );
 
   public final Trigger isFlywheelSpinningBackwards = new Trigger(
-      () -> isFlywheelAt(100) || flywheelEncoder.getVelocity() < 100 // was 5000
+      () -> isFlywheelAt(-(FlywheelSetpoints.kShootRpm)) || flywheelEncoder.getVelocity() < -(FlywheelSetpoints.kShootRpm)
   );
 
   /** 

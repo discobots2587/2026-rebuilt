@@ -19,14 +19,17 @@ import frc.robot.Constants.IntakeConstants.IntakeSetPoints;
 public class Intake extends SubsystemBase {
   private final SparkMax intakeMotor;
   private final SparkMax intakeArmMotor;
+  private final SparkMax intakeArmFollowerMotor;
 
   public Intake() {
     // initializing motors
     intakeMotor = new SparkMax(IntakeConstants.kIntakeMotorCanId, SparkMax.MotorType.kBrushless);
     intakeArmMotor = new SparkMax(IntakeConstants.kIntakeArmMotorCanId, SparkMax.MotorType.kBrushless);
+    intakeArmFollowerMotor = new SparkMax(IntakeConstants.kIntakeArmMotorFollowerCanId, SparkMax.MotorType.kBrushless);
 
     intakeMotor.configure(Configs.IntakeSubsystem.intakeMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     intakeArmMotor.configure(Configs.IntakeSubsystem.intakeArmMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    intakeArmFollowerMotor.configure(Configs.IntakeSubsystem.intakeArmFollowerMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
   }
   //Everything below this, feel free to do whatever you want with it since im not sure if it even works.
@@ -37,6 +40,10 @@ public class Intake extends SubsystemBase {
   //set speed for the arm motor 
   private void setIntakeArmPower(double power){
     intakeArmMotor.set(power);
+  }
+
+  private void setIntakeArmFollowerPower(double power){
+    intakeArmFollowerMotor.set(power);
   }
 
   //command to run the motors (if command interrupted the motors will stop)
@@ -62,16 +69,20 @@ public class Intake extends SubsystemBase {
       return this.startEnd(
         () -> {
         this.setIntakeArmPower(IntakeArmSetPoints.kRaise);
+        // this.setIntakeArmFollowerPower(IntakeArmSetPoints.kRaise);
         }, () ->{
           this.setIntakeArmPower(0);
+          this.setIntakeArmFollowerPower(0);
         }).withName("Raising Arm");
     }
   public Command runLowerCommand(){
       return this.startEnd(
         () -> {
         this.setIntakeArmPower(IntakeArmSetPoints.kLower);
+        // this.setIntakeArmFollowerPower(IntakeArmSetPoints.kLower);
         }, () ->{
           this.setIntakeArmPower(0);
+          this.setIntakeArmFollowerPower(0);
         }).withName("Lowering Arm");
     }
 

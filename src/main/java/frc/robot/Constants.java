@@ -141,6 +141,7 @@ public final class Constants {
   public static final class IntakeConstants {
     public static final int kIntakeMotorCanId = 55; // change later
     public static final int kIntakeArmMotorCanId = 51; // change later
+    public static final int kIntakeArmMotorFollowerCanId = 52; // change later
 
     public static final class IntakeSetPoints {
       public static final double kIntake = 1.0; // adjust motor speed later
@@ -148,8 +149,8 @@ public final class Constants {
     }
 
     public static final class IntakeArmSetPoints {
-      public static final double kRaise = .6; // adjust motor speed later
-      public static final double kLower = -.6; // adjust motor speed later
+      public static final double kRaise = .15; // adjust motor speed later
+      public static final double kLower = -.15; // adjust motor speed later
     }
   }
   public static final class HoodSubsystemConstants{
@@ -176,7 +177,8 @@ public final class Constants {
     }
 
     public static final class FlywheelSetpoints {
-      public static final double kShootRpm = -100; //was -5000
+      public static final double kShootPercentage = 0.05;
+      public static final double kShootRpm = -(5676*kShootPercentage); //was -5000 and 5676 is the max rpm 
       public static final double kVelocityTolerance = 100;
     }
 
@@ -245,7 +247,7 @@ public final class Constants {
             Inches.of(15.0).in(Meters),  // Y:  Right 
             Inches.of(16).in(Meters)   // Z: Up
           ),
-          new Rotation3d(0, 0, 90)
+          new Rotation3d(0, 0, -90)
         ),
     };
   }

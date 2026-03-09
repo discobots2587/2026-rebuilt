@@ -163,6 +163,7 @@ public class Vision extends SubsystemBase {
                 }
             SmartDashboard.putNumber("vision/m_field/getX", pose.getX());
             SmartDashboard.putNumber("vision/m_field/getY", pose.getY());
+            SmartDashboard.putNumber("vision/m_field/getYaw", pose.getRotation().getDegrees());
             }
 
             for (EstimatedRobotPose trigPose : trigPoses) {
