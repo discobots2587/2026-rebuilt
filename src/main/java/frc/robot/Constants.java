@@ -177,7 +177,7 @@ public final class Constants {
     }
 
     public static final class FlywheelSetpoints {
-      public static final double kShootPercentage = 0.05;
+      public static final double kShootPercentage = 0.05/5;
       public static final double kShootRpm = -(5676*kShootPercentage); //was -5000 and 5676 is the max rpm 
       public static final double kVelocityTolerance = 100;
     }

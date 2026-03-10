@@ -67,22 +67,27 @@ public class Intake extends SubsystemBase {
   }
   public Command runRaiseCommand(){
       return this.startEnd(
+        
         () -> {
         this.setIntakeArmPower(IntakeArmSetPoints.kRaise);
+        this.setIntakePower(IntakeSetPoints.kIntake);
         // this.setIntakeArmFollowerPower(IntakeArmSetPoints.kRaise);
         }, () ->{
           this.setIntakeArmPower(0);
           this.setIntakeArmFollowerPower(0);
+          this.setIntakePower(0);
         }).withName("Raising Arm");
     }
   public Command runLowerCommand(){
       return this.startEnd(
         () -> {
         this.setIntakeArmPower(IntakeArmSetPoints.kLower);
+        this.setIntakePower(IntakeSetPoints.kIntake);
         // this.setIntakeArmFollowerPower(IntakeArmSetPoints.kLower);
         }, () ->{
           this.setIntakeArmPower(0);
           this.setIntakeArmFollowerPower(0);
+          this.setIntakePower(0);
         }).withName("Lowering Arm");
     }
 
