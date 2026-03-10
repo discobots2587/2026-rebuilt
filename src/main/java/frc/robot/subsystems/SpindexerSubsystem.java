@@ -33,11 +33,16 @@ public class SpindexerSubsystem extends SubsystemBase{
     private void setFeederPower(double power){
         feederMotor.set(power);
     }
-    public Command runSpindexerCommand(){
+    public Command runSpindexerCommand(boolean spindexer_only){
         return this.startEnd(
             () -> {
-                this.setSpindexerPower(ShooterSubsystemConstants.SpindexerSetpoints.kSpindex);
-                this.setFeederPower(ShooterSubsystemConstants.FeederSetpoints.kFeed);
+                double power = ShooterSubsystemConstants.SpindexerSetpoints.kSpindex;
+                if(spindexer_only){
+                    power *= 0.3;
+                }else{
+                    this.setFeederPower(ShooterSubsystemConstants.FeederSetpoints.kFeed);
+                }
+                this.setSpindexerPower(power);
             }, () -> {
                 this.setSpindexerPower(0);
                 this.setFeederPower(0);

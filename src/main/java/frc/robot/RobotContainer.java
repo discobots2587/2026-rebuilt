@@ -189,7 +189,7 @@ public class RobotContainer {
         //         .toggleOnTrue(m_shooter.runShooterCommand());
         
         m_driverController.y().toggleOnTrue(m_shooter.runShooterCommand()); 
-        m_driverController.b().toggleOnTrue(m_spindexer.runSpindexerCommand()); //runs the spinsdexer and the indexer(feeder) 
+        m_driverController.b().toggleOnTrue(m_spindexer.runSpindexerCommand(false)); //runs the spinsdexer and the indexer(feeder) 
         m_driverController.x().whileTrue(m_hood.runHoodCommand());
         m_driverController.a().whileTrue(m_hood.runbackHoodCommand());
 
@@ -207,6 +207,8 @@ public class RobotContainer {
         m_driverController.pov(180).whileTrue(m_climber.runDescendCommand());
 
         m_driverController.pov(90).whileTrue(m_AlignToHub);
+
+        m_driverController.pov(270).toggleOnTrue(m_spindexer.runSpindexerCommand(true));
 
     }
 
