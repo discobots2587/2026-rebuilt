@@ -199,7 +199,9 @@ public class RobotContainer {
         // new JoystickButton(m_driverController, CommandXboxController.Button.kB.value)
         //         .whileTrue(m_climber.runClimbCommand()); // change button later (if needed)
 
-        m_driverController.pov(0).whileTrue(m_climber.runClimbCommand());
+        //m_driverController.pov(0).whileTrue(m_climber.runClimbCommand()); //og command 
+        m_driverController.pov(0).toggleOnTrue(m_climber.autoClimberCommand()); //testing for one click climber
+
 
         // new JoystickButton(m_driverController, CommandXboxController.Button.kA.value)
         //         .whileTrue(m_climber.runDescendCommand()); // change button later (if needed)

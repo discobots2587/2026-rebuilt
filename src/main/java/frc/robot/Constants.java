@@ -205,6 +205,8 @@ public final class Constants {
     public static final class ClimberSetPoints {
       public static final double kClimb = 0.8; // adjust motor speed later
       public static final double kDescend = -0.8; // adjust motor speed later
+      public static final int kLevel1 = 30;// in inches??
+
     }
   }
 
