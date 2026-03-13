@@ -111,7 +111,8 @@ public class ShooterSubsystem extends SubsystemBase {
    * setpoint.
    */
   private void setFlywheelVelocity(double velocity) {
-    flywheelController.setSetpoint(velocity, ControlType.kMAXMotionVelocityControl);
+    // flywheelController.setSetpoint(velocity, ControlType.kMAXMotionVelocityControl);
+    flywheelController.setSetpoint(velocity, ControlType.kDutyCycle);
     flywheelTargetVelocity = velocity;
   }
   

@@ -38,7 +38,7 @@ public class SpindexerSubsystem extends SubsystemBase{
             () -> {
                 double power = ShooterSubsystemConstants.SpindexerSetpoints.kSpindex;
                 if(spindexer_only){
-                    power *= 0.3;
+                    power *= -0.3;
                 }else{
                     this.setFeederPower(ShooterSubsystemConstants.FeederSetpoints.kFeed);
                 }

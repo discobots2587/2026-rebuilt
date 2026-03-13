@@ -169,21 +169,22 @@ public final class Constants {
     public static final int kFlywheelMotorCanId = 5; // SPARK Flex CAN ID (Right)
     public static final int kFlywheelFollowerMotorCanId = 7; // SPARK Flex CAN ID (Left)
     public static final int kSpindexerCanID = 8;
-    
+
+      public static final double kShootPercentage = 0.035; //was .4    
 
 
     public static final class FeederSetpoints {
-      public static final double kFeed = 0.95;
+      public static final double kFeed = 0.56; //was 95%
     }
 
     public static final class FlywheelSetpoints {
-      public static final double kShootPercentage = 0.05/5;
-      public static final double kShootRpm = -(5676*kShootPercentage); //was -5000 and 5676 is the max rpm 
+      public static final double kShootRpm = -(0.635); //was -5000 and 5676 is the max rpm 
+      // public static final double kShootRpm = -(5676*kShootPercentage); //was -5000 and 5676 is the max rpm 
       public static final double kVelocityTolerance = 100;
     }
 
     public static final class SpindexerSetpoints {
-      public static final double kSpindex = -0.45; // adjust motor speed later
+      public static final double kSpindex = -0.475; // adjust motor speed later
     }
 
     public static final class HubTarget {
@@ -233,9 +234,9 @@ public final class Constants {
         // Front Camera
         new Transform3d(
             new Translation3d(
-              Inches.of(2.25).in(Meters),  // X: Front
-              Inches.of(-12.0).in(Meters),  // Y: Left
-              Inches.of(23.0).in(Meters)  // Z: Up
+              Inches.of(2.25).in(Meters),  // X: Front 2.25
+              Inches.of(14).in(Meters),  // Y: Left -12.5
+              Inches.of(23.5).in(Meters)  // Z: Up
               
             ),
             new Rotation3d(0, 0, 0)
@@ -243,11 +244,11 @@ public final class Constants {
         // LSide Camera
         new Transform3d(
           new Translation3d(
-            Inches.of(2.0).in(Meters),   // X:  Front
+            Inches.of(3.0).in(Meters),   // X:  Front
             Inches.of(15.0).in(Meters),  // Y:  Right 
-            Inches.of(16).in(Meters)   // Z: Up
+            Inches.of(18.5).in(Meters)   // Z: Up
           ),
-          new Rotation3d(0, 0, -90)
+          new Rotation3d(0, 0, Math.PI/2)
         ),
     };
   }

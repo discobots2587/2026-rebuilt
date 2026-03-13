@@ -154,6 +154,9 @@ public class Vision extends SubsystemBase {
 
                 latestUsedPoses[i] = estPose.estimatedPose;
                 Pose2d pose = estPose.estimatedPose.toPose2d();
+                SmartDashboard.putNumber("vision/e_field/getX", pose.getX());
+                SmartDashboard.putNumber("vision/e_field/getY", pose.getY());
+                SmartDashboard.putNumber("vision/e_field/getYaw", pose.getRotation().getDegrees());
               //  System.out.println(pose); //over here
 
                 double normSpeed = new Translation2d(chassisSpeedsSupplier.get().vxMetersPerSecond,
