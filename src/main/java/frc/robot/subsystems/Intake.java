@@ -8,13 +8,16 @@ import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkMax;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Configs;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.IntakeConstants.IntakeArmSetPoints;
 import frc.robot.Constants.IntakeConstants.IntakeSetPoints;
+import frc.robot.Constants.ShooterSubsystemConstants.FlywheelSetpoints;
 
 public class Intake extends SubsystemBase {
   private final SparkMax intakeMotor;
@@ -91,7 +94,21 @@ public class Intake extends SubsystemBase {
         }).withName("Lowering Arm");
     }
 
-  //add command to raise and lower arm
+  //add command to raise and lower 
+
+
+private boolean isSpinnerAt(double velocity) {
+    return MathUtil.isNear(intakeMotor.getOutputCurrent(), 
+            velocity, FlywheelSetpoints.kVelocityTolerance);
+  }
+
+  /** 
+   * Trigger: Is the flywheel spinning at the required velocity?
+   */
+   
+  public final Trigger isFlywheelSpinning = new Trigger(
+      () -> isSpinnerAt(IntakeArmSetPoints.kStallCurrentThreshehold) // || flywheelEncoder.getVelocity() > FlywheelSetpoints.kShootRpm 
+  );
 
   @Override
   public void periodic() {

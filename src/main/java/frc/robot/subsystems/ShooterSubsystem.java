@@ -13,6 +13,7 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -46,6 +47,7 @@ public class ShooterSubsystem extends SubsystemBase {
   //     new SparkMax(ShooterSubsystemConstants.kSpindexerCanID, MotorType.kBrushless);
 
   // Member variables for subsystem state management
+  
   private double flywheelTargetVelocity = 0.0;
   private boolean runSpindexer =  false;
   /** Creates a new ShooterSubsystem. */
@@ -77,6 +79,7 @@ public class ShooterSubsystem extends SubsystemBase {
     //   Configs.ShooterSubsystem.spindexerConfig,
     //   ResetMode.kResetSafeParameters,
     //   PersistMode.kPersistParameters);
+  
 
     // Zero flywheel encoder on initialization
     flywheelEncoder.setPosition(0);
@@ -236,6 +239,12 @@ public class ShooterSubsystem extends SubsystemBase {
     SmartDashboard.putBoolean("Is Flywheel Spinning", isFlywheelSpinning.getAsBoolean());
     SmartDashboard.putBoolean("Is Flywheel Stopped", isFlywheelStopped.getAsBoolean());
     SmartDashboard.putBoolean("Is Flywheel Spinning Backwards", runSpindexer);
+
+    SmartDashboard.putNumber("Shooter | Flywheel | Voltage", flywheelMotor.getBusVoltage());
+    SmartDashboard.putNumber("Shooter | Flywheel | Output", flywheelMotor.getAppliedOutput());
+    SmartDashboard.putNumber("Shooter | Flywheel | Current", flywheelMotor.getOutputCurrent());
+    SmartDashboard.putNumber("Shooter | Flywheel | Velocity", flywheelEncoder.getVelocity());
   }
+
 
 }
