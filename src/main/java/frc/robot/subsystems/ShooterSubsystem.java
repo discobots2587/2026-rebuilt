@@ -92,6 +92,7 @@ public class ShooterSubsystem extends SubsystemBase {
   /** 
    * Trigger: Is the flywheel spinning at the required velocity?
    */
+   
   public final Trigger isFlywheelSpinning = new Trigger(
       () -> isFlywheelAt(FlywheelSetpoints.kShootRpm) || flywheelEncoder.getVelocity() > FlywheelSetpoints.kShootRpm 
   );
@@ -104,6 +105,9 @@ public class ShooterSubsystem extends SubsystemBase {
    * Trigger: Is the flywheel stopped?
    */
   public final Trigger isFlywheelStopped = new Trigger(() -> isFlywheelAt(0));
+  
+
+
 
   /**
    * Drive the flywheels to their set velocity. This will use MAXMotion
@@ -112,7 +116,7 @@ public class ShooterSubsystem extends SubsystemBase {
    */
   private void setFlywheelVelocity(double velocity) {
     // flywheelController.setSetpoint(velocity, ControlType.kMAXMotionVelocityControl);
-    flywheelController.setSetpoint(velocity, ControlType.kDutyCycle);
+    flywheelController.setSetpoint(velocity, ControlType.kVoltage); //was duty cycle for percentage
     flywheelTargetVelocity = velocity;
   }
   
