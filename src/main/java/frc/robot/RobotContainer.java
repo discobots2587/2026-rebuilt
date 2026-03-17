@@ -64,6 +64,7 @@ public class RobotContainer {
 
     // The driver's controller
     CommandXboxController m_driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
+    CommandXboxController m_operatorController = new CommandXboxController(OIConstants.kOperatorControllerPort);
     // XboxController m_driverController = new
     // XboxController(OIConstants.kDriverControllerPort);
 
@@ -132,86 +133,45 @@ public class RobotContainer {
         //                 () -> m_robotDrive.setX(),
         //                 m_robotDrive));
 
-        // new JoystickButton(m_driverController,
-        // CommandXboxController.Button.kStart.value)
-        // .onTrue(new InstantCommand(
-        // () -> m_robotDrive.zeroHeading(),
-        // m_robotDrive));
-
+        //Driver Controller Commands
+        //Reset Heading
         m_driverController.start().onTrue(new InstantCommand(
                 () -> m_robotDrive.zeroHeading(),
                 m_robotDrive));
-
-        // This is the intake button (L1) so you can test if it works or change it.
-        // Also this should work on the driver controller and we can maybe change it
-        // later to the operator controller if we have one.
-        // new JoystickButton(m_driverController, Button.kL1.value)
-        // new JoystickButton(m_driverController,
-        // CommandXboxController.Button.kLeftBumper.value)
-        // .whileTrue(new RunCommand(
-        // () -> m_intake.runIntakeCommand(),
-        // m_intake));
-
-        // m_driverController.leftBumper().toggleOnTrue(new RunCommand(
-        //         () -> m_intake.runIntakeCommand(),
-        //         m_intake));
+        
+        //Intake Commands
         m_driverController.leftBumper().toggleOnTrue(m_intake.runIntakeCommand());
 
-
-
-        // new JoystickButton(m_driverController,
-        // CommandXboxController.Button.kRightBumper.value) //change the left trigger
-        // .whileTrue(new RunCommand(
-        // () -> m_intake.runOuttakeCommand(),
-        // m_intake));
-
-        // m_driverController.rightBumper().toggleOnTrue(new RunCommand(
-        //         () -> m_intake.runOuttakeCommand(),
-        //         m_intake));
-
         m_driverController.rightBumper().toggleOnTrue(m_intake.runOuttakeCommand());
-        
 
-        // new JoystickButton(m_driverController,
-        // XboxController.Button.kLeftTrigger.value)
-        // .whileTrue(m_intake.runLowerCommand());
-        // new JoystickButton(m_driverController,
-        // XboxController.Button.kRightTrigger.value)
-        // .whileTrue(m_intake.runRaiseCommand());
         m_driverController
                 .leftTrigger(OIConstants.kTriggerButtonThreshold)
                 .whileTrue(m_intake.runLowerCommand());
         m_driverController
                 .rightTrigger(OIConstants.kTriggerButtonThreshold)
                 .whileTrue(m_intake.runRaiseCommand());
-
-        // new JoystickButton(m_driverController, CommandXboxController.Button.kY.value)
-        //         .toggleOnTrue(m_shooter.runShooterCommand());
         
+        //Shooter Commands
         m_driverController.y().toggleOnTrue(m_shooter.runShooterCommand()); 
         m_driverController.b().toggleOnTrue(m_spindexer.runSpindexerCommand(false)); //runs the spinsdexer and the indexer(feeder) 
         m_driverController.x().whileTrue(m_hood.runHoodCommand());
         m_driverController.a().whileTrue(m_hood.runbackHoodCommand());
 
-
-        // new JoystickButton(m_driverController,
-        // XboxController.Button.kY.value).toggleOnTrue(m_shooter.runShooterCommand().alongWith(m_intake.runIntakeCommand()));
-        // new JoystickButton(m_driverController, CommandXboxController.Button.kB.value)
-        //         .whileTrue(m_climber.runClimbCommand()); // change button later (if needed)
-
-        //m_driverController.pov(0).whileTrue(m_climber.runClimbCommand()); //og command 
-        m_driverController.pov(0).toggleOnTrue(m_climber.autoClimberCommand()); //testing for one click climber
-
-
-        // new JoystickButton(m_driverController, CommandXboxController.Button.kA.value)
-        //         .whileTrue(m_climber.runDescendCommand()); // change button later (if needed)
+        //Climber Commands
+        m_driverController.pov(0).whileTrue(m_climber.runClimbCommand()); //og command 
+        // m_driverController.pov(0).toggleOnTrue(m_climber.autoClimberCommand()); //testing for one click climber 
         
         m_driverController.pov(180).whileTrue(m_climber.runDescendCommand());
 
+        //Auto Align Command
         m_driverController.pov(90).whileTrue(m_AlignToHub);
 
-        m_driverController.pov(270).toggleOnTrue(m_spindexer.runSpindexerCommand(true));
-
+        //Operator Controller Commands
+        //Shooter Commands
+        m_operatorController.y().toggleOnTrue(m_shooter.runShooterCommand()); 
+        m_operatorController.b().toggleOnTrue(m_spindexer.runSpindexerCommand(false)); //runs the spinsdexer and the indexer(feeder) 
+        m_operatorController.pov(0).whileTrue(m_hood.runHoodCommand());
+        m_operatorController.pov(180).whileTrue(m_hood.runbackHoodCommand());       
     }
 
 

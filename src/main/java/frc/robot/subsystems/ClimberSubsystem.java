@@ -49,6 +49,7 @@ public class ClimberSubsystem extends SubsystemBase {
       }).withName("Descending");
   }
    public Command autoClimberCommand(){
+        // this cmmand needs a limit either software or hardware as during testing it came off the sprocket.
         return this.runOnce(() -> {
             final Timer m_time = new Timer();
             m_time.restart();
