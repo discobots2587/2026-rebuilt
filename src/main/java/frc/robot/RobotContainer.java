@@ -152,10 +152,10 @@ public class RobotContainer {
                 .whileTrue(m_intake.runRaiseCommand());
         
         //Shooter Commands
-        m_driverController.y().toggleOnTrue(m_shooter.runShooterCommand()); 
-        m_driverController.b().toggleOnTrue(m_spindexer.runSpindexerCommand(false)); //runs the spinsdexer and the indexer(feeder) 
-        m_driverController.x().whileTrue(m_hood.runHoodCommand());
-        m_driverController.a().whileTrue(m_hood.runbackHoodCommand());
+        // m_driverController.y().toggleOnTrue(m_shooter.runShooterCommand()); 
+        // m_driverController.b().toggleOnTrue(m_spindexer.runSpindexerCommand(false)); //runs the spinsdexer and the indexer(feeder) 
+        // m_driverController.x().whileTrue(m_hood.runHoodCommand());
+        // m_driverController.a().whileTrue(m_hood.runbackHoodCommand());
 
         //Climber Commands
         m_driverController.pov(0).whileTrue(m_climber.runClimbCommand()); //og command 
