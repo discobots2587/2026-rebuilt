@@ -1,150 +1,123 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.VisionConstants;
-import frc.robot.Constants.ShooterSubsystemConstants.HubTarget;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.Vision;
 
-import edu.wpi.first.wpilibj2.command.Command;
-
-/* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class AlignToHub extends Command {
-    private final PIDController xController;
-    private final PIDController yController;
     private final PIDController rotController;
     
     private final DriveSubsystem m_drivetrain;
     private final ShooterSubsystem m_shooter;
-    private final Vision m_vision;
-    // Safety timer to stop if we lose the tag for too long
+    
+    // Hub positions (field coordinates)
+    private static final Translation2d BLUE_HUB = new Translation2d(4.63, 4.03);
+    private static final Translation2d RED_HUB = new Translation2d(11.92, 4.03);
+    
+    private Translation2d targetHub;
     private final Timer safetyTimer = new Timer();
 
-  public AlignToHub(DriveSubsystem drivetrain, ShooterSubsystem shooter, Vision vision) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    m_drivetrain = drivetrain;
-    m_shooter = shooter;
-    m_vision = vision;
+    public AlignToHub(DriveSubsystem drivetrain, ShooterSubsystem shooter) {
+        m_drivetrain = drivetrain;
+        m_shooter = shooter;
 
-    xController = new PIDController(1.0, 0.0, 0.0); // Tune these gains
-    yController = new PIDController(1.0, 0.0, 0.0); // Tune these gains
-    rotController = new PIDController(0.05, 0.0, 0.0); // Tune these gains
+        rotController = new PIDController(0.05, 0.0, 0.01); // Tune rotation gains
+        rotController.setTolerance(2.0); // Degrees
+        rotController.enableContinuousInput(-180, 180);
 
-
-    // Set Tolerances (How close is "good enough"?)
-    xController.setTolerance(HubTarget.kTargetXTol); 
-    yController.setTolerance(HubTarget.kTargetYTol);
-    rotController.setTolerance(2.0); // Degrees
-
-    // Set the goal (Setpoints)
-    // We want to be at kTargetX distance and 0.0 Y offset (centered)
-    xController.setSetpoint(HubTarget.kTargetX);
-    yController.setSetpoint(HubTarget.kTargetY); 
-    rotController.setSetpoint(90.0); // We want 0 degrees rotation error
-    
-    // Allow rotation to wrap around 180 (so it takes the shortest path)
-    rotController.enableContinuousInput(-180, 180);
-
-    addRequirements(m_drivetrain);
-  }
-
-  
-
-
-
-
-// Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-        safetyTimer.restart();
-        
-        // Reset PID loops so they don't remember old errors
-        xController.reset();
-        yController.reset();
-        rotController.reset();
-
-        SmartDashboard.putBoolean("AlignToHub/Running", true);
-  }
-
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-        // 1. Get Target Info
-        Transform3d targetPos = m_vision.getTargetPos();
-        double currentRange = targetPos.getX();
-       // currentRange = diff_x;   remove hack
-        SmartDashboard.putNumber("AlignToHub/X",currentRange);
-        double currentYOffset = targetPos.getY();
-        // currentYOffset = diff_y;  remove hack
-        SmartDashboard.putNumber("AlignToHub/Y",currentYOffset);
-        
-        // IMPORTANT: Ensure your subsystem returns rotation in the Transform3d
-        double currentYawError = Math.toDegrees(targetPos.getRotation().getZ());
-        SmartDashboard.putNumber("AlignToHub/rot",currentYawError); 
-        currentYawError=0;//ignore rotaition
-        // 2. Safety Check: If data is "empty" (0.0), treat as invalid.
-        boolean validTarget = currentRange > 0.01 && currentRange < 4.0; //could work for stopping command
-
-        if (validTarget) {
-            safetyTimer.reset(); // We saw a tag, reset safety timer
-
-            // 3. Calculate Speeds
-            // INVERTED Logic: If range is 2.0 (too far), error is negative, so we must invert to drive forward.
-            double xSpeed = -xController.calculate(currentRange);
-            double ySpeed = -yController.calculate(currentYOffset);
-            double rotSpeed = rotController.calculate(currentYawError);
-
-            // 4. Clamp Speeds (Safety)
-            xSpeed = MathUtil.clamp(xSpeed, -1.0, 1.0);
-            ySpeed = MathUtil.clamp(ySpeed, -1.0, 1.0);
-            rotSpeed = MathUtil.clamp(rotSpeed, -1.0, 1.0);
-
-            // 5. Drive (Robot Relative)
-            m_drivetrain.drive(xSpeed, ySpeed, rotSpeed, false); 
-
-            // Debug
-            SmartDashboard.putNumber("AlignToHub/X_Speed", xSpeed);
-            SmartDashboard.putNumber("AlignToHub/Y_Speed", ySpeed);
-            SmartDashboard.putNumber("AlignToHub/Range", currentRange);
-            SmartDashboard.putNumber("AlignToHub/YOffset", currentYOffset);
-        } else {
-            // Target lost? Stop momentarily (or hunt if you prefer)
-            m_drivetrain.drive(0, 0, 0, false); 
-        }
-  }
-
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {
-        m_drivetrain.drive(0, 0, 0, false);
-        
-        SmartDashboard.putBoolean("AlignToHub/Running", false);
-        SmartDashboard.putBoolean("AlignToHub/Finished", !interrupted);
-  }
-
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    boolean atX = xController.atSetpoint();
-    boolean atY = yController.atSetpoint();
-    // boolean atRot = rotController.atSetpoint(); // Optional: enable if rotation is critical
-
-    // Timeout safety: If we haven't seen a tag for 0.5 seconds, just quit.
-    if (safetyTimer.hasElapsed(0.5)) {
-        return true;
+        addRequirements(m_drivetrain);
     }
 
-    return atX && atY; 
-  }
+    @Override
+    public void initialize() {
+        safetyTimer.restart();
+        rotController.reset();
+        
+        // Determine target hub based on alliance
+        var alliance = DriverStation.getAlliance();
+        if (alliance.isPresent()) {
+            if (alliance.get() == Alliance.Blue) {
+                targetHub = BLUE_HUB;
+                SmartDashboard.putString("AlignToHub/TargetAlliance", "BLUE");
+            } else {
+                targetHub = RED_HUB;
+                SmartDashboard.putString("AlignToHub/TargetAlliance", "RED");
+            }
+        } else {
+            // No alliance yet, default to blue (shouldn't happen in match)
+            targetHub = BLUE_HUB;
+            SmartDashboard.putString("AlignToHub/TargetAlliance", "UNKNOWN");
+        }
+        
+        SmartDashboard.putNumber("AlignToHub/TargetX", targetHub.getX());
+        SmartDashboard.putNumber("AlignToHub/TargetY", targetHub.getY());
+        SmartDashboard.putBoolean("AlignToHub/Running", true);
+    }
+
+    @Override
+    public void execute() {
+        // Get current robot pose from odometry/vision
+        Pose2d robotPose = m_drivetrain.getPose();
+        
+        SmartDashboard.putNumber("AlignToHub/RobotX", robotPose.getX());
+        SmartDashboard.putNumber("AlignToHub/RobotY", robotPose.getY());
+        SmartDashboard.putNumber("AlignToHub/RobotHeading", robotPose.getRotation().getDegrees());
+        
+        // Calculate vector from robot to hub
+        Translation2d robotToHub = targetHub.minus(robotPose.getTranslation());
+        
+        // Calculate desired heading (angle toward hub)
+        double desiredHeading = Math.atan2(robotToHub.getY(), robotToHub.getX());
+        desiredHeading = Math.toDegrees(desiredHeading);
+        
+        // Get current heading
+        double currentHeading = robotPose.getRotation().getDegrees();
+        
+        // Calculate heading error
+        double headingError = desiredHeading - currentHeading;
+        
+        // Normalize error to [-180, 180]
+        while (headingError > 180) headingError -= 360;
+        while (headingError < -180) headingError += 360;
+        
+        SmartDashboard.putNumber("AlignToHub/DesiredHeading", desiredHeading);
+        SmartDashboard.putNumber("AlignToHub/HeadingError", headingError);
+        
+        // Calculate rotation speed using PID
+        double rotSpeed = rotController.calculate(currentHeading, desiredHeading);
+        rotSpeed = MathUtil.clamp(rotSpeed, -1.0, 1.0);
+        
+        SmartDashboard.putNumber("AlignToHub/RotSpeed", rotSpeed);
+        
+        // OVERRIDE: Drive with rotation only (no x/y movement from driver)
+        // This completely ignores driver input and only uses our calculated rotation
+        m_drivetrain.drive(0, 0, rotSpeed, false);
+        
+        safetyTimer.reset();
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        m_drivetrain.drive(0, 0, 0, false);
+        SmartDashboard.putBoolean("AlignToHub/Running", false);
+        SmartDashboard.putBoolean("AlignToHub/Finished", !interrupted);
+    }
+
+    @Override
+    public boolean isFinished() {
+        // Finish when heading is aligned to hub
+        if (safetyTimer.hasElapsed(5.0)) {
+            return true; // Safety timeout
+        }
+        
+        return rotController.atSetpoint();
+    }
 }
