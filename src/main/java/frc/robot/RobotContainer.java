@@ -60,7 +60,7 @@ public class RobotContainer {
     private SendableChooser<Command> autoChooser;
 
     //test align
-    private final AlignToHub m_AlignToHub = new AlignToHub(m_robotDrive, m_shooter,  vision);
+    private final AlignToHub m_AlignToHub = new AlignToHub(m_robotDrive, m_shooter);
 
     // The driver's controller
     CommandXboxController m_driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
@@ -163,8 +163,8 @@ public class RobotContainer {
         
         m_driverController.pov(180).whileTrue(m_climber.runDescendCommand());
 
-        //Auto Align Command
-        m_driverController.pov(90).whileTrue(m_AlignToHub);
+        //Auto Align Command - Toggle on DPad Right (90)
+        m_driverController.pov(90).toggleOnTrue(m_AlignToHub);
 
         //Operator Controller Commands
         //Shooter Commands
