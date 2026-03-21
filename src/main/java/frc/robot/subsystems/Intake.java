@@ -192,7 +192,7 @@ public class Intake extends SubsystemBase {
   StartEndCommand lowerPowerCmd = new StartEndCommand(
     () -> moveIntakeArmToRotations(lowerTarget),
     () -> { setIntakeArmPower(0); setIntakeArmFollowerPower(0); },
-    this);
+    this); 
   WaitUntilCommand lowerWait = new WaitUntilCommand(() -> Math.abs(getIntakeArmRotations() - lowerTarget) <= tolerance);
 
   // ParallelRaceGroup will finish when either the powering command ends (due to timeout) or the WaitUntil succeeds.
