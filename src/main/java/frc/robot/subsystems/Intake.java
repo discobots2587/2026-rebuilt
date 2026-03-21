@@ -6,11 +6,20 @@ package frc.robot.subsystems;
 
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkBase.ControlType;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Configs;
@@ -23,6 +32,13 @@ public class Intake extends SubsystemBase {
   private final SparkMax intakeMotor;
   private final SparkMax intakeArmMotor;
   private final SparkMax intakeArmFollowerMotor;
+  // Encoder and closed-loop controller for the intake arm
+  private RelativeEncoder intakeArmEncoder;
+  private SparkClosedLoopController intakeArmController;
+  // Safety limits (rotations) and default timeout (seconds)
+  private double m_minIntakeArmRotations = -2.0; // tune to your mechanism
+  private double m_maxIntakeArmRotations = 20.0; // tune to your mechanism
+  private double m_moveTimeoutSeconds = 3.0;
 
   public Intake() {
     // initializing motors
@@ -33,6 +49,17 @@ public class Intake extends SubsystemBase {
     intakeMotor.configure(Configs.IntakeSubsystem.intakeMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     intakeArmMotor.configure(Configs.IntakeSubsystem.intakeArmMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     intakeArmFollowerMotor.configure(Configs.IntakeSubsystem.intakeArmFollowerMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+  // Initialize encoder and closed-loop controller for intake arm
+  intakeArmEncoder = intakeArmMotor.getEncoder();
+  intakeArmController = intakeArmMotor.getClosedLoopController();
+  // Optionally zero the encoder at startup
+  intakeArmEncoder.setPosition(0);
+
+  // Publish safety limits to SmartDashboard for tuning
+  SmartDashboard.putNumber("IntakeArm/MinRotations", m_minIntakeArmRotations);
+  SmartDashboard.putNumber("IntakeArm/MaxRotations", m_maxIntakeArmRotations);
+  SmartDashboard.putNumber("IntakeArm/MoveTimeout", m_moveTimeoutSeconds);
 
   }
   //Everything below this, feel free to do whatever you want with it since im not sure if it even works.
@@ -94,6 +121,93 @@ public class Intake extends SubsystemBase {
         }).withName("Lowering Arm");
     }
 
+  public Command runPlow(){
+    // Simple sequence: raise the arm for a set duration, then lower it.
+    // This implementation uses timed open-loop commands. If you prefer
+    // position control, use moveIntakeArmToRotations and related methods.
+    return this.startEnd(
+      () -> {
+        this.setIntakeArmPower(IntakeArmSetPoints.kRaise);
+      },
+      () -> {
+        this.setIntakeArmPower(0);
+      }
+    ).withTimeout(0.5)
+    .andThen(new WaitCommand(0.1))
+    .andThen(this.startEnd(
+      () -> { this.setIntakeArmPower(IntakeArmSetPoints.kLower); },
+      () -> { this.setIntakeArmPower(0); }
+    ).withTimeout(0.5)).withName("PlowSequence");
+  }
+
+  /** Returns the intake arm encoder position in rotations. */
+  public double getIntakeArmRotations() {
+    if (intakeArmEncoder != null) {
+      return intakeArmEncoder.getPosition();
+    }
+    return 0.0;
+  }
+
+  /** Resets the intake arm encoder to zero. */
+  public void resetIntakeArmEncoder() {
+    if (intakeArmEncoder != null) {
+      intakeArmEncoder.setPosition(0);
+    }
+  }
+
+  /** Move the intake arm to a target in motor rotations using closed-loop position control. */
+  public void moveIntakeArmToRotations(double rotations) {
+    // Clamp target to safety limits
+    double target = Math.max(m_minIntakeArmRotations, Math.min(m_maxIntakeArmRotations, rotations));
+    if (intakeArmController != null) {
+      // Use position control (native SparkMax position setpoint is in rotations)
+      intakeArmController.setSetpoint(target, ControlType.kPosition);
+    } else {
+      // Fallback: open-loop approximate control (not precise)
+      double power = target > getIntakeArmRotations() ? IntakeArmSetPoints.kRaise : IntakeArmSetPoints.kLower;
+      intakeArmMotor.set(power);
+    }
+  }
+
+  /**
+   * Position-based command that moves the intake arm to raiseRotations then back to lowerRotations.
+   * It waits until the encoder reports within tolerance of the target before proceeding.
+   */
+  public Command runArmCyclePositionCommand(double raiseRotations, double lowerRotations, double tolerance) {
+    // Clamp inputs to safety limits
+    double raiseTarget = Math.max(m_minIntakeArmRotations, Math.min(m_maxIntakeArmRotations, raiseRotations));
+    double lowerTarget = Math.max(m_minIntakeArmRotations, Math.min(m_maxIntakeArmRotations, lowerRotations));
+
+    // Build robust move-to-target command: power the arm (set closed-loop setpoint)
+    // until the encoder is within tolerance or the timeout expires. Use a
+    // ParallelRaceGroup so either the arrival condition or the timeout ends
+    // the powering command. The startEnd ensures motors are stopped on end
+    // or interruption.
+  StartEndCommand raisePowerCmd = new StartEndCommand(
+    () -> moveIntakeArmToRotations(raiseTarget),
+    () -> { setIntakeArmPower(0); setIntakeArmFollowerPower(0); },
+    this);
+  WaitUntilCommand raiseWait = new WaitUntilCommand(() -> Math.abs(getIntakeArmRotations() - raiseTarget) <= tolerance);
+
+  StartEndCommand lowerPowerCmd = new StartEndCommand(
+    () -> moveIntakeArmToRotations(lowerTarget),
+    () -> { setIntakeArmPower(0); setIntakeArmFollowerPower(0); },
+    this);
+  WaitUntilCommand lowerWait = new WaitUntilCommand(() -> Math.abs(getIntakeArmRotations() - lowerTarget) <= tolerance);
+
+  // ParallelRaceGroup will finish when either the powering command ends (due to timeout) or the WaitUntil succeeds.
+  ParallelRaceGroup raisePhase = new ParallelRaceGroup(raisePowerCmd, raiseWait).withTimeout(m_moveTimeoutSeconds);
+  ParallelRaceGroup lowerPhase = new ParallelRaceGroup(lowerPowerCmd, lowerWait).withTimeout(m_moveTimeoutSeconds);
+
+    SequentialCommandGroup seq = new SequentialCommandGroup(raisePhase, lowerPhase);
+
+    // Ensure motors are stopped if the overall sequence ends or is interrupted.
+    return seq.withName("ArmCyclePosition").andThen(new InstantCommand(() -> {
+      setIntakeArmPower(0);
+      setIntakeArmFollowerPower(0);
+    }, this));
+  }
+
   //add command to raise and lower 
 
 
@@ -115,5 +229,11 @@ private boolean isSpinnerAt(double velocity) {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Intake/ Applied Output", intakeMotor.getAppliedOutput());
     SmartDashboard.putNumber("IntakeArm/Applied Output", intakeArmMotor.getAppliedOutput());
+    SmartDashboard.putNumber("IntakeArm/Rotations", getIntakeArmRotations());
+
+    // Read possible updated limits from dashboard
+    m_minIntakeArmRotations = SmartDashboard.getNumber("IntakeArm/MinRotations", m_minIntakeArmRotations);
+    m_maxIntakeArmRotations = SmartDashboard.getNumber("IntakeArm/MaxRotations", m_maxIntakeArmRotations);
+    m_moveTimeoutSeconds = SmartDashboard.getNumber("IntakeArm/MoveTimeout", m_moveTimeoutSeconds);
   }
 }
