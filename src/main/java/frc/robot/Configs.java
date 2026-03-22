@@ -127,7 +127,7 @@ public final class Configs {
     
           // Configure basic setting of the feeder motor
           feederConfig
-            .inverted(true)
+            .inverted(false)
             .idleMode(IdleMode.kCoast)
             .openLoopRampRate(1.0)
             .smartCurrentLimit(60);
