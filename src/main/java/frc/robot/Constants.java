@@ -215,6 +215,13 @@ public final class Constants {
       public static final double kDescend = -0.8; // adjust motor speed later
       public static final int kLevel1 = 30;// in inches??
 
+
+      //tune these
+
+      public static final float kMaxExtensionRotations = 50.0f;
+      public static final float kMinExtensionRotations = 0.0f;
+
+
     }
   }
 

@@ -3,6 +3,7 @@ package frc.robot;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.config.AbsoluteEncoderConfig;
+import com.revrobotics.spark.config.LimitSwitchConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
@@ -77,8 +78,33 @@ public final class Configs {
 
         static {
                 climberMotorConfig.inverted(false).idleMode(IdleMode.kBrake).smartCurrentLimit(40); //change later
+
+                climberMotorConfig
+                .inverted(false)
+                .idleMode(IdleMode.kBrake)
+                .smartCurrentLimit(40)
+                .secondaryCurrentLimit(60)
+                .openLoopRampRate(0.25);
+
+                climberMotorConfig.limitSwitch
+                .forwardLimitSwitchEnabled(true)
+                .reverseLimitSwitchEnabled(true)
+                .forwardLimitSwitchType(LimitSwitchConfig.Type.kNormallyClosed)  // fail-safe
+                .reverseLimitSwitchType(LimitSwitchConfig.Type.kNormallyClosed);
+
+                climberMotorConfig.softLimit
+                .forwardSoftLimitEnabled(true)
+                .forwardSoftLimit(Constants.ClimberSubsystemConstants.ClimberSetPoints.kMaxExtensionRotations)
+                .reverseSoftLimitEnabled(true)
+                .reverseSoftLimit(Constants.ClimberSubsystemConstants.ClimberSetPoints.kMinExtensionRotations);
+
+
         }
     }
+
+
+
+
     public static final class ShooterSubsystem {
         public static final SparkMaxConfig flywheelConfig = new SparkMaxConfig();
         public static final SparkMaxConfig flywheelFollowerConfig = new SparkMaxConfig();
