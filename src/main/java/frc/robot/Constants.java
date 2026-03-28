@@ -210,6 +210,8 @@ public final class Constants {
   public static final class ClimberSubsystemConstants {
     public static final int kClimberMotorCanId = 60; // change later
 
+    public static final int kClimberLimitSwitchPort = 0;  // dio port for limit switch
+
     public static final class ClimberSetPoints {
       public static final double kClimb = 0.8; // adjust motor speed later
       public static final double kDescend = -0.8; // adjust motor speed later
