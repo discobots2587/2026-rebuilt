@@ -7,37 +7,50 @@
         {
           "type": "named",
           "data": {
-            "name": "ShooterHub"
+            "name": "ShooterLR"
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "Bmid"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "RLeftGoClimb"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Climber"
+                }
+              }
+            ]
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 5.0
+            "waitTime": 2.0
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Mid Shoot"
+            "pathName": "RLeftReadyClimb"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "ShooterHub"
+            "name": "Descend"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "BlueBasic",
+  "folder": "RedBasic",
   "choreoAuto": false
 }

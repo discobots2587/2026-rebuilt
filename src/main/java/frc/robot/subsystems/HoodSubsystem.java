@@ -19,8 +19,21 @@ public class HoodSubsystem extends SubsystemBase{
         hoodMotor.configure(Configs.ShooterSubsystem.hoodConfig, ResetMode.kNoResetSafeParameters,PersistMode.kPersistParameters);
 
     }
-    private void setHoodMotorPower(double power){
+    public void setHoodMotorPower(double power){
     hoodMotor.set(power);
+    }
+    
+    /**
+     * Moves hood to a specific angle using closed-loop control
+     * @param targetAngle Target hood angle (in degrees or rotations depending on your mechanism)
+     */
+    public void moveHoodToAngle(double targetAngle) {
+        // If you have a closed-loop controller, use it here
+        // Otherwise, you can use open-loop with a timeout
+        // This depends on your hood motor configuration
+        
+        // Placeholder - adjust based on your actual hood implementation
+        // hoodController.setSetpoint(targetAngle, ControlType.kPosition);
     }
     
   public Command runHoodCommand(){

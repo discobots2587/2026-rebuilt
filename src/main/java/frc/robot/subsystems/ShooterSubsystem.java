@@ -121,7 +121,7 @@ public class ShooterSubsystem extends SubsystemBase {
    * velocity control which will allow for a smooth acceleration and deceleration to the mechanism's
    * setpoint.
    */
-  private void setFlywheelVelocity(double velocity) {
+  public void setFlywheelVelocity(double velocity) {
     // flywheelController.setSetpoint(velocity, ControlType.kMAXMotionVelocityControl);
     flywheelController.setSetpoint(velocity, ControlType.kVoltage); //was duty cycle for percentage
     flywheelTargetVelocity = velocity;

@@ -22,6 +22,7 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.AlignToHub;
+import frc.robot.commands.ShooterWithParametersCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.HoodSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -88,7 +89,29 @@ public class RobotContainer {
         
         // Registered named commands for Path Planner.
         NamedCommands.registerCommand("Shooter", m_shooter.runShooterCommand());
-        // NamedCommands.registerCommand("Climb", m_shooter.runClimbCommand());
+    
+        // Register preset shooter configurations for different positions
+        NamedCommands.registerCommand("ShooterHub", 
+                new ShooterWithParametersCommand(m_shooter, m_hood, 0.75, 0.0)); // Full speed, 45° hood
+        
+        NamedCommands.registerCommand("ShooterLR", 
+                new ShooterWithParametersCommand(m_shooter, m_hood, 0.675, 0.0)); // 80% speed, 35° hood
+        
+        NamedCommands.registerCommand("ShooterTrench", 
+                new ShooterWithParametersCommand(m_shooter, m_hood, 0.675, 35.0)); // 60% speed, 25° hood
+        
+        NamedCommands.registerCommand("ShooterClimb", 
+                new ShooterWithParametersCommand(m_shooter, m_hood, 0.6, 15.0)); // Close range
+        
+        NamedCommands.registerCommand("ShooterDepot", 
+                new ShooterWithParametersCommand(m_shooter, m_hood, 0.675, 15.0)); // Long range
+
+        NamedCommands.registerCommand("ShooterSide", 
+                new ShooterWithParametersCommand(m_shooter, m_hood, 0.7, 15.0)); // Long range
+
+        NamedCommands.registerCommand("Climber", m_climber.runClimbCommand());
+        NamedCommands.registerCommand("Descend", m_climber.runDescendCommand());
+
 
                 try {
                         autoChooser = AutoBuilder.buildAutoChooser();

@@ -13,7 +13,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Bmid"
+            "pathName": "RRefuel"
           }
         },
         {
@@ -25,7 +25,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Mid Shoot"
+            "pathName": "RMidRush"
           }
         },
         {
@@ -38,6 +38,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "BlueBasic",
+  "folder": "RedBasic",
   "choreoAuto": false
 }

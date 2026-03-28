@@ -13,7 +13,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Shooter"
+            "name": "ShooterLR"
           }
         },
         {
@@ -27,11 +27,23 @@
           "data": {
             "pathName": "BClimbL"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Climber"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Descend"
+          }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "BlueBasic",
   "choreoAuto": false
 }
