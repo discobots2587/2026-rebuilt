@@ -88,8 +88,6 @@ public class RobotContainer {
         
         // Registered named commands for Path Planner.
         NamedCommands.registerCommand("Shooter", m_shooter.runShooterCommand());
-        // NamedCommands.registerCommand("Climb", m_shooter.runClimbCommand());
-
                 try {
                         autoChooser = AutoBuilder.buildAutoChooser();
                 } catch (RuntimeException e) {
