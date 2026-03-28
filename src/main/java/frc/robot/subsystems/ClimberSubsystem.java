@@ -1,67 +1,68 @@
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
 package frc.robot.subsystems;
-
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Configs;
+import frc.robot.Constants;
 import frc.robot.Constants.ClimberSubsystemConstants;
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.SparkLimitSwitch;
-
 public class ClimberSubsystem extends SubsystemBase {
+  /** Creates a new ClimberSubsystem. */
+private final SparkMax climberMotor;
+public ClimberSubsystem() {
+  // Initialize the climber motor
+  climberMotor = new SparkMax(ClimberSubsystemConstants.kClimberMotorCanId, SparkMax.MotorType.kBrushless);
+  //config climber motor
+  climberMotor.configure(Configs.ClimberSubsystem.climberMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+  }
+private void setClimberPower(double power) {
+  climberMotor.set(power);
+  } 
+public Command runClimbCommand() {
+  return this.startEnd(
+        () -> {
+  this.setClimberPower(ClimberSubsystemConstants.ClimberSetPoints.kClimb);
+        }, () -> {
+  this.setClimberPower(0);
+      }).withName("Climbing");
+  }
 
-    private final SparkMax climberMotor;
-
-    public ClimberSubsystem() {
-        climberMotor = new SparkMax(
-            ClimberSubsystemConstants.kClimberMotorCanId,
-            SparkMax.MotorType.kBrushless
-        );
-        climberMotor.configure(
-            Configs.ClimberSubsystem.climberMotorConfig,
-            ResetMode.kResetSafeParameters,
-            PersistMode.kPersistParameters
-        );
+public Command runDescendCommand() {
+  return this.startEnd(
+        () -> {
+  this.setClimberPower(ClimberSubsystemConstants.ClimberSetPoints.kDescend);
+        },() -> {
+  this.setClimberPower(0);
+        }).withName("Descending");
+  }
+  
+public Command autoClimberCommand(){
+  // this cmmand needs a limit either software or hardware as during testing it came off the sprocket.
+  return this.runOnce(() -> {
+    final Timer m_time = new Timer();
+    m_time.restart();
+                ;
+    while (!m_time.hasElapsed(2.0)){ //Was 2.0 in Space City
+    setClimberPower(ClimberSubsystemConstants.ClimberSetPoints.kClimb);;
+    /**
+                    if (Timer.getMatchTime() > 3){
+                        autoStopClimber();
+                    }
+                        */
+                }; 
+    setClimberPower(0.0);
+          });
     }
 
-    private void setClimberPower(double power) {
-        climberMotor.set(power);
-    }
-
-    // Manual climb — held button
-    public Command runClimbCommand() {
-        return this.startEnd(
-            () -> setClimberPower(ClimberSubsystemConstants.ClimberSetPoints.kClimb),
-            () -> setClimberPower(0)
-        ).withName("Climbing");
-    }
-
-    // Manual descend — held button
-    public Command runDescendCommand() {
-        return this.startEnd(
-            () -> setClimberPower(ClimberSubsystemConstants.ClimberSetPoints.kDescend),
-            () -> setClimberPower(0)
-        ).withName("Descending");
-    }
-
-    // Auto climb — runs for a fixed time then stops
-    // Limit switches will cut power automatically if hit before timeout
-    public Command autoClimberCommand() {
-        return this.startEnd(
-            () -> setClimberPower(ClimberSubsystemConstants.ClimberSetPoints.kClimb),
-            () -> setClimberPower(0)
-        )
-        .withTimeout(2.0)  // was 2.0 at Space City
-        .withName("AutoClimbing");
-    }
-
-    @Override
-    public void periodic() {
-        SmartDashboard.putNumber("Climber/Motor Output", climberMotor.getAppliedOutput());
-        SmartDashboard.putNumber("Climber/Encoder Position", climberMotor.getEncoder().getPosition());
-        SmartDashboard.putBoolean("Climber/Forward Limit", climberMotor.getForwardLimitSwitch().isPressed());
-        SmartDashboard.putBoolean("Climber/Reverse Limit", climberMotor.getReverseLimitSwitch().isPressed());
-    }
+  @Override
+public void periodic() {
+// This method will be called once per scheduler run
+SmartDashboard.putNumber("Climber Motor Output", climberMotor.getAppliedOutput());
+  }
 }
