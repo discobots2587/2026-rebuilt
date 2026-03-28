@@ -213,8 +213,8 @@ public final class Constants {
     public static final int kClimberLimitSwitchPort = 0;  // dio port for limit switch
 
     public static final class ClimberSetPoints {
-      public static final double kClimb = 0.8; // adjust motor speed later
-      public static final double kDescend = -0.8; // adjust motor speed later
+      public static final double kClimb = 0.3; // was 80%
+      public static final double kDescend = -0.4; // was 80%
       public static final int kLevel1 = 30;// in inches??
       
 

@@ -58,7 +58,7 @@ public class ShooterSubsystem extends SubsystemBase {
      *
      * kResetSafeParameters is used to get the SPARK to a known state. This
      * is useful in case the SPARK is replaced.
-     *
+     *run
      * kPersistParameters is used to ensure the configuration is not lost when
      * the SPARK loses power. This is useful for power cycles that may occur
      * mid-operation.
@@ -141,6 +141,17 @@ public class ShooterSubsystem extends SubsystemBase {
    * Command to run the flywheel motors. When the command is interrupted, e.g. the button is released,
    * the motors will stop.
    */
+
+   public Command stopShooter(){
+
+     return this.startEnd(
+        () -> {
+          this.setFlywheelVelocity(0);
+        },
+        () -> {
+          this.setFlywheelVelocity(0.0);
+        }).withName("Stop Flywheel");
+   }
   public Command runFlywheelCommand() {
     return this.startEnd(
         () -> {

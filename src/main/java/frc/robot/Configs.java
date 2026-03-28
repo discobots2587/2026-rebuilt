@@ -81,6 +81,7 @@ public final class Configs {
                 climberMotorConfig.inverted(false).idleMode(IdleMode.kBrake).smartCurrentLimit(40); //change later
 
                 climberMotorConfig.limitSwitch.reverseLimitSwitchEnabled(true).reverseLimitSwitchType(Type.kNormallyOpen);
+                climberMotorConfig.limitSwitch.forwardLimitSwitchEnabled(true).reverseLimitSwitchType(Type.kNormallyOpen);
 
         }
     }

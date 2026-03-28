@@ -41,6 +41,7 @@ public class ClimberSubsystem extends SubsystemBase {
   public double getClimberRotations() {
     return climberEncoder.getPosition();
   }
+  
 
   private void zeroClimberOnLimitSwitch() {
     if (!wasResetByLimit && isAtLimit()) {
@@ -61,12 +62,21 @@ public class ClimberSubsystem extends SubsystemBase {
   }
 
   private void setClimberPower(double power) {
-    if (isAtLimit() && power > 0) {
+    if (isAtLimit() && power > 0 ) {
       climberMotor.set(0);
       return;
     }
     climberMotor.set(power);
   }
+
+  private void setdownClimberPower(double power) {
+    if ((isAtLimit() && power > 0) || getClimberRotations() <=4) {
+      climberMotor.set(0);
+      return;
+    }
+    climberMotor.set(power);
+  }
+
 
   public Command runClimbCommand() {
   return this.startEnd(
@@ -85,6 +95,23 @@ public Command runDescendCommand() {
   this.setClimberPower(0);
         }).withName("Descending");
   }
+public Command runLowCommand() {
+  return this.run(
+            () -> this.setClimberPower(ClimberSubsystemConstants.ClimberSetPoints.kDescend)
+        )
+        .until(this::isAtLimit)          // stop if limit switch triggers
+        .finallyDo(() -> this.setClimberPower(0))
+        .withName("AutoRaise");
+  }
+
+  public Command runRaiseCommand() {
+  return this.run(
+            () -> this.setClimberPower(ClimberSubsystemConstants.ClimberSetPoints.kClimb)
+        )
+        .until(this::isAtLimit)          // stop if limit switch triggers
+        .finallyDo(() -> this.setClimberPower(0))
+        .withName("AutoRaise");
+  } 
    public Command autoRaiseCommand() {
         return this.run(
             () -> this.setClimberPower(ClimberSubsystemConstants.ClimberSetPoints.kClimb)
@@ -93,6 +120,7 @@ public Command runDescendCommand() {
         .withTimeout(2.0)                // hard fallback: stop after 2 seconds
         .finallyDo(() -> this.setClimberPower(0))
         .withName("AutoRaise");
+
     }
 
   public Command autoLowerCommand() {
@@ -111,6 +139,8 @@ public Command runDescendCommand() {
 
     SmartDashboard.putNumber("Climber/Motor Output", climberMotor.getAppliedOutput());
     SmartDashboard.putBoolean("Climber/At Limit", isAtLimit());
+    SmartDashboard.putBoolean("Climber/Reverse Limit", climberMotor.getReverseLimitSwitch().isPressed());
+    SmartDashboard.putBoolean("Climber/Forward Limit", climberMotor.getForwardLimitSwitch().isPressed());
     SmartDashboard.putNumber("Climber/Rotations", getClimberRotations());
   }
 }
@@ -212,4 +242,3 @@ SmartDashboard.putBoolean("Climber At Limit", isAtLimit());
   }
 }
 */
-
