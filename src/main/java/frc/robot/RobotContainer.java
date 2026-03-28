@@ -163,15 +163,16 @@ public class RobotContainer {
         
         m_driverController.pov(180).whileTrue(m_climber.runDescendCommand());
 
-        //Auto Align Command - Toggle on DPad Right (90)
-        m_driverController.pov(90).toggleOnTrue(m_AlignToHub);
+        //Auto Align Command
+        m_driverController.pov(90).whileTrue(m_AlignToHub);
 
         //Operator Controller Commands
         //Shooter Commands
         m_operatorController.y().toggleOnTrue(m_shooter.runShooterCommand()); 
         m_operatorController.b().toggleOnTrue(m_spindexer.runSpindexerCommand(false)); //runs the spinsdexer and the indexer(feeder) 
         m_operatorController.pov(0).whileTrue(m_hood.runHoodCommand());
-        m_operatorController.pov(180).whileTrue(m_hood.runbackHoodCommand());       
+        m_operatorController.pov(180).whileTrue(m_hood.runbackHoodCommand()); 
+        m_operatorController.a().toggleOnTrue(m_intake.runArmCyclePositionCommand(0, 0, 0)); 
     }
 
 

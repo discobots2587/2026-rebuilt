@@ -175,7 +175,7 @@ public final class Constants {
     public static final int kSpindexerCanID = 8;
 
 
-    public static final double kShootPercentage = 0.035; //was .4    
+    public static final double kShootPercentage = 0.105; //was .035
 
 
     public static final class FeederSetpoints {
