@@ -5,21 +5,9 @@
     "data": {
       "commands": [
         {
-          "type": "path",
-          "data": {
-            "pathName": "clitest"
-          }
-        },
-        {
           "type": "named",
           "data": {
-            "name": "Climber"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Descend"
+            "name": "Intake"
           }
         }
       ]

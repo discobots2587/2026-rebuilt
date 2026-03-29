@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 16.82,
-        "y": 3.4
+        "x": 15.82222674754969,
+        "y": 3.6499900829940057
       },
       "isLocked": false,
       "linkedName": "mtt"
@@ -17,11 +17,11 @@
     {
       "anchor": {
         "x": 15.82,
-        "y": 3.44
+        "y": 3.55
       },
       "prevControl": {
-        "x": 14.82,
-        "y": 3.44
+        "x": 15.807574424764253,
+        "y": 3.300308980778121
       },
       "nextControl": null,
       "isLocked": false,

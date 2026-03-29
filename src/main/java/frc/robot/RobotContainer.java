@@ -98,7 +98,7 @@ public class RobotContainer {
 
         NamedCommands.registerCommand("Spindexer", m_spindexer.runSpindexerCommand(false).withTimeout(5.0)); //non-timer 
 
-        NamedCommands.registerCommand("Intake", m_intake.runIntakeCommand().withTimeout(5.0)); //non-timer
+        NamedCommands.registerCommand("Intake", m_intake.runIntakeCommand().withTimeout(7.0)); //non-timer
 
         NamedCommands.registerCommand("Intake Arm Raise", m_intake.runRaiseArmCommand().withTimeout(5.0)); //non-timer 
         NamedCommands.registerCommand("Intake Arm Lower", m_intake.runLowArmCommand().withTimeout(5.0)); //non-timer 
@@ -127,7 +127,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("ShooterSide", 
                 new ShooterWithParametersCommand(m_shooter, m_hood, 0.7, 15.0)); // Long range
 
-        NamedCommands.registerCommand("Climber", m_climber.runRaiseCommand().withTimeout(8.0));
+        NamedCommands.registerCommand("Climber", m_climber.runRaiseCommand().withTimeout(3.0));
         NamedCommands.registerCommand("Descend", m_climber.runLowCommand().withTimeout(8.0));
 
 
@@ -152,9 +152,9 @@ public class RobotContainer {
                 // Turning is controlled by the X axis of the right stick.
                 new RunCommand(
                         () -> m_robotDrive.drive(
-                                -MathUtil.applyDeadband(m_driverController.getLeftY() / 2, OIConstants.kDriveDeadband),
-                                -MathUtil.applyDeadband(m_driverController.getLeftX() / 2, OIConstants.kDriveDeadband),
-                                -MathUtil.applyDeadband(m_driverController.getRightX() / 2, OIConstants.kDriveDeadband),
+                                -MathUtil.applyDeadband(m_driverController.getLeftY() * .6, OIConstants.kDriveDeadband),
+                                -MathUtil.applyDeadband(m_driverController.getLeftX() * .6, OIConstants.kDriveDeadband),
+                                -MathUtil.applyDeadband(m_driverController.getRightX() * .6, OIConstants.kDriveDeadband),
                                 true),
                         m_robotDrive));
     }
@@ -186,12 +186,24 @@ public class RobotContainer {
 
         m_driverController.rightBumper().toggleOnTrue(m_intake.runOuttakeCommand());
 
-        m_driverController
+
+
+        //working arm code commented for other command testing
+        // m_driverController
+        //         .leftTrigger(OIConstants.kTriggerButtonThreshold)
+        //         .whileTrue(m_intake.runLowerCommand());
+        // m_driverController
+        //         .rightTrigger(OIConstants.kTriggerButtonThreshold)
+        //         .whileTrue(m_intake.runRaiseCommand());
+
+          m_driverController
                 .leftTrigger(OIConstants.kTriggerButtonThreshold)
-                .whileTrue(m_intake.runLowerCommand());
-        m_driverController
-                .rightTrigger(OIConstants.kTriggerButtonThreshold)
-                .whileTrue(m_intake.runRaiseCommand());
+                 .whileTrue(m_intake.runLowArmCommand());
+         m_driverController
+                 .rightTrigger(OIConstants.kTriggerButtonThreshold)
+                 .whileTrue(m_intake.runRaiseArmCommand());
+
+        
         
         //Shooter Commands
         // m_driverController.y().toggleOnTrue(m_shooter.runShooterCommand()); 

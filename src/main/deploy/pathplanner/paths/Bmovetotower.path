@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.722,
+        "x": 0.71,
         "y": 4.664
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.972,
-        "y": 4.664
+        "x": 0.6988230994152047,
+        "y": 4.3491301169590635
       },
       "isLocked": false,
       "linkedName": "movetoclimbB"
     },
     {
       "anchor": {
-        "x": 0.722,
-        "y": 4.624
+        "x": 0.71,
+        "y": 4.47
       },
       "prevControl": {
-        "x": 0.44339015919911523,
-        "y": 4.624
+        "x": 0.7052339181286551,
+        "y": 4.816184210526315
       },
       "nextControl": null,
       "isLocked": false,

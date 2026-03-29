@@ -51,47 +51,39 @@
                                   }
                                 },
                                 {
-                                  "type": "parallel",
+                                  "type": "path",
                                   "data": {
-                                    "commands": [
-                                      {
-                                        "type": "path",
-                                        "data": {
-                                          "pathName": "BmidGoclimb"
-                                        }
-                                      },
-                                      {
-                                        "type": "sequential",
-                                        "data": {
-                                          "commands": [
-                                            {
-                                              "type": "named",
-                                              "data": {
-                                                "name": "Climber"
-                                              }
-                                            },
-                                            {
-                                              "type": "path",
-                                              "data": {
-                                                "pathName": "Bleftreadyclimb"
-                                              }
-                                            },
-                                            {
-                                              "type": "path",
-                                              "data": {
-                                                "pathName": "Bmovetotower"
-                                              }
-                                            },
-                                            {
-                                              "type": "named",
-                                              "data": {
-                                                "name": "Descend"
-                                              }
-                                            }
-                                          ]
-                                        }
-                                      }
-                                    ]
+                                    "pathName": "BmidGoclimb"
+                                  }
+                                },
+                                {
+                                  "type": "named",
+                                  "data": {
+                                    "name": "Climber"
+                                  }
+                                },
+                                {
+                                  "type": "path",
+                                  "data": {
+                                    "pathName": "Bleftreadyclimb"
+                                  }
+                                },
+                                {
+                                  "type": "path",
+                                  "data": {
+                                    "pathName": "Bmovetotower"
+                                  }
+                                },
+                                {
+                                  "type": "named",
+                                  "data": {
+                                    "name": "Descend"
+                                  }
+                                },
+                                {
+                                  "type": "named",
+                                  "data": {
+                                    "name": "Descend"
                                   }
                                 }
                               ]

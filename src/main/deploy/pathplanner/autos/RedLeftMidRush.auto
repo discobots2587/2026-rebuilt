@@ -13,18 +13,6 @@
                 "data": {
                   "pathName": "RLeftCenterRush"
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake Arm Raise"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake"
-                }
               }
             ]
           }
