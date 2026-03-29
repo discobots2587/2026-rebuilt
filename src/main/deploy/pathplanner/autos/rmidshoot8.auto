@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "start"
+            "pathName": "Rmidstart"
           }
         },
         {
@@ -17,13 +17,26 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "ShooterLR"
+                  "name": "ShooterHub"
                 }
               },
               {
-                "type": "named",
+                "type": "sequential",
                 "data": {
-                  "name": "Spindexer"
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 2.1
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Spindexer"
+                      }
+                    }
+                  ]
                 }
               }
             ]

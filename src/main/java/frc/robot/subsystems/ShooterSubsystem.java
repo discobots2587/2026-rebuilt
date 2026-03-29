@@ -25,6 +25,9 @@ import frc.robot.Constants.ShooterSubsystemConstants.FlywheelSetpoints;
 import frc.robot.Constants.IntakeConstants.IntakeSetPoints;
 import frc.robot.Constants.ShooterSubsystemConstants;
 
+import edu.wpi.first.wpilibj.Timer;
+
+
 public class ShooterSubsystem extends SubsystemBase {
   
   // Initialize flywheel SPARKs. We will use MAXMotion velocity control for the flywheel, so we also need to
@@ -171,6 +174,19 @@ public class ShooterSubsystem extends SubsystemBase {
           this.setFlywheelVelocity(0.0);
         }).withName("Spinning Up Flywheel");
   }
+
+
+  public Command autoShootCommand(){
+        return this.runOnce(() -> {
+            final Timer m_time = new Timer();
+            m_time.restart();
+            ;
+            while (!m_time.hasElapsed(6.0)){ //5 might be good 
+                setFlywheelVelocity(FlywheelSetpoints.kShootRpm);
+            }; 
+            setFlywheelVelocity(0.0);
+        });
+      }
 
   /**
    * Command to run the feeder and flywheel motors. When the command is interrupted, e.g. the button is relea

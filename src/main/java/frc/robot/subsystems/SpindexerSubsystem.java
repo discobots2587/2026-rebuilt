@@ -103,10 +103,12 @@ import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Configs;
+import frc.robot.Constants.ClimberSubsystemConstants;
 import frc.robot.Constants.ShooterSubsystemConstants;
 
 /**
@@ -228,6 +230,30 @@ public class SpindexerSubsystem extends SubsystemBase {
                 this.setFeederPower(0);
             }).withName("Spindexing");
     }
+
+      public Command autoSpinCommand(){
+        return this.runOnce(() -> {
+            final Timer m_time = new Timer();
+            m_time.restart();
+            ;
+            while (!m_time.hasElapsed(4.0)){ //3 might be good
+                setSpindexerPower(ClimberSubsystemConstants.ClimberSetPoints.kClimb);
+
+                setFeederPower(ShooterSubsystemConstants.FeederSetpoints.kFeed);
+                /**
+                if (Timer.getMatchTime() > 3){
+                    autoStopClimber();
+                }
+                    */
+            }; 
+            setSpindexerPower(0.0);
+            setFeederPower(0);
+        
+        });
+    }
+
+
+    
 
     /**
      * Returns the total number of rotations measured by the spindexer encoder

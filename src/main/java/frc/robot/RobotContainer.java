@@ -88,16 +88,24 @@ public class RobotContainer {
 
         
         // Registered named commands for Path Planner.
-        NamedCommands.registerCommand("Shooter", m_shooter.runShooterCommand());
+        //NamedCommands.registerCommand("Shooter", m_shooter.runShooterCommand()); //non-timer
+
+        //NamedCommands.registerCommand("ShooterHub", m_shooter.autoShootCommand());
+
+
+
         NamedCommands.registerCommand("StopShooter", m_shooter.stopShooter());
 
-        NamedCommands.registerCommand("Spindexer", m_spindexer.runSpindexerCommand(false));
+        NamedCommands.registerCommand("Spindexer", m_spindexer.runSpindexerCommand(false).withTimeout(5.0)); //non-timer 
+
+        //NamedCommands.registerCommand("Spindexer", m_spindexer.autoSpinCommand());
+
 
         
     
         // Register preset shooter configurations for different positions
-        NamedCommands.registerCommand("ShooterHub", 
-                new ShooterWithParametersCommand(m_shooter, m_hood, 1.0, 0.0)); // Full speed, 45° hood
+         NamedCommands.registerCommand("ShooterHub", 
+                 new ShooterWithParametersCommand(m_shooter, m_hood, 1.0, 0.0)); // Full speed, 45° hood
         
         NamedCommands.registerCommand("ShooterLR", 
                 new ShooterWithParametersCommand(m_shooter, m_hood, 0.675, 0.0)); // 80% speed, 35° hood
@@ -114,11 +122,12 @@ public class RobotContainer {
         NamedCommands.registerCommand("ShooterSide", 
                 new ShooterWithParametersCommand(m_shooter, m_hood, 0.7, 15.0)); // Long range
 
-        NamedCommands.registerCommand("Climber", m_climber.runRaiseCommand());
-        NamedCommands.registerCommand("Descend", m_climber.runLowCommand());
+        NamedCommands.registerCommand("Climber", m_climber.runRaiseCommand().withTimeout(8.0));
+        NamedCommands.registerCommand("Descend", m_climber.runLowCommand().withTimeout(8.0));
 
 
                 try {
+
                         autoChooser = AutoBuilder.buildAutoChooser();
                 } catch (RuntimeException e) {
                         // If AutoBuilder wasn't configured (e.g. PathPlanner GUI/settings unavailable),
@@ -186,7 +195,7 @@ public class RobotContainer {
         // m_driverController.a().whileTrue(m_hood.runbackHoodCommand());
 
         //Climber Commands
-        m_driverController.pov(0).whileTrue(m_climber.runClimbCommand()); //og command 
+        m_driverController.pov(0).whileTrue(m_climber.runRaiseCommand()); //og command 
         // m_driverController.pov(0).toggleOnTrue(m_climber.autoClimberCommand()); //testing for one click climber 
         
         m_driverController.pov(180).whileTrue(m_climber.runDescendCommand());

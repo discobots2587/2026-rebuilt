@@ -40,12 +40,6 @@
           "data": {
             "pathName": "RLeftReadyClimb"
           }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Descend"
-          }
         }
       ]
     }

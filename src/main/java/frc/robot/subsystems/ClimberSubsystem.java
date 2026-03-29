@@ -97,10 +97,10 @@ public Command runDescendCommand() {
   }
 public Command runLowCommand() {
   return this.run(
-            () -> this.setClimberPower(ClimberSubsystemConstants.ClimberSetPoints.kDescend)
+            () -> this.setdownClimberPower(ClimberSubsystemConstants.ClimberSetPoints.kDescend)
         )
         .until(this::isAtLimit)          // stop if limit switch triggers
-        .finallyDo(() -> this.setClimberPower(0))
+        .finallyDo(() -> this.setdownClimberPower(0))
         .withName("AutoRaise");
   }
 
@@ -128,7 +128,7 @@ public Command runLowCommand() {
         () -> this.setClimberPower(ClimberSubsystemConstants.ClimberSetPoints.kDescend)
     )
     .withTimeout(2.0)
-    .finallyDo(() -> this.setClimberPower(0))
+    .finallyDo(() -> this.setdownClimberPower(0))
     .withName("AutoLower");
 }
 

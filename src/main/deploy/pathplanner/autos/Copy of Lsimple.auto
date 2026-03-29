@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "startR"
+            "pathName": "bluemidshoot8"
           }
         },
         {
@@ -21,13 +21,13 @@
                 }
               },
               {
-                "type": "parallel",
+                "type": "sequential",
                 "data": {
                   "commands": [
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 2.1
+                        "waitTime": 2.5
                       }
                     },
                     {
@@ -46,6 +46,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "RedBasic",
+  "folder": "BlueBasic",
   "choreoAuto": false
 }
