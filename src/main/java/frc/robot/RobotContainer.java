@@ -98,6 +98,11 @@ public class RobotContainer {
 
         NamedCommands.registerCommand("Spindexer", m_spindexer.runSpindexerCommand(false).withTimeout(5.0)); //non-timer 
 
+        NamedCommands.registerCommand("Intake", m_intake.runIntakeCommand().withTimeout(5.0)); //non-timer
+
+        NamedCommands.registerCommand("Intake Arm Raise", m_intake.runRaiseArmCommand().withTimeout(5.0)); //non-timer 
+        NamedCommands.registerCommand("Intake Arm Lower", m_intake.runLowArmCommand().withTimeout(5.0)); //non-timer 
+
         //NamedCommands.registerCommand("Spindexer", m_spindexer.autoSpinCommand());
 
 

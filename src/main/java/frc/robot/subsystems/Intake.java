@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Configs;
+import frc.robot.Constants.ClimberSubsystemConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.IntakeConstants.IntakeArmSetPoints;
 import frc.robot.Constants.IntakeConstants.IntakeSetPoints;
@@ -62,8 +63,27 @@ public class Intake extends SubsystemBase {
   SmartDashboard.putNumber("IntakeArm/MoveTimeout", m_moveTimeoutSeconds);
 
   }
-  //Everything below this, feel free to do whatever you want with it since im not sure if it even works.
-  //set speed for the intake motor 
+
+  private void setDownArmPower(double power) {
+    if (getClimberRotations() <=4) {
+      intakeArmMotor.set(0);
+      return;
+    }
+    intakeArmMotor.set(power);
+  }
+
+  private void setRaiseArmPower(double power) {
+    if (getClimberRotations() >= 10) {
+      intakeArmMotor.set(0);
+      return;
+    }
+    intakeArmMotor.set(power);
+  }
+
+
+  public double getClimberRotations() {
+    return intakeArmEncoder.getPosition();
+  }
   private void setIntakePower(double power){
     intakeMotor.set(power);
   }
@@ -224,6 +244,24 @@ private boolean isSpinnerAt(double velocity) {
       () -> isSpinnerAt(IntakeArmSetPoints.kStallCurrentThreshehold) // || flywheelEncoder.getVelocity() > FlywheelSetpoints.kShootRpm 
   );
 
+  public Command runLowArmCommand() {
+  return this.run(
+            () -> this.setDownArmPower(IntakeArmSetPoints.kLower)
+        )
+        .until(() -> getClimberRotations() <= 4)          // stop if limit switch triggers
+        .finallyDo(() -> this.setDownArmPower(0))
+        .withName("AutoLower");
+  }
+
+  public Command runRaiseArmCommand() {
+  return this.run(
+            () -> this.setRaiseArmPower(IntakeArmSetPoints.kRaise)
+        )
+        .until(() -> getClimberRotations() >= 10)          // stop if limit switch triggers
+        .finallyDo(() -> this.setRaiseArmPower(0))
+        .withName("AutoRaise");
+  } 
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
@@ -235,5 +273,6 @@ private boolean isSpinnerAt(double velocity) {
     m_minIntakeArmRotations = SmartDashboard.getNumber("IntakeArm/MinRotations", m_minIntakeArmRotations);
     m_maxIntakeArmRotations = SmartDashboard.getNumber("IntakeArm/MaxRotations", m_maxIntakeArmRotations);
     m_moveTimeoutSeconds = SmartDashboard.getNumber("IntakeArm/MoveTimeout", m_moveTimeoutSeconds);
+
   }
 }
