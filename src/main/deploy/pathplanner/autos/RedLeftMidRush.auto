@@ -1,0 +1,87 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "RLeftCenterRush"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Arm Raise"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ShooterHub"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 5.0
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "rleftrushtower"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Climber"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RLeftReadyClimb"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "movetotower"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Descend"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "RAdv",
+  "choreoAuto": false
+}

@@ -51,15 +51,22 @@
                                   }
                                 },
                                 {
-                                  "type": "path",
+                                  "type": "parallel",
                                   "data": {
-                                    "pathName": "RmidGoclimb"
-                                  }
-                                },
-                                {
-                                  "type": "named",
-                                  "data": {
-                                    "name": "Climber"
+                                    "commands": [
+                                      {
+                                        "type": "path",
+                                        "data": {
+                                          "pathName": "RmidGoclimb"
+                                        }
+                                      },
+                                      {
+                                        "type": "named",
+                                        "data": {
+                                          "name": "Climber"
+                                        }
+                                      }
+                                    ]
                                   }
                                 },
                                 {

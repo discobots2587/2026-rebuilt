@@ -5,6 +5,7 @@
   "pathFolders": [],
   "autoFolders": [
     "BlueBasic",
+    "RAdv",
     "RedBasic"
   ],
   "defaultMaxVel": 3.0,
