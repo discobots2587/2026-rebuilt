@@ -65,7 +65,7 @@ public class Intake extends SubsystemBase {
   }
 
   private void setDownArmPower(double power) {
-    if (getClimberRotations() <=4) {
+    if (getClimberRotations() <=2) {
       intakeArmMotor.set(0);
       return;
     }
@@ -73,7 +73,7 @@ public class Intake extends SubsystemBase {
   }
 
   private void setRaiseArmPower(double power) {
-    if (getClimberRotations() >= 10) {
+    if (getClimberRotations() >= 50) {
       intakeArmMotor.set(0);
       return;
     }
@@ -248,7 +248,7 @@ private boolean isSpinnerAt(double velocity) {
   return this.run(
             () -> this.setDownArmPower(IntakeArmSetPoints.kLower)
         )
-        .until(() -> getClimberRotations() <= 4)          // stop if limit switch triggers
+        .until(() -> getClimberRotations() <= -10)          // stop if limit switch triggers
         .finallyDo(() -> this.setDownArmPower(0))
         .withName("AutoLower");
   }
@@ -257,7 +257,7 @@ private boolean isSpinnerAt(double velocity) {
   return this.run(
             () -> this.setRaiseArmPower(IntakeArmSetPoints.kRaise)
         )
-        .until(() -> getClimberRotations() >= 10)          // stop if limit switch triggers
+        .until(() -> getClimberRotations() >= -2)          // stop if limit switch triggers
         .finallyDo(() -> this.setRaiseArmPower(0))
         .withName("AutoRaise");
   } 

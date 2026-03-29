@@ -5,9 +5,15 @@
     "data": {
       "commands": [
         {
+          "type": "path",
+          "data": {
+            "pathName": "BLeftNeutralRush"
+          }
+        },
+        {
           "type": "named",
           "data": {
-            "name": "Intake Arm Raise"
+            "name": "Intake Arm Lower"
           }
         },
         {
@@ -19,13 +25,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "BLeftNeutralRush"
+            "pathName": "bleftgetneutral"
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "bleftgetneutral"
+            "name": "Intake Arm Raise"
           }
         },
         {
