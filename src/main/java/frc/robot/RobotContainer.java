@@ -157,6 +157,20 @@ public class RobotContainer {
                                 -MathUtil.applyDeadband(m_driverController.getRightX() * .6, OIConstants.kDriveDeadband),
                                 true),
                         m_robotDrive));
+
+
+        m_shooter.setDefaultCommand(
+        new RunCommand(
+                () -> {
+         // The left stick Y measure sets the flywheel speed
+                double y = m_driverController.getLeftY();
+                if (Math.abs(y) < 0.05) {
+                        y = 0;
+                }
+                m_shooter.setFlywheelVelocity(y * 12 * -1);
+                },
+                m_shooter )
+        );
     }
 
     /**
@@ -229,7 +243,8 @@ public class RobotContainer {
         m_operatorController.b().toggleOnTrue(m_spindexer.runSpindexerCommand(false)); //runs the spinsdexer and the indexer(feeder) 
         m_operatorController.pov(0).whileTrue(m_hood.runHoodCommand());
         m_operatorController.pov(180).whileTrue(m_hood.runbackHoodCommand()); 
-        m_operatorController.a().toggleOnTrue(m_intake.runArmCyclePositionCommand(0, 0, 0)); 
+        m_operatorController.a().toggleOnTrue(m_intake.runArmCyclePositionCommand(0, 0, 0)); //who added this??
+        
     }
 
 
