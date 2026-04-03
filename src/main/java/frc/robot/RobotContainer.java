@@ -162,9 +162,9 @@ public class RobotContainer {
                 // Turning is controlled by the X axis of the right stick.
                 new RunCommand(
                         () -> m_robotDrive.drive(
-                                -MathUtil.applyDeadband(m_driverController.getLeftY() * .6, OIConstants.kDriveDeadband),
-                                -MathUtil.applyDeadband(m_driverController.getLeftX() * .6, OIConstants.kDriveDeadband),
-                                -MathUtil.applyDeadband(m_driverController.getRightX() * .6, OIConstants.kDriveDeadband),
+                                -MathUtil.applyDeadband(m_driverController.getLeftY() * .8, OIConstants.kDriveDeadband),
+                                -MathUtil.applyDeadband(m_driverController.getLeftX() * .8, OIConstants.kDriveDeadband),
+                                -MathUtil.applyDeadband(m_driverController.getRightX() * .8, OIConstants.kDriveDeadband),
                                 true),
                         m_robotDrive));
 
@@ -173,7 +173,7 @@ public class RobotContainer {
         new RunCommand(
                 () -> {
          // The left stick Y measure sets the flywheel speed
-                double y = m_driverController.getLeftY();
+                double y = m_operatorController.getLeftY();
                 if (Math.abs(y) < 0.05) {
                         y = 0;
                 }
