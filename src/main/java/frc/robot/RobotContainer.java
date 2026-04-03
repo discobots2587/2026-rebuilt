@@ -100,9 +100,9 @@ public class RobotContainer {
 
         NamedCommands.registerCommand("StopShooter", m_shooter.stopShooter());
 
-        NamedCommands.registerCommand("Spindexer", m_spindexer.runSpindexerCommand(false).withTimeout(5.0)); //non-timer 
+        NamedCommands.registerCommand("Spindexer", m_spindexer.runSpindexerCommand(false).withTimeout(2.5)); //non-timer 
 
-        NamedCommands.registerCommand("Intake", m_intake.runIntakeCommand().withTimeout(5.0)); //non-timer
+        NamedCommands.registerCommand("Intake", m_intake.runIntakeCommand().withTimeout(4.0)); //non-timer
 
         NamedCommands.registerCommand("Intake Arm Raise", m_intake.runRaiseCommand().withTimeout(1.0)); //non-timer 
         NamedCommands.registerCommand("Intake Arm Lower", m_intake.runLowerCommand().withTimeout(1.0)); //non-timer 
@@ -114,7 +114,7 @@ public class RobotContainer {
     
         // Register preset shooter configurations for different positions
          NamedCommands.registerCommand("ShooterHub", 
-                 new ShooterWithParametersCommand(m_shooter, m_hood, 1.0, 0.0).withTimeout(6.0)); // Full speed, 45° hood
+                 new ShooterWithParametersCommand(m_shooter, m_hood, 1.0, 0.0).withTimeout(8.0)); // Full speed, 45° hood
         
         NamedCommands.registerCommand("ShooterLR", 
                 new ShooterWithParametersCommand(m_shooter, m_hood, 0.675, 0.0)); // 80% speed, 35° hood
