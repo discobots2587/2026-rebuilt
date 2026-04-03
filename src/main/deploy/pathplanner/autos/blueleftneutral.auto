@@ -17,21 +17,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "Intake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "bleftgetneutral"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake Arm Raise"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "bleftgetneutral"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
+              }
+            ]
           }
         },
         {
@@ -76,6 +77,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "BlueBasic",
+  "folder": "BlueAdv",
   "choreoAuto": false
 }

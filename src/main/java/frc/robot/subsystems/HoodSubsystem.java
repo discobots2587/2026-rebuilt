@@ -61,4 +61,38 @@ public class HoodSubsystem extends SubsystemBase{
     SmartDashboard.putNumber("Hood | Applied Output", hoodMotor.getAppliedOutput());
   }
 
+  // ============ POSITION-BASED HOOD CONTROL ============
+  /*
+   * TODO: Uncomment and configure once you add a closed-loop controller
+   * This will allow moving to specific angles instead of just open-loop power
+   */
+  
+  /*
+  private SparkClosedLoopController hoodClosedLoopController;
+  private RelativeEncoder hoodEncoder;
+  private double targetHoodAngle = 0.0;
+  
+  // Conversion factor from motor rotations to degrees
+  // TODO: Calculate based on your hood gearing
+  // private static final double ROTATIONS_TO_DEGREES = 360.0; // Adjust based on gearing
+  
+  public void initializeClosedLoopControl() {
+    hoodClosedLoopController = hoodMotor.getClosedLoopController();
+    hoodEncoder = hoodMotor.getEncoder();
+    hoodEncoder.setPosition(0);
+  }
+  
+  public void setHoodAngleClosed(double targetAngleDegrees) {
+    targetHoodAngle = targetAngleDegrees;
+    // Convert degrees to motor rotations
+    // double targetRotations = targetAngleDegrees / ROTATIONS_TO_DEGREES;
+    // hoodClosedLoopController.setSetpoint(targetRotations, ControlType.kPosition);
+  }
+  
+  public double getHoodAngle() {
+    // return hoodEncoder.getPosition() * ROTATIONS_TO_DEGREES;
+    return 0.0; // Placeholder
+  }
+  */
+
 }

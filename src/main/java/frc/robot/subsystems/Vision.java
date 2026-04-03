@@ -86,6 +86,8 @@ public class Vision extends SubsystemBase {
 
     private final Pose3d[] latestUsedPoses = new Pose3d[] { Pose3d.kZero, Pose3d.kZero };
     private final Pose3d[] latestUsedTrigPoses = new Pose3d[] { Pose3d.kZero, Pose3d.kZero };
+    
+    private boolean visionEnabled = true;
 
     public Vision() {
 
@@ -126,6 +128,11 @@ public class Vision extends SubsystemBase {
      * Updates the measurement consumer with the latest data from all cameras.
      */
     public void updateVisionEstimates() {
+        // Skip vision updates if disabled
+        if (!visionEnabled) {
+            return;
+        }
+
         if (poseEstimator == null) {
             return;
         }
@@ -387,5 +394,21 @@ public class Vision extends SubsystemBase {
         }
 
         return result;
+    }
+
+    /**
+     * Enables or disables vision pose estimation
+     * @param enabled true to enable, false to disable
+     */
+    public void setVisionEnabled(boolean enabled) {
+        this.visionEnabled = enabled;
+    }
+
+    /**
+     * Gets the current vision enabled state
+     * @return true if vision is enabled
+     */
+    public boolean isVisionEnabled() {
+        return visionEnabled;
     }
 }

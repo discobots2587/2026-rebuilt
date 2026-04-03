@@ -254,6 +254,94 @@ public class ShooterSubsystem extends SubsystemBase {
 //       }).withName("Intaking");
 //   }
 
+  // ============ DYNAMIC SHOOTER CONTROL (TELEOP) ============
+  // This section handles distance-based flywheel and hood control
+  
+  /*
+   * Distance-to-Speed mapping (Voltage vs Distance in meters)
+   * TODO: Fill in actual data points from testing
+   * Format: double[][] distanceSpeedMap = { {distance, voltage}, {distance, voltage}, ... }
+   * Example data structure (COMMENT OUT UNTIL DATA IS AVAILABLE):
+   * 
+   * private static final double[][] DISTANCE_SPEED_MAP = {
+   *   {1.0, -3.0},    // 1m away: 3V
+   *   {2.0, -5.0},    // 2m away: 5V
+   *   {3.0, -7.0},    // 3m away: 7V
+   *   {4.0, -8.5},    // 4m away: 8.5V
+   *   {5.0, -10.0},   // 5m away: 10V (max)
+   * };
+   * 
+   * Distance-to-Hood-Angle mapping (degrees vs Distance in meters)
+   * private static final double[][] DISTANCE_HOOD_MAP = {
+   *   {1.0, 10.0},    // 1m away: 10° hood angle
+   *   {2.0, 20.0},    // 2m away: 20° hood angle
+   *   {3.0, 30.0},    // 3m away: 30° hood angle
+   *   {4.0, 40.0},    // 4m away: 40° hood angle
+   *   {5.0, 50.0},    // 5m away: 50° hood angle (max)
+   * };
+   */
+
+  /**
+   * Interpolates a value based on distance using linear interpolation
+   * TODO: Uncomment and use once data is available
+   * 
+   * @param distance Distance from hub in meters
+   * @param dataMap 2D array with {distance, value} pairs
+   * @return Interpolated value at given distance
+   */
+  /*
+  private double interpolateFromDistance(double distance, double[][] dataMap) {
+    // Handle edge cases
+    if (distance <= dataMap[0][0]) {
+      return dataMap[0][1];
+    }
+    if (distance >= dataMap[dataMap.length - 1][0]) {
+      return dataMap[dataMap.length - 1][1];
+    }
+
+    // Find the two points to interpolate between
+    for (int i = 0; i < dataMap.length - 1; i++) {
+      double d1 = dataMap[i][0];
+      double v1 = dataMap[i][1];
+      double d2 = dataMap[i + 1][0];
+      double v2 = dataMap[i + 1][1];
+
+      if (distance >= d1 && distance <= d2) {
+        // Linear interpolation formula: y = y1 + (x - x1) * (y2 - y1) / (x2 - x1)
+        double interpolated = v1 + (distance - d1) * (v2 - v1) / (d2 - d1);
+        return interpolated;
+      }
+    }
+    return dataMap[dataMap.length - 1][1];
+  }
+  */
+
+  /**
+   * Gets the required flywheel voltage based on distance from hub
+   * TODO: Uncomment once data is available
+   * 
+   * @param distanceFromHub Distance in meters
+   * @return Voltage to set flywheel motor (-12V to 12V)
+   */
+  /*
+  public double getFlywheelVoltageFromDistance(double distanceFromHub) {
+    return interpolateFromDistance(distanceFromHub, DISTANCE_SPEED_MAP);
+  }
+  */
+
+  /**
+   * Gets the required hood angle based on distance from hub
+   * TODO: Uncomment once data is available
+   * 
+   * @param distanceFromHub Distance in meters
+   * @return Hood angle in degrees
+   */
+  /*
+  public double getHoodAngleFromDistance(double distanceFromHub) {
+    return interpolateFromDistance(distanceFromHub, DISTANCE_HOOD_MAP);
+  }
+  */
+
 
   @Override
   public void periodic() {

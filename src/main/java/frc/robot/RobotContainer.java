@@ -23,6 +23,8 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.AlignToHub;
 import frc.robot.commands.ShooterWithParametersCommand;
+import frc.robot.commands.BlueLeftNeutralAuto;
+import frc.robot.commands.TeleopShooterCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.HoodSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -134,6 +136,10 @@ public class RobotContainer {
                 try {
 
                         autoChooser = AutoBuilder.buildAutoChooser();
+                        
+                        // Add alliance-aware autos that mirror based on alliance
+                        autoChooser.addOption("Blue Left Neutral (Auto Mirror)", new BlueLeftNeutralAuto());
+                        
                 } catch (RuntimeException e) {
                         // If AutoBuilder wasn't configured (e.g. PathPlanner GUI/settings unavailable),
                         // fall back to a simple chooser to avoid crashing the robot program.
@@ -171,6 +177,15 @@ public class RobotContainer {
                 },
                 m_shooter )
         );
+
+        // ============ TELEOP SHOOTER SETUP ============
+        // TODO: Uncomment once distance-to-parameter mapping is tuned
+        /*
+        // Set up dynamic shooter control for teleop
+        m_shooter.setDefaultCommand(
+            new TeleopShooterCommand(m_robotDrive, m_shooter, m_hood)
+        );
+        */
     }
 
     /**
@@ -298,5 +313,13 @@ public class RobotContainer {
         // false));
         return autoChooser.getSelected(); // use this line for Path Planner Selector
 
+    }
+
+    /**
+     * Gets the Vision subsystem
+     * @return the Vision subsystem instance
+     */
+    public Vision getVision() {
+        return vision;
     }
 }
