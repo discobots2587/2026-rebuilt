@@ -3,71 +3,67 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.815,
-        "y": 3.079
+        "x": 7.484578884934758,
+        "y": 4.83655990510083
       },
       "prevControl": null,
       "nextControl": {
-        "x": 8.013948868519325,
-        "y": 2.9276086273432984
+        "x": 7.733659890073926,
+        "y": 4.8579760877406475
       },
       "isLocked": false,
-      "linkedName": "BRightFuelLoad"
+      "linkedName": "bumpNballs"
     },
     {
       "anchor": {
-        "x": 7.815,
-        "y": 0.65
+        "x": 6.321111111111112,
+        "y": 5.471023391812865
       },
       "prevControl": {
-        "x": 8.064657472744507,
-        "y": 0.663082289662985
+        "x": 6.556858694506834,
+        "y": 5.387818362379081
       },
       "nextControl": {
-        "x": 7.518453347524718,
-        "y": 0.6344606726022562
-      },
-      "isLocked": false,
-      "linkedName": "BNeutralRush"
-    },
-    {
-      "anchor": {
-        "x": 2.7095132255276564,
-        "y": 0.7
-      },
-      "prevControl": {
-        "x": 2.9523640108220297,
-        "y": 0.6406409561911053
-      },
-      "nextControl": {
-        "x": 2.466662440233283,
-        "y": 0.7593590438088946
+        "x": 6.085363527715389,
+        "y": 5.5542284212466475
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.9074306313682676,
-        "y": 3.079
+        "x": 3.008754448398578,
+        "y": 5.592828947368421
       },
       "prevControl": {
-        "x": 3.151710776034652,
-        "y": 3.1321715235983545
+        "x": 3.2392823896309206,
+        "y": 5.6895598540693175
+      },
+      "nextControl": {
+        "x": 2.7782265071662353,
+        "y": 5.496098040667524
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.9,
+        "y": 4.947418280294216
+      },
+      "prevControl": {
+        "x": 3.149407582105746,
+        "y": 4.964618803198061
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "ShootingfromRNeutral"
+      "linkedName": "endofblueleftneutral"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 1.4923863925661918,
-      "rotationDegrees": 0.0
-    },
-    {
-      "waypointRelativePos": 1.9629741598777999,
-      "rotationDegrees": 0.0
+      "waypointRelativePos": 0.9766162310866578,
+      "rotationDegrees": -139.67803567026846
     }
   ],
   "constraintZones": [],
@@ -83,13 +79,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -63.96256861187308
+    "rotation": -125.00000000000001
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 90.0
+    "rotation": -66.03751102542171
   },
   "useDefaultConstraints": true
 }

@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.7565204678362571,
-        "y": 5.971067251461988
+        "x": 6.2042348754448415,
+        "y": 5.675776986951364
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.7565204678362574,
-        "y": 5.971067251461988
+        "x": 6.450202352969819,
+        "y": 5.72049834650136
       },
       "isLocked": false,
-      "linkedName": "getDepot"
+      "linkedName": "bumpN"
     },
     {
       "anchor": {
-        "x": 2.311,
-        "y": 4.008
+        "x": 7.484578884934758,
+        "y": 4.83655990510083
       },
       "prevControl": {
-        "x": 2.1991366448326057,
-        "y": 5.012320039574235
+        "x": 8.022538552787664,
+        "y": 6.665622775800712
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "BMidEnd"
+      "linkedName": "bumpNballs"
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": -66.03751102542171
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": -20.170653411850353
   },
   "useDefaultConstraints": true
 }

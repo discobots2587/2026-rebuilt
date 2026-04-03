@@ -40,19 +40,25 @@
                 }
               },
               {
-                "type": "path",
-                "data": {
-                  "pathName": "depot climb"
-                }
-              },
-              {
                 "type": "sequential",
                 "data": {
                   "commands": [
                     {
-                      "type": "wait",
+                      "type": "path",
                       "data": {
-                        "waitTime": 1.0
+                        "pathName": "depot climb"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Spindexer"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Intake Arm Raise"
                       }
                     },
                     {
