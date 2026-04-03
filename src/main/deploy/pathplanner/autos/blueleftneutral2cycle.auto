@@ -58,7 +58,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 2.0
+                        "waitTime": 2.1
                       }
                     },
                     {
@@ -74,33 +74,46 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "BLneutralToClimb"
-          }
-        },
-        {
           "type": "named",
           "data": {
-            "name": "Climber"
+            "name": "Intake Arm Raise"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Bleftreadyclimb"
+            "pathName": "BLstartSecondCycle"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Bmovetotower"
+            "pathName": "BLeftNeutralRush"
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "Descend"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "bleftgetneutral"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "leftneutralgoback"
           }
         }
       ]

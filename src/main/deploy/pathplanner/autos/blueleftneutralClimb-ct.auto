@@ -36,12 +36,6 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "leftneutralgoback"
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -56,9 +50,21 @@
                 "data": {
                   "commands": [
                     {
-                      "type": "wait",
+                      "type": "path",
                       "data": {
-                        "waitTime": 2.0
+                        "pathName": "leftneutralgoback"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Spindexer"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Intake Arm Lower"
                       }
                     },
                     {
@@ -74,15 +80,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "BLneutralToClimb"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Climber"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "BLneutralToClimb"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Climber"
+                }
+              }
+            ]
           }
         },
         {
