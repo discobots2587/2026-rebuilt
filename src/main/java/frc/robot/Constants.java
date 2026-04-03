@@ -141,12 +141,13 @@ public final class Constants {
 
   public static final class IntakeConstants {
     public static final int kIntakeMotorCanId = 55; // change later
+    public static final int kIntakeMotorFollowerCanId = 59;
     public static final int kIntakeArmMotorCanId = 51; // change later
     public static final int kIntakeArmMotorFollowerCanId = 52; // change later
 
     public static final class IntakeSetPoints {
-      public static final double kIntake = 1.0; // adjust motor speed later
-      public static final double kExtake = -1.0; // adjust motor speed later
+      public static final double kIntake = .65; // adjust motor speed later
+      public static final double kExtake = -1; // adjust motor speed later
     }
 
     public static final class IntakeArmSetPoints {

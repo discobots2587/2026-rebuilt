@@ -64,14 +64,21 @@ public final class Configs {
     }
     public static final class IntakeSubsystem {
         public static final SparkMaxConfig intakeMotorConfig = new SparkMaxConfig();
+        public static final SparkMaxConfig intakeFollowerMotorConfig = new SparkMaxConfig();
         public static final SparkMaxConfig intakeArmMotorConfig = new SparkMaxConfig();
         public static final SparkMaxConfig intakeArmFollowerMotorConfig = new SparkMaxConfig();
 
         static {
                 intakeMotorConfig.inverted(true).idleMode(IdleMode.kBrake).smartCurrentLimit(20); //change later
+                intakeFollowerMotorConfig.apply(intakeMotorConfig).follow(Constants.IntakeConstants.kIntakeMotorCanId, true);
+                //flywheelFollowerConfig.apply(flywheelConfig).follow(Constants.ShooterSubsystemConstants.kFlywheelMotorCanId, true);
+                //intakeFollowerMotorConfig.inverted(false).idleMode(IdleMode.kBrake).smartCurrentLimit(20); //change later
                 intakeArmMotorConfig.inverted(false).idleMode(IdleMode.kCoast).smartCurrentLimit(20); //change later
                 // intakeArmFollowerMotorConfig.inverted(true).idleMode(IdleMode.kBrake).smartCurrentLimit(20); //change later
                 intakeArmFollowerMotorConfig.apply(intakeArmMotorConfig).follow(Constants.IntakeConstants.kIntakeArmMotorCanId, true);
+
+
+
         }
     }
     public static final class ClimberSubsystem {
@@ -131,7 +138,7 @@ public final class Configs {
     
           // Configure the follower flywheel motor to follow the main flywheel motor
           flywheelFollowerConfig.apply(flywheelConfig)
-            .follow(Constants.ShooterSubsystemConstants.kFlywheelMotorCanId, true);
+            .follow(Constants.ShooterSubsystemConstants.kFlywheelMotorCanId, false);
 
 
     

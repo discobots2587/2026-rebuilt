@@ -31,6 +31,7 @@ import frc.robot.Constants.ShooterSubsystemConstants.FlywheelSetpoints;
 
 public class Intake extends SubsystemBase {
   private final SparkMax intakeMotor;
+  private final SparkMax intakeFollowerMotor;
   private final SparkMax intakeArmMotor;
   private final SparkMax intakeArmFollowerMotor;
   // Encoder and closed-loop controller for the intake arm
@@ -44,10 +45,12 @@ public class Intake extends SubsystemBase {
   public Intake() {
     // initializing motors
     intakeMotor = new SparkMax(IntakeConstants.kIntakeMotorCanId, SparkMax.MotorType.kBrushless);
+    intakeFollowerMotor = new SparkMax(IntakeConstants.kIntakeMotorFollowerCanId, SparkMax.MotorType.kBrushless);
     intakeArmMotor = new SparkMax(IntakeConstants.kIntakeArmMotorCanId, SparkMax.MotorType.kBrushless);
     intakeArmFollowerMotor = new SparkMax(IntakeConstants.kIntakeArmMotorFollowerCanId, SparkMax.MotorType.kBrushless);
 
     intakeMotor.configure(Configs.IntakeSubsystem.intakeMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    intakeFollowerMotor.configure(Configs.IntakeSubsystem.intakeFollowerMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     intakeArmMotor.configure(Configs.IntakeSubsystem.intakeArmMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     intakeArmFollowerMotor.configure(Configs.IntakeSubsystem.intakeArmFollowerMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
@@ -86,6 +89,7 @@ public class Intake extends SubsystemBase {
   }
   private void setIntakePower(double power){
     intakeMotor.set(power);
+    intakeFollowerMotor.set(power);
   }
   //set speed for the arm motor 
   private void setIntakeArmPower(double power){
