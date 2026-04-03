@@ -105,7 +105,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("Intake", m_intake.runIntakeCommand().withTimeout(5.0)); //non-timer
 
         NamedCommands.registerCommand("Intake Arm Raise", m_intake.runRaiseCommand().withTimeout(1.0)); //non-timer 
-        NamedCommands.registerCommand("Intake Arm Lower", m_intake.runLowerCommand().withTimeout(0.7)); //non-timer 
+        NamedCommands.registerCommand("Intake Arm Lower", m_intake.runLowerCommand().withTimeout(1.0)); //non-timer 
 
         //NamedCommands.registerCommand("Spindexer", m_spindexer.autoSpinCommand());
 
@@ -248,10 +248,10 @@ public class RobotContainer {
         // m_driverController.a().whileTrue(m_hood.runbackHoodCommand());
 
         //Climber Commands
-        m_driverController.pov(0).whileTrue(m_climber.runRaiseCommand()); //og command 
+        m_driverController.pov(0).toggleOnTrue(m_climber.runRaiseCommand()); //og command 
         // m_driverController.pov(0).toggleOnTrue(m_climber.autoClimberCommand()); //testing for one click climber 
         
-        m_driverController.pov(180).whileTrue(m_climber.runDescendCommand());
+        m_driverController.pov(180).toggleOnTrue(m_climber.runDescendCommand());
 
         //Auto Align Command
         m_driverController.pov(90).whileTrue(m_AlignToHub);
