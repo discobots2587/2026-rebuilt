@@ -36,6 +36,9 @@ public class ClimberSubsystem extends SubsystemBase {
   public boolean isAtLimit() {
     return climberMotor.getReverseLimitSwitch().isPressed();
   }
+  public boolean isAttopLimit() {
+    return climberMotor.getForwardLimitSwitch().isPressed();
+  }
 
   /** Returns the climber encoder position in rotations. */
   public double getClimberRotations() {
@@ -62,15 +65,17 @@ public class ClimberSubsystem extends SubsystemBase {
   }
 
   private void setClimberPower(double power) {
-    if (isAtLimit() && power > 0 ) {
+    if ((isAttopLimit() && power > 0)  ) {
       climberMotor.set(0);
       return;
     }
     climberMotor.set(power);
   }
 
+  // ||  ((getClimberRotations() >=85.7) && power > 0)
+
   private void setdownClimberPower(double power) {
-    if ((isAtLimit() && power > 0) || getClimberRotations() <=4) {
+    if ((isAtLimit() && power <  0)) {
       climberMotor.set(0);
       return;
     }
@@ -99,19 +104,18 @@ public Command runLowCommand() {
   return this.run(
             () -> this.setdownClimberPower(ClimberSubsystemConstants.ClimberSetPoints.kDescend)
         )
-        .until(this::isAtLimit)          // stop if limit switch triggers
         .finallyDo(() -> this.setdownClimberPower(0))
         .withName("AutoRaise");
   }
 
-  public Command runRaiseCommand() {
-  return this.run(
-            () -> this.setClimberPower(ClimberSubsystemConstants.ClimberSetPoints.kClimb)
-        )
-        .until(this::isAtLimit)          // stop if limit switch triggers
-        .finallyDo(() -> this.setClimberPower(0))
-        .withName("AutoRaise");
-  } 
+public Command runRaiseCommand() {
+  return this.startEnd(
+        () -> {
+  this.setClimberPower(ClimberSubsystemConstants.ClimberSetPoints.kClimb);
+        },() -> {
+  this.setClimberPower(0);
+        }).withName("Descending");
+  }
    public Command autoRaiseCommand() {
         return this.run(
             () -> this.setClimberPower(ClimberSubsystemConstants.ClimberSetPoints.kClimb)

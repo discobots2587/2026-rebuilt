@@ -24,6 +24,8 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.commands.AlignToHub;
 import frc.robot.commands.ShooterWithParametersCommand;
 import frc.robot.commands.BlueLeftNeutralAuto;
+import frc.robot.commands.BlueRightNeutralAuto;
+import frc.robot.commands.BlueLefNeutralClimbAuto;
 import frc.robot.commands.TeleopShooterCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.HoodSubsystem;
@@ -98,12 +100,12 @@ public class RobotContainer {
 
         NamedCommands.registerCommand("StopShooter", m_shooter.stopShooter());
 
-        NamedCommands.registerCommand("Spindexer", m_spindexer.runSpindexerCommand(false).withTimeout(5.0)); //non-timer 
+        NamedCommands.registerCommand("Spindexer", m_spindexer.runSpindexerCommand(false).withTimeout(2.5)); //non-timer 
 
-        NamedCommands.registerCommand("Intake", m_intake.runIntakeCommand().withTimeout(5.0)); //non-timer
+        NamedCommands.registerCommand("Intake", m_intake.runIntakeCommand().withTimeout(4.0)); //non-timer
 
         NamedCommands.registerCommand("Intake Arm Raise", m_intake.runRaiseCommand().withTimeout(1.0)); //non-timer 
-        NamedCommands.registerCommand("Intake Arm Lower", m_intake.runLowerCommand().withTimeout(5.0)); //non-timer 
+        NamedCommands.registerCommand("Intake Arm Lower", m_intake.runLowerCommand().withTimeout(1.0)); //non-timer 
 
         //NamedCommands.registerCommand("Spindexer", m_spindexer.autoSpinCommand());
 
@@ -112,7 +114,7 @@ public class RobotContainer {
     
         // Register preset shooter configurations for different positions
          NamedCommands.registerCommand("ShooterHub", 
-                 new ShooterWithParametersCommand(m_shooter, m_hood, 1.0, 0.0).withTimeout(6.0)); // Full speed, 45° hood
+                 new ShooterWithParametersCommand(m_shooter, m_hood, 1.0, 0.0).withTimeout(8.0)); // Full speed, 45° hood
         
         NamedCommands.registerCommand("ShooterLR", 
                 new ShooterWithParametersCommand(m_shooter, m_hood, 0.675, 0.0)); // 80% speed, 35° hood
@@ -139,6 +141,8 @@ public class RobotContainer {
                         
                         // Add alliance-aware autos that mirror based on alliance
                         autoChooser.addOption("Blue Left Neutral (Auto Mirror)", new BlueLeftNeutralAuto());
+                        autoChooser.addOption("Blue Right Neutral (Auto Mirror)", new BlueRightNeutralAuto());
+                        autoChooser.addOption("Blue Left Neutral Climb (Auto Mirror)", new BlueLefNeutralClimbAuto());
                         
                 } catch (RuntimeException e) {
                         // If AutoBuilder wasn't configured (e.g. PathPlanner GUI/settings unavailable),
@@ -158,9 +162,9 @@ public class RobotContainer {
                 // Turning is controlled by the X axis of the right stick.
                 new RunCommand(
                         () -> m_robotDrive.drive(
-                                -MathUtil.applyDeadband(m_driverController.getLeftY() * .6, OIConstants.kDriveDeadband),
-                                -MathUtil.applyDeadband(m_driverController.getLeftX() * .6, OIConstants.kDriveDeadband),
-                                -MathUtil.applyDeadband(m_driverController.getRightX() * .6, OIConstants.kDriveDeadband),
+                                -MathUtil.applyDeadband(m_driverController.getLeftY() * .8, OIConstants.kDriveDeadband),
+                                -MathUtil.applyDeadband(m_driverController.getLeftX() * .8, OIConstants.kDriveDeadband),
+                                -MathUtil.applyDeadband(m_driverController.getRightX() * .8, OIConstants.kDriveDeadband),
                                 true),
                         m_robotDrive));
 
@@ -169,7 +173,7 @@ public class RobotContainer {
         new RunCommand(
                 () -> {
          // The left stick Y measure sets the flywheel speed
-                double y = m_driverController.getLeftY();
+                double y = m_operatorController.getLeftY();
                 if (Math.abs(y) < 0.05) {
                         y = 0;
                 }
@@ -244,10 +248,10 @@ public class RobotContainer {
         // m_driverController.a().whileTrue(m_hood.runbackHoodCommand());
 
         //Climber Commands
-        m_driverController.pov(0).whileTrue(m_climber.runRaiseCommand()); //og command 
+        m_driverController.pov(0).toggleOnTrue(m_climber.runRaiseCommand()); //og command 
         // m_driverController.pov(0).toggleOnTrue(m_climber.autoClimberCommand()); //testing for one click climber 
         
-        m_driverController.pov(180).whileTrue(m_climber.runDescendCommand());
+        m_driverController.pov(180).toggleOnTrue(m_climber.runDescendCommand());
 
         //Auto Align Command
         m_driverController.pov(90).whileTrue(m_AlignToHub);
