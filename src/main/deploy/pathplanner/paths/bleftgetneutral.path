@@ -4,12 +4,12 @@
     {
       "anchor": {
         "x": 7.81483187134503,
-        "y": 7.426323099415205
+        "y": 7.426
       },
       "prevControl": null,
       "nextControl": {
         "x": 7.81483187134503,
-        "y": 6.317251461988303
+        "y": 6.3169283625730985
       },
       "isLocked": false,
       "linkedName": "beutralleft"
