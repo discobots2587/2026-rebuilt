@@ -24,6 +24,8 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.commands.AlignToHub;
 import frc.robot.commands.ShooterWithParametersCommand;
 import frc.robot.commands.BlueLeftNeutralAuto;
+import frc.robot.commands.BlueRightNeutralAuto;
+import frc.robot.commands.BlueLefNeutralClimbAuto;
 import frc.robot.commands.TeleopShooterCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.HoodSubsystem;
@@ -103,7 +105,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("Intake", m_intake.runIntakeCommand().withTimeout(5.0)); //non-timer
 
         NamedCommands.registerCommand("Intake Arm Raise", m_intake.runRaiseCommand().withTimeout(1.0)); //non-timer 
-        NamedCommands.registerCommand("Intake Arm Lower", m_intake.runLowerCommand().withTimeout(5.0)); //non-timer 
+        NamedCommands.registerCommand("Intake Arm Lower", m_intake.runLowerCommand().withTimeout(0.7)); //non-timer 
 
         //NamedCommands.registerCommand("Spindexer", m_spindexer.autoSpinCommand());
 
@@ -139,6 +141,8 @@ public class RobotContainer {
                         
                         // Add alliance-aware autos that mirror based on alliance
                         autoChooser.addOption("Blue Left Neutral (Auto Mirror)", new BlueLeftNeutralAuto());
+                        autoChooser.addOption("Blue Right Neutral (Auto Mirror)", new BlueRightNeutralAuto());
+                        autoChooser.addOption("Blue Left Neutral Climb (Auto Mirror)", new BlueLefNeutralClimbAuto());
                         
                 } catch (RuntimeException e) {
                         // If AutoBuilder wasn't configured (e.g. PathPlanner GUI/settings unavailable),

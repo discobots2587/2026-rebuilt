@@ -62,7 +62,7 @@ public class ClimberSubsystem extends SubsystemBase {
   }
 
   private void setClimberPower(double power) {
-    if (isAtLimit() && power > 0 ) {
+    if ((isAtLimit() && power > 0) || getClimberRotations() >=77   ) {
       climberMotor.set(0);
       return;
     }
