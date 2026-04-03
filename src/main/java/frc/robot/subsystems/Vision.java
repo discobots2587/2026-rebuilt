@@ -182,9 +182,12 @@ public class Vision extends SubsystemBase {
 
                 double normSpeed = new Translation2d(chassisSpeedsSupplier.get().vxMetersPerSecond,
                         chassisSpeedsSupplier.get().vyMetersPerSecond).getNorm();
+                SmartDashboard.putNumber("vision/updageVisionEstimates/NormSpeed", normSpeed);
                 if (normSpeed < 2.0 || !DriverStation.isAutonomous()) {
-                    preciseVisionMeasurementConsumer.accept(pose, trigPose.timestampSeconds,
-                            SINGLE_TAG_PRECISE_STD_DEVS);
+                     if (!DriverStation.isAutonomous()){ //Disable for autonomous
+                        preciseVisionMeasurementConsumer.accept(pose, trigPose.timestampSeconds,
+                                SINGLE_TAG_PRECISE_STD_DEVS);
+                    }
                 }
             }
         }
