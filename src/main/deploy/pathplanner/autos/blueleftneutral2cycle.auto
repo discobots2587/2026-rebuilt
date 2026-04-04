@@ -11,9 +11,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "Intake Arm Lower"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "blrushend2"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Arm Lower"
+                }
+              }
+            ]
           }
         },
         {
@@ -36,12 +49,6 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "leftneutralgoback"
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -56,9 +63,21 @@
                 "data": {
                   "commands": [
                     {
-                      "type": "wait",
+                      "type": "path",
                       "data": {
-                        "waitTime": 2.1
+                        "pathName": "leftneutralgoback"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Spindexer"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Intake Arm Raise"
                       }
                     },
                     {
@@ -71,12 +90,6 @@
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake Arm Raise"
           }
         },
         {
@@ -98,22 +111,16 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "bleftgetneutral"
+                  "pathName": "blrushend2"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "Intake"
+                  "name": "Intake Arm Lower"
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "leftneutralgoback"
           }
         }
       ]

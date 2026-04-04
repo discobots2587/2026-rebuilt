@@ -31,40 +31,34 @@
                       }
                     },
                     {
+                      "type": "path",
+                      "data": {
+                        "pathName": "rlnspath1"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Intake Arm Lower"
+                      }
+                    },
+                    {
                       "type": "parallel",
                       "data": {
                         "commands": [
                           {
                             "type": "path",
                             "data": {
-                              "pathName": "RLeftGoClimb"
+                              "pathName": "rlnsp2"
                             }
                           },
                           {
                             "type": "named",
                             "data": {
-                              "name": "Climber"
+                              "name": "Intake"
                             }
                           }
                         ]
-                      }
-                    },
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "RLeftReadyClimb"
-                      }
-                    },
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "movetotower"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Descend"
                       }
                     }
                   ]
