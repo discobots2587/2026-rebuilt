@@ -69,7 +69,10 @@ public class ClimberSubsystem extends SubsystemBase {
     if ((isAttopLimit() && power > 0)  ) {
       climberMotor.set(0);
       return;
-    }
+    } 
+    //else if (power <0 && getClimberRotations()<= 4){
+      //turn off in auton
+ //   }
     climberMotor.set(power);
   }
 
