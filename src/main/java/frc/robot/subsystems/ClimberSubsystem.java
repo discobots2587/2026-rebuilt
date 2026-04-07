@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Configs;
 import frc.robot.Constants.ClimberSubsystemConstants;
+import edu.wpi.first.wpilibj.DriverStation;
+
 
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
@@ -35,10 +37,37 @@ public class ClimberSubsystem extends SubsystemBase {
 
   /** Returns true when the SPARK MAX reverse limit switch is triggered. */
   public boolean isAtLimit() {
-    return climberMotor.getReverseLimitSwitch().isPressed();
+    double rotationLimit=0.25;
+    if(DriverStation.isAutonomous() || (DriverStation.getMatchTime() <= 30 && DriverStation.getMatchTime() >= 0)){
+    // if(DriverStation.isAutonomous() || (DriverStation.getMatchTime() <= 30 && DriverStation.getMatchTime() >= 0)){
+      rotationLimit=4;
+    }
+    if (climberMotor.getReverseLimitSwitch().isPressed() || getClimberRotations() <= rotationLimit){
+      return true;
+    }
+    else {
+      return false;
+    }
+
+    // return climberMotor.getReverseLimitSwitch().isPressed();
   }
   public boolean isAttopLimit() {
-    return climberMotor.getForwardLimitSwitch().isPressed();
+    // return climberMotor.getForwardLimitSwitch().isPressed();
+    if (climberMotor.getForwardLimitSwitch().isPressed() || getClimberRotations() >= 83){
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+    public boolean isAtLimitForLimitSwitch() {
+    if (climberMotor.getReverseLimitSwitch().isPressed()){
+      return true;
+    }
+    else {
+      return false;
+    }
+    // return climberMotor.getReverseLimitSwitch().isPressed();
   }
 
   /** Returns the climber encoder position in rotations. */
@@ -48,10 +77,10 @@ public class ClimberSubsystem extends SubsystemBase {
   
 
   private void zeroClimberOnLimitSwitch() {
-    if (!wasResetByLimit && isAtLimit()) {
+    if (!wasResetByLimit &&  isAtLimitForLimitSwitch()) {
       climberEncoder.setPosition(0);
       wasResetByLimit = true;
-    } else if (!isAtLimit()) {
+    } else if (!isAtLimitForLimitSwitch()) {
       wasResetByLimit = false;
     }
   }
@@ -70,9 +99,11 @@ public class ClimberSubsystem extends SubsystemBase {
       climberMotor.set(0);
       return;
     } 
-    //else if (power <0 && getClimberRotations()<= 4){
+    else if (power < 0 && isAtLimit()){
       //turn off in auton
- //   }
+      climberMotor.set(0);
+      return;
+   }
     climberMotor.set(power);
   }
 
@@ -96,7 +127,7 @@ public class ClimberSubsystem extends SubsystemBase {
       }).withName("Climbing");
   }
 
-public Command runDescendCommand() {
+public Command runDescendCommandOld() {
   return this.startEnd(
         () -> {
   this.setClimberPower(ClimberSubsystemConstants.ClimberSetPoints.kDescend);
@@ -112,7 +143,7 @@ public Command runLowCommand() {
         .withName("AutoRaise");
   }
 
-public Command runRaiseCommand() {
+public Command runRaiseCommandOld() {
   return this.startEnd(
         () -> {
   this.setClimberPower(ClimberSubsystemConstants.ClimberSetPoints.kClimb);
@@ -120,22 +151,45 @@ public Command runRaiseCommand() {
   this.setClimberPower(0);
         }).withName("Descending");
   }
-   public Command autoRaiseCommand() {
-        return this.run(
-            () -> this.setClimberPower(ClimberSubsystemConstants.ClimberSetPoints.kClimb)
-        )
-        .until(this::isAtLimit)          // stop if limit switch triggers
-        .withTimeout(2.0)                // hard fallback: stop after 2 seconds
-        .finallyDo(() -> this.setClimberPower(0))
-        .withName("AutoRaise");
 
-    }
+    public Command runRaiseCommand() {
+      return this.run(
+          () -> this.setClimberPower(ClimberSubsystemConstants.ClimberSetPoints.kClimb)
+      )
+      .until(this::isAttopLimit)          // stop if limit switch triggers
+      .withTimeout(3.0)                // hard fallback: stop after 2 seconds
+      .finallyDo(() -> this.setClimberPower(0))
+      .withName("AutoRaise");
+
+  }
+
+  public Command runDescendCommand() {
+    return this.run(
+        () -> this.setClimberPower(ClimberSubsystemConstants.ClimberSetPoints.kDescend)
+    )
+    .until(this::isAtLimit)
+    .withTimeout(3.0)
+    .finallyDo(() -> this.setdownClimberPower(0))
+    .withName("AutoLower");
+}
+
+  public Command autoRaiseCommand() {
+      return this.run(
+          () -> this.setClimberPower(ClimberSubsystemConstants.ClimberSetPoints.kClimb)
+      )
+      .until(this::isAttopLimit)          // stop if limit switch triggers
+      .withTimeout(3.0)                // hard fallback: stop after 2 seconds
+      .finallyDo(() -> this.setClimberPower(0))
+      .withName("AutoRaise");
+
+  }
 
   public Command autoLowerCommand() {
     return this.run(
         () -> this.setClimberPower(ClimberSubsystemConstants.ClimberSetPoints.kDescend)
     )
-    .withTimeout(2.0)
+    .until(this::isAtLimit)
+    .withTimeout(3.0)
     .finallyDo(() -> this.setdownClimberPower(0))
     .withName("AutoLower");
 }

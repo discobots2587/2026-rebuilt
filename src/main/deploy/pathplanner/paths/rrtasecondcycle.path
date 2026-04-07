@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 15.55269005847953,
-        "y": 7.080138888888888
+        "x": 13.520460526315789,
+        "y": 6.195445906432749
       },
       "isLocked": false,
       "linkedName": "rrtaendoffirstscycle"
@@ -20,8 +20,8 @@
         "y": 7.394269005847953
       },
       "prevControl": {
-        "x": 13.796125730994154,
-        "y": 7.3429824561403505
+        "x": 13.270438596491228,
+        "y": 6.919868421052631
       },
       "nextControl": null,
       "isLocked": false,

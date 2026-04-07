@@ -215,8 +215,8 @@ public final class Constants {
     public static final int kClimberLimitSwitchPort = 0;  // dio port for limit switch
 
     public static final class ClimberSetPoints {
-      public static final double kClimb = 0.5; // was 80%
-      public static final double kDescend = -0.4; // was 80%
+      public static final double kClimb = 0.4; // was 80%
+      public static final double kDescend = -0.3; // was 80%
       public static final int kLevel1 = 30;// in inches??
       
 
@@ -266,11 +266,11 @@ public final class Constants {
         // LSide Camera
         new Transform3d(
           new Translation3d(
-            Inches.of(3.0).in(Meters),   // X:  Front
-            Inches.of(15.0).in(Meters),  // Y:  Right 
-            Inches.of(18.5).in(Meters)   // Z: Up
+            Inches.of(2.25).in(Meters),   // X:  Front 3
+            Inches.of(-14).in(Meters),  // Y:  Right 15
+            Inches.of(23.5).in(Meters)   // Z: Up 18.5
           ),
-          new Rotation3d(0, 0, Math.PI/2)
+          new Rotation3d(0, 0, 0) //Math.PI/2
         ),
     };
   }
