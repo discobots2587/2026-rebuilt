@@ -53,6 +53,7 @@ public class ShooterSubsystem extends SubsystemBase {
   // Member variables for subsystem state management
   
   private double flywheelTargetVelocity = 0.0;
+  public double flywheelVoltOffset = 0.0;
   private boolean runSpindexer =  false;
   /** Creates a new ShooterSubsystem. */
   public ShooterSubsystem() {
@@ -243,16 +244,31 @@ public class ShooterSubsystem extends SubsystemBase {
         this.setFlywheelVelocity(0.0);
       }).withName("Shooting");
   }
+// commands for dpad controlled shooter
+public Command increaseFlywheelVoltageCommand() {
+  return this.runOnce(() -> {
+    flywheelVoltOffset += FlywheelSetpoints.kVoltStep;
+    flywheelVoltOffset = MathUtil.clamp(flywheelVoltOffset, -12.0, 12.0);
+  }).withName("Increasing Flywheel Voltage");
+}
 
+public Command decreaseFlywheelVoltageCommand() {
+  return this.runOnce(() -> {
+    flywheelVoltOffset -= FlywheelSetpoints.kVoltStep;
+    flywheelVoltOffset = MathUtil.clamp(flywheelVoltOffset, -12.0, 12.0);
+  }).withName("Increasing Flywheel Voltage");
+}
 
-  // public Command runIntakeCommand(){
-//     return this.startEnd(
-//       () -> {
-//       this.setSpindexerPower(SpindexerSetpoints.kSpindex);
-//       }, () ->{
-//       this.setSpindexerPower(0);
-//       }).withName("Intaking");
-//   }
+public double getFlywheelVoltageOffset() {
+    return flywheelVoltOffset;
+}
+
+public Command runTeleOpShooterCommand() {
+    return this.startEnd(
+        () -> this.setFlywheelVelocity(FlywheelSetpoints.kShootRpm + flywheelVoltOffset),
+        () -> this.setFlywheelVelocity(0.0)
+    ).withName("Shooting");
+}
 
   // ============ DYNAMIC SHOOTER CONTROL (TELEOP) ============
   // This section handles distance-based flywheel and hood control
@@ -363,6 +379,8 @@ public class ShooterSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Shooter | Flywheel | Output", flywheelMotor.getAppliedOutput());
     SmartDashboard.putNumber("Shooter | Flywheel | Current", flywheelMotor.getOutputCurrent());
     SmartDashboard.putNumber("Shooter | Flywheel | Velocity", flywheelEncoder.getVelocity());
+    SmartDashboard.putNumber("Shooter | Flywheel | Voltage Offset", flywheelVoltOffset);
+
   }
 
 

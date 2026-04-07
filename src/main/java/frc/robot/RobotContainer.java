@@ -260,10 +260,13 @@ public class RobotContainer {
         //Shooter Commands
         m_operatorController.y().toggleOnTrue(m_shooter.runShooterCommand()); 
         m_operatorController.b().toggleOnTrue(m_spindexer.runSpindexerCommand(false)); //runs the spinsdexer and the indexer(feeder) 
-        m_operatorController.pov(0).whileTrue(m_hood.runHoodCommand());
-        m_operatorController.pov(180).whileTrue(m_hood.runbackHoodCommand()); 
-        m_operatorController.a().toggleOnTrue(m_intake.runArmCyclePositionCommand(0, 0, 0)); //who added this??
+        m_operatorController.pov(0).toggleOnTrue(m_shooter.increaseFlywheelVoltageCommand());
+        m_operatorController.pov(180).toggleOnTrue(m_shooter.decreaseFlywheelVoltageCommand()); 
+        m_operatorController.a().toggleOnTrue(m_shooter.runTeleOpShooterCommand());
+       // m_operatorController.a().toggleOnTrue(m_intake.runArmCyclePositionCommand(0, 0, 0)); //who added this??
         
+        // m_operatorController.pov(0).whileTrue(m_hood.runHoodCommand());
+        // m_operatorController.pov(180).whileTrue(m_hood.runbackHoodCommand()); 
     }
 
 

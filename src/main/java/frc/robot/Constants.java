@@ -186,6 +186,7 @@ public final class Constants {
     public static final class FlywheelSetpoints {
       //public static final double kShootRpm = -(0.635); //was -5000 and 5676 is the max rpm  (original)
       public static final double kShootRpm = -7.2; // this is in volts (name is misleading since it's being used for testing) //3.6 for inside testing
+      public static final double kVoltStep = kShootRpm*.1;
       // public static final double kShootRpm = -(5676*kShootPercentage); //was -5000 and 5676 is the max rpm 
       public static final double kVelocityTolerance = 100;
       public static final double kStallCurrentThreshehold = 20;
