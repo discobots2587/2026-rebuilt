@@ -175,10 +175,6 @@ public final class Constants {
     public static final int kFlywheelFollowerMotorCanId = 7; // SPARK Flex CAN ID (Left)
     public static final int kSpindexerCanID = 8;
 
-
-    public static final double kShootPercentage = 0.105; //was .035
-
-
     public static final class FeederSetpoints {
       public static final double kFeed = 0.56; //was 95%
     }
@@ -187,7 +183,6 @@ public final class Constants {
       //public static final double kShootRpm = -(0.635); //was -5000 and 5676 is the max rpm  (original)
       public static final double kShootRpm = -7.2; // this is in volts (name is misleading since it's being used for testing) //3.6 for inside testing
       public static final double kVoltStep = kShootRpm*.1;
-      // public static final double kShootRpm = -(5676*kShootPercentage); //was -5000 and 5676 is the max rpm 
       public static final double kVelocityTolerance = 100;
       public static final double kStallCurrentThreshehold = 20;
     }

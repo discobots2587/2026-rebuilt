@@ -71,7 +71,6 @@ public final class Configs {
         static {
                 intakeMotorConfig.inverted(true).idleMode(IdleMode.kBrake).smartCurrentLimit(20); //change later
                 intakeFollowerMotorConfig.apply(intakeMotorConfig).follow(Constants.IntakeConstants.kIntakeMotorCanId, true);
-                //flywheelFollowerConfig.apply(flywheelConfig).follow(Constants.ShooterSubsystemConstants.kFlywheelMotorCanId, true);
                 //intakeFollowerMotorConfig.inverted(false).idleMode(IdleMode.kBrake).smartCurrentLimit(20); //change later
                 intakeArmMotorConfig.inverted(false).idleMode(IdleMode.kCoast).smartCurrentLimit(20); //change later
                 // intakeArmFollowerMotorConfig.inverted(true).idleMode(IdleMode.kBrake).smartCurrentLimit(20); //change later
