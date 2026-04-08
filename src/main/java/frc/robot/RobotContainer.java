@@ -16,7 +16,6 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.PS4Controller.Button;
 import frc.robot.Constants.AutoConstants;
 
 import frc.robot.Constants.DriveConstants;
@@ -58,60 +57,44 @@ public class RobotContainer {
     private final ShooterSubsystem m_shooter = new ShooterSubsystem();
     private final SpindexerSubsystem m_spindexer = new SpindexerSubsystem();
     private final HoodSubsystem m_hood = new HoodSubsystem();
-
-
     private final ClimberSubsystem m_climber = new ClimberSubsystem();
+
     Vision vision = new Vision();
     private SendableChooser<Command> autoChooser;
 
     //test align
     private final AlignToHub m_AlignToHub = new AlignToHub(m_robotDrive, m_shooter);
 
-    // The driver's controller
+    // The controllers
     CommandXboxController m_driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
     CommandXboxController m_operatorController = new CommandXboxController(OIConstants.kOperatorControllerPort);
-    // XboxController m_driverController = new
-    // XboxController(OIConstants.kDriverControllerPort);
 
-    /**
-     * The container for the robot. Contains subsystems, OI devices, and commands.
-     */
+    // The container for the robot. Contains subsystems, OI devices, and commands.
     public RobotContainer() {
-        // Build an auto chooser. This will use Commands.none() as the default option.
-        //
 
+        // Vision Configurations
         vision.setSimPoseSupplier(m_robotDrive::getSimPose);
         vision.setPoseEstimator(m_robotDrive.getPoseEstimator());
         vision.setChassisSpeedsSupplier(m_robotDrive::getSpeeds); // was getChassisSpeeds
         vision.setHeadingSupplier(m_robotDrive::getRotation);
         vision.setVisionMeasurementConsumer(m_robotDrive::addVisionMeasurement);
         vision.setPreciseVisionMeasurementConsumer(m_robotDrive::addPreciseVisionMeasurement);
+
         // Configure the button bindings
         configureButtonBindings();
-        // Auto chooser
 
-        
+        // Build an auto chooser. This will use Commands.none() as the default option.
+        // Auto chooser
         // Registered named commands for Path Planner.
         //NamedCommands.registerCommand("Shooter", m_shooter.runShooterCommand()); //non-timer
-
         //NamedCommands.registerCommand("ShooterHub", m_shooter.autoShootCommand());
-
-
-
         NamedCommands.registerCommand("StopShooter", m_shooter.stopShooter());
-
         NamedCommands.registerCommand("Spindexer", m_spindexer.runSpindexerCommand(false).withTimeout(2.7)); //non-timer 
-
         NamedCommands.registerCommand("Intake", m_intake.runIntakeCommand().withTimeout(2.0)); //non-timer
-
         NamedCommands.registerCommand("Intake Arm Raise", m_intake.runRaiseCommand().withTimeout(1.5)); //non-timer 
         NamedCommands.registerCommand("Intake Arm Lower", m_intake.runLowerCommand().withTimeout(1.0)); //non-timer 
-
         //NamedCommands.registerCommand("Spindexer", m_spindexer.autoSpinCommand());
 
-
-        
-    
         // Register preset shooter configurations for different positions
          NamedCommands.registerCommand("ShooterHub", 
                  new ShooterWithParametersCommand(m_shooter, m_hood, 1.0, 0.0).withTimeout(11.0)); 
@@ -131,19 +114,19 @@ public class RobotContainer {
         NamedCommands.registerCommand("ShooterSide", 
                 new ShooterWithParametersCommand(m_shooter, m_hood, 0.7, 15.0)); // Long range
 
-        NamedCommands.registerCommand("Climber", m_climber.runRaiseCommand().withTimeout(3.0));
-        NamedCommands.registerCommand("Descend", m_climber.runLowCommand().withTimeout(8.0));
+        // Needs to be switched to autoRaiseCommand and autoLowerCommand so auton will use motor rotation limit rather than a timer
+        NamedCommands.registerCommand("Climber", m_climber.autoRaiseCommand().withTimeout(3.0));
+        // NamedCommands.registerCommand("Climber", m_climber.runRaiseCommandOld().withTimeout(3.0));
+        NamedCommands.registerCommand("Descend", m_climber.autoLowerCommand().withTimeout(3.0));
+        // NamedCommands.registerCommand("Descend", m_climber.runLowCommand().withTimeout(8.0));
 
 
                 try {
-
-                        autoChooser = AutoBuilder.buildAutoChooser();
-                        
+                        autoChooser = AutoBuilder.buildAutoChooser();       
                         // Add alliance-aware autos that mirror based on alliance
                         autoChooser.addOption("Blue Left Neutral (Auto Mirror)", new BlueLeftNeutralAuto());
                         autoChooser.addOption("Blue Right Neutral (Auto Mirror)", new BlueRightNeutralAuto());
-                        autoChooser.addOption("Blue Left Neutral Climb (Auto Mirror)", new BlueLefNeutralClimbAuto());
-                        
+                        autoChooser.addOption("Blue Left Neutral Climb (Auto Mirror)", new BlueLefNeutralClimbAuto());      
                 } catch (RuntimeException e) {
                         // If AutoBuilder wasn't configured (e.g. PathPlanner GUI/settings unavailable),
                         // fall back to a simple chooser to avoid crashing the robot program.
@@ -155,24 +138,24 @@ public class RobotContainer {
                 }
                 SmartDashboard.putData("Auto Chooser", autoChooser);
 
-
         // Configure default commands
         m_robotDrive.setDefaultCommand(
                 // The left stick controls translation of the robot.
                 // Turning is controlled by the X axis of the right stick.
                 new RunCommand(
                         () -> m_robotDrive.drive(
+                                // The * .# limits the driver controller input by ##%
                                 -MathUtil.applyDeadband(m_driverController.getLeftY() * .8, OIConstants.kDriveDeadband),
                                 -MathUtil.applyDeadband(m_driverController.getLeftX() * .8, OIConstants.kDriveDeadband),
                                 -MathUtil.applyDeadband(m_driverController.getRightX() * .8, OIConstants.kDriveDeadband),
                                 true),
                         m_robotDrive));
 
-
+        // Operator Left Joystick controlled flywheel speed
         m_shooter.setDefaultCommand(
         new RunCommand(
                 () -> {
-         // The left stick Y measure sets the flywheel speed
+                // The left stick Y measure sets the flywheel speed
                 double y = m_operatorController.getLeftY();
                 if (Math.abs(y) < 0.05) {
                         y = 0;
@@ -202,12 +185,6 @@ public class RobotContainer {
      * {@link JoystickButton}.
      */
     private void configureButtonBindings() {
-
-        // new JoystickButton(m_driverController, Button.kR1.value)
-        //         .whileTrue(new RunCommand(
-        //                 () -> m_robotDrive.setX(),
-        //                 m_robotDrive));
-
         //Driver Controller Commands
         //Reset Heading
         m_driverController.start().onTrue(new InstantCommand(
@@ -216,19 +193,15 @@ public class RobotContainer {
         
         //Intake Commands
         m_driverController.leftBumper().toggleOnTrue(m_intake.runIntakeCommand());
-
         m_driverController.rightBumper().toggleOnTrue(m_intake.runOuttakeCommand());
 
-
-
-        //working arm code commented for other command testing
+        // Working arm code commented for other command testing
           m_driverController
                   .leftTrigger(OIConstants.kTriggerButtonThreshold)
                  .whileTrue(m_intake.runLowerCommand());
           m_driverController
                   .rightTrigger(OIConstants.kTriggerButtonThreshold)
                  .whileTrue(m_intake.runRaiseCommand());
-
         //test code below
         //   m_driverController
         //         .leftTrigger(OIConstants.kTriggerButtonThreshold)
@@ -237,38 +210,33 @@ public class RobotContainer {
         //          .rightTrigger(OIConstants.kTriggerButtonThreshold)
         //          .whileTrue(m_intake.runRaiseArmCommand());
 
-
-
-        
-        
-        //Shooter Commands
-        // m_driverController.y().toggleOnTrue(m_shooter.runShooterCommand()); 
-        // m_driverController.b().toggleOnTrue(m_spindexer.runSpindexerCommand(false)); //runs the spinsdexer and the indexer(feeder) 
-        // m_driverController.x().whileTrue(m_hood.runHoodCommand());
-        // m_driverController.a().whileTrue(m_hood.runbackHoodCommand());
-
         //Climber Commands
         // m_driverController.pov(0).whileTrue(m_climber.runRaiseCommand()); //og command 
-        m_driverController.pov(0).toggleOnTrue(m_climber.runRaiseCommand()); //og command 
-        // m_driverController.pov(0).toggleOnTrue(m_climber.autoClimberCommand()); //testing for one click climber 
-        
-        m_driverController.pov(180).toggleOnTrue(m_climber.runDescendCommand());
-        // m_driverController.pov(180).whileTrue(m_climber.runDescendCommand());
+        m_driverController.pov(0).toggleOnTrue(m_climber.autoRaiseCommand()); //New command 
+        // m_driverController.pov(180).whileTrue(m_climber.runDescendCommand()); //og command 
+        m_driverController.pov(180).toggleOnTrue(m_climber.autoLowerCommand()); //New command 
 
         //Auto Align Command
         m_driverController.pov(90).whileTrue(m_AlignToHub);
 
-        //Operator Controller Commands
-        //Shooter Commands
+
+
+        // Operator Controller Commands
+        // Shooter Commands
         m_operatorController.y().toggleOnTrue(m_shooter.runShooterCommand()); 
         m_operatorController.b().toggleOnTrue(m_spindexer.runSpindexerCommand(false)); //runs the spinsdexer and the indexer(feeder) 
-        m_operatorController.pov(0).toggleOnTrue(m_shooter.increaseFlywheelVoltageCommand());
-        m_operatorController.pov(180).toggleOnTrue(m_shooter.decreaseFlywheelVoltageCommand()); 
-        m_operatorController.a().toggleOnTrue(m_shooter.runTeleOpShooterCommand());
-       // m_operatorController.a().toggleOnTrue(m_intake.runArmCyclePositionCommand(0, 0, 0)); //who added this??
         
+        // More Manual Shooter Commands
+        m_operatorController.rightBumper().toggleOnTrue(m_shooter.increaseFlywheelVoltageCommand());
+        m_operatorController.leftBumper().toggleOnTrue(m_shooter.decreaseFlywheelVoltageCommand()); 
+        m_operatorController.a().toggleOnTrue(m_shooter.runTeleOpShooterCommand());
+        
+        // Hood Controls
         // m_operatorController.pov(0).whileTrue(m_hood.runHoodCommand());
         // m_operatorController.pov(180).whileTrue(m_hood.runbackHoodCommand()); 
+
+        // Unkown Command
+        // m_operatorController.a().toggleOnTrue(m_intake.runArmCyclePositionCommand(0, 0, 0)); //who added this??
     }
 
 
