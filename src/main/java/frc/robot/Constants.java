@@ -181,8 +181,8 @@ public final class Constants {
 
     public static final class FlywheelSetpoints {
       //public static final double kShootRpm = -(0.635); //was -5000 and 5676 is the max rpm  (original)
-      public static final double kShootRpm = -7.2; // this is in volts (name is misleading since it's being used for testing) //3.6 for inside testing
-      public static final double kVoltStep = kShootRpm*.1;
+      public static final double kShootVoltage = -7.2; // this is in volts (name is misleading since it's being used for testing) //3.6 for inside testing
+      public static final double kVoltStep = kShootVoltage*.1;
       public static final double kVelocityTolerance = 100;
       public static final double kStallCurrentThreshehold = 20;
     }
@@ -210,8 +210,8 @@ public final class Constants {
     public static final int kClimberLimitSwitchPort = 0;  // dio port for limit switch
 
     public static final class ClimberSetPoints {
-      public static final double kClimb = 0.4; // was 80%
-      public static final double kDescend = -0.3; // was 80%
+      public static final double kRaiseHook = 0.4; // was 80%
+      public static final double kLowerHook = -0.3; // was 80%
       public static final int kLevel1 = 30;// in inches??
       
 

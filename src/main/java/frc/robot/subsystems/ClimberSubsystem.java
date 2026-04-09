@@ -120,7 +120,7 @@ public class ClimberSubsystem extends SubsystemBase {
 
   public Command autoRaiseCommand() {
     return this.run(
-        () -> this.setClimberPower(ClimberSubsystemConstants.ClimberSetPoints.kClimb))
+        () -> this.setClimberPower(ClimberSubsystemConstants.ClimberSetPoints.kRaiseHook))
         .until(this::isAttopLimit) 
         .withTimeout(3.0) 
         .finallyDo(() -> this.setClimberPower(0))
@@ -129,7 +129,7 @@ public class ClimberSubsystem extends SubsystemBase {
   
   public Command autoLowerCommand() {
     return this.run(
-        () -> this.setClimberPower(ClimberSubsystemConstants.ClimberSetPoints.kDescend))
+        () -> this.setClimberPower(ClimberSubsystemConstants.ClimberSetPoints.kLowerHook))
         .until(this::isAtLimit)
         .withTimeout(3.0)
         .finallyDo(() -> this.setClimberPower(0))

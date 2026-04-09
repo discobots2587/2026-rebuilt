@@ -30,6 +30,8 @@ public class ShooterSubsystem extends SubsystemBase {
   
   // Initialize flywheel SPARKs. We will use MAXMotion velocity control for the flywheel, so we also need to
   // initialize the closed loop controllers and encoders.
+
+  //UPDATE: We are switching to voltage control for the flywheel.
   private SparkMax flywheelMotor = new SparkMax(ShooterSubsystemConstants.kFlywheelMotorCanId, MotorType.kBrushless);
   private SparkClosedLoopController flywheelController = flywheelMotor.getClosedLoopController();
   private RelativeEncoder flywheelEncoder = flywheelMotor.getEncoder();
@@ -83,7 +85,7 @@ public class ShooterSubsystem extends SubsystemBase {
   // Main Flywheel Motor Spin Data
   // Trigger: Is the flywheel spinning at the required velocity?
   public final Trigger isFlywheelSpinning = new Trigger(
-      () -> isFlywheelAt(FlywheelSetpoints.kShootRpm) || flywheelEncoder.getVelocity() > FlywheelSetpoints.kShootRpm 
+      () -> isFlywheelAt(FlywheelSetpoints.kShootVoltage) || flywheelEncoder.getVelocity() > FlywheelSetpoints.kShootVoltage
   );
   // public final Trigger isFlywheelSpinningBackwards = new Trigger(
   //     () -> isFlywheelAt(-(FlywheelSetpoints.kShootRpm)) || flywheelEncoder.getVelocity() < -(FlywheelSetpoints.kShootRpm)
@@ -94,7 +96,7 @@ public class ShooterSubsystem extends SubsystemBase {
   // Flywheel Follower Motor Spin Data
   // Trigger: Is the flywheel spinning at the required velocity?
   public final Trigger isFlywheelFollowerSpinning = new Trigger(
-      () -> isFlywheelFollowerAt(FlywheelSetpoints.kShootRpm) || flywheelFollowerEncoder.getVelocity() > FlywheelSetpoints.kShootRpm 
+      () -> isFlywheelFollowerAt(FlywheelSetpoints.kShootVoltage) || flywheelFollowerEncoder.getVelocity() > FlywheelSetpoints.kShootVoltage 
   );
   // public final Trigger isFlywheelFollowerSpinningBackwards = new Trigger(
   //     () -> isFlywheelFollowerAt(-(FlywheelSetpoints.kShootRpm)) || flywheelFollowerEncoder.getVelocity() < -(FlywheelSetpoints.kShootRpm)
@@ -135,7 +137,7 @@ public class ShooterSubsystem extends SubsystemBase {
   public Command runFlywheelCommand() {
     return this.startEnd(
         () -> {
-          this.setFlywheelVelocity(FlywheelSetpoints.kShootRpm);
+          this.setFlywheelVelocity(FlywheelSetpoints.kShootVoltage);
         },
         () -> {
           this.setFlywheelVelocity(0.0);
@@ -148,7 +150,7 @@ public class ShooterSubsystem extends SubsystemBase {
             m_time.restart();
             ;
             while (!m_time.hasElapsed(6.0)){ //5 might be good 
-                setFlywheelVelocity(FlywheelSetpoints.kShootRpm);
+                setFlywheelVelocity(FlywheelSetpoints.kShootVoltage);
             }; 
             setFlywheelVelocity(0.0);
         });
@@ -180,7 +182,7 @@ public class ShooterSubsystem extends SubsystemBase {
     //  ).withName("Shooting");
 
     return this.startEnd(
-      () -> {this.setFlywheelVelocity(FlywheelSetpoints.kShootRpm);
+      () -> {this.setFlywheelVelocity(FlywheelSetpoints.kShootVoltage);
       },() -> {
         this.setFlywheelVelocity(0.0);
       }).withName("Shooting");
@@ -207,7 +209,7 @@ public double getFlywheelVoltageOffset() {
 
 public Command runTeleOpShooterCommand() {
     return this.startEnd(
-        () -> this.setFlywheelVelocity(FlywheelSetpoints.kShootRpm + flywheelVoltOffset),
+        () -> this.setFlywheelVelocity(FlywheelSetpoints.kShootVoltage + flywheelVoltOffset),
         () -> this.setFlywheelVelocity(0.0)
     ).withName("Shooting");
 }
