@@ -186,6 +186,10 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         //Driver Controller Commands
+        //Makes wheels enter an X shape for defense
+        m_driverController.x().whileTrue(new RunCommand(
+                () -> m_robotDrive.setX(), 
+                m_robotDrive));
         //Reset Heading
         m_driverController.start().onTrue(new InstantCommand(
                 () -> m_robotDrive.zeroHeading(),
@@ -225,7 +229,7 @@ public class RobotContainer {
         // Shooter Commands
         m_operatorController.y().toggleOnTrue(m_shooter.runShooterCommand()); 
         m_operatorController.b().toggleOnTrue(m_spindexer.runSpindexerCommand(false)); //runs the spinsdexer and the indexer(feeder) 
-        
+
         // More Manual Shooter Commands
         m_operatorController.rightBumper().toggleOnTrue(m_shooter.increaseFlywheelVoltageCommand());
         m_operatorController.leftBumper().toggleOnTrue(m_shooter.decreaseFlywheelVoltageCommand()); 
