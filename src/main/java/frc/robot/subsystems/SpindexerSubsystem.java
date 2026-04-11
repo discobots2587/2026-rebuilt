@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Configs;
@@ -151,17 +150,19 @@ public class SpindexerSubsystem extends SubsystemBase {
      * Runs until timeout specified in the auto file.
      */
     public Command autoSpinCommand(){
+        Command intakeCycle = intakeSubsystem.runRaiseCommand()
+            .withTimeout(1.0)
+            .andThen(intakeSubsystem.runLowerCommand().withTimeout(1.0))
+            .repeatedly();
+
         return new SequentialCommandGroup(
             // Spin spindexer while cycling intake repeatedly
             this.run(() -> {
                 setSpindexerPower(ShooterSubsystemConstants.SpindexerSetpoints.kSpindex);
                 setFeederPower(ShooterSubsystemConstants.FeederSetpoints.kFeed);
             }).deadlineWith(
-                // Run intake arm cycles continuously
-                new ParallelRaceGroup(
-                    intakeSubsystem.runRaiseCommand().withTimeout(0.5),
-                    intakeSubsystem.runLowerCommand().withTimeout(0.5)
-                ).repeatedly()
+                // Run intake arm cycles continuously without subsystem requirement conflicts.
+                intakeCycle
             ),
             // Stop motors when done
             new InstantCommand(() -> {
