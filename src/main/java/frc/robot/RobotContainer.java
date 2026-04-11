@@ -25,6 +25,10 @@ import frc.robot.commands.ShooterWithParametersCommand;
 import frc.robot.commands.BlueLeftNeutralAuto;
 import frc.robot.commands.BlueRightNeutralAuto;
 import frc.robot.commands.BlueLefNeutralClimbAuto;
+import frc.robot.commands.BLOAAuto;
+import frc.robot.commands.BROAAuto;
+import frc.robot.commands.BlueRoboAutoLAuto;
+import frc.robot.commands.BlueRoboAutoRAuto;
 import frc.robot.commands.TeleopShooterCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.HoodSubsystem;
@@ -55,7 +59,7 @@ public class RobotContainer {
     private final DriveSubsystem m_robotDrive = new DriveSubsystem();
     private final Intake m_intake = new Intake();
     private final ShooterSubsystem m_shooter = new ShooterSubsystem();
-    private final SpindexerSubsystem m_spindexer = new SpindexerSubsystem();
+    private final SpindexerSubsystem m_spindexer = new SpindexerSubsystem(m_intake);
     private final HoodSubsystem m_hood = new HoodSubsystem();
     private final ClimberSubsystem m_climber = new ClimberSubsystem();
 
@@ -126,7 +130,11 @@ public class RobotContainer {
                         // Add alliance-aware autos that mirror based on alliance
                         autoChooser.addOption("Blue Left Neutral (Auto Mirror)", new BlueLeftNeutralAuto());
                         autoChooser.addOption("Blue Right Neutral (Auto Mirror)", new BlueRightNeutralAuto());
-                        autoChooser.addOption("Blue Left Neutral Climb (Auto Mirror)", new BlueLefNeutralClimbAuto());      
+                        autoChooser.addOption("Blue Left Neutral Climb (Auto Mirror)", new BlueLefNeutralClimbAuto());
+                        autoChooser.addOption("BLOA (Auto Mirror)", new BLOAAuto());
+                        autoChooser.addOption("BROA (Auto Mirror)", new BROAAuto());
+                        autoChooser.addOption("Blue Robo Auto L (Auto Mirror)", new BlueRoboAutoLAuto());
+                        autoChooser.addOption("Blue Robo Auto R (Auto Mirror)", new BlueRoboAutoRAuto());
                 } catch (RuntimeException e) {
                         // If AutoBuilder wasn't configured (e.g. PathPlanner GUI/settings unavailable),
                         // fall back to a simple chooser to avoid crashing the robot program.

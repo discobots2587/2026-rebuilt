@@ -13,6 +13,9 @@ import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Configs;
 import frc.robot.Constants.ClimberSubsystemConstants;
@@ -43,17 +46,21 @@ public class SpindexerSubsystem extends SubsystemBase {
 
     private double lastVelocityRpm = 0.0;
     private boolean jamDetected = false;
+    private Intake intakeSubsystem;
 
     /**
      * Constructs a new SpindexerSubsystem.  Motor configuration parameters are loaded
      * from the Configs object, and the encoder position is reset to zero.  The
      * closed loop controller is left in voltage control mode.
      */
-    public SpindexerSubsystem() {
+    public SpindexerSubsystem(Intake intake) {
         spindexerMotor = new SparkMax(ShooterSubsystemConstants.kSpindexerCanID, SparkMax.MotorType.kBrushless);
         feederMotor = new SparkMax(ShooterSubsystemConstants.kFeederMotorCanId, SparkMax.MotorType.kBrushless);
         spindexerController = spindexerMotor.getClosedLoopController();
         spindexerEncoder = spindexerMotor.getEncoder();
+        
+        this.intakeSubsystem = intake;
+        
         feederMotor.configure(
             Configs.ShooterSubsystem.feederConfig,
             ResetMode.kResetSafeParameters,
@@ -138,25 +145,30 @@ public class SpindexerSubsystem extends SubsystemBase {
             }).withName("Spindexing");
     }
 
-      public Command autoSpinCommand(){
-        return this.runOnce(() -> {
-            final Timer m_time = new Timer();
-            m_time.restart();
-            ;
-            while (!m_time.hasElapsed(4.0)){ //3 might be good
+    /**
+     * Auto spin command that continuously cycles the intake arm up and down
+     * while spinning the spindexer for the full duration.
+     * Runs until timeout specified in the auto file.
+     */
+    public Command autoSpinCommand(){
+        return new SequentialCommandGroup(
+            // Spin spindexer while cycling intake repeatedly
+            this.run(() -> {
                 setSpindexerPower(ShooterSubsystemConstants.SpindexerSetpoints.kSpindex);
-
                 setFeederPower(ShooterSubsystemConstants.FeederSetpoints.kFeed);
-                /**
-                if (Timer.getMatchTime() > 3){
-                    autoStopClimber();
-                }
-                    */
-            }; 
-            setSpindexerPower(0.0);
-            setFeederPower(0);
-        
-        });
+            }).deadlineWith(
+                // Run intake arm cycles continuously
+                new ParallelRaceGroup(
+                    intakeSubsystem.runRaiseCommand().withTimeout(0.5),
+                    intakeSubsystem.runLowerCommand().withTimeout(0.5)
+                ).repeatedly()
+            ),
+            // Stop motors when done
+            new InstantCommand(() -> {
+                setSpindexerPower(0.0);
+                setFeederPower(0.0);
+            }, this)
+        ).withName("AutoSpinWithIntakeCycle");
     }
 
 
