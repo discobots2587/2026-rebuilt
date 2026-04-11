@@ -38,11 +38,6 @@
                 "data": {
                   "pathName": "rrtaGetFuel"
                 }
-              },
-              {
-                "data": {
-                  "name": "Intake"
-                }
               }
             ]
           }
