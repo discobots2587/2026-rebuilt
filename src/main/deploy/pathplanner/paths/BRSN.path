@@ -3,35 +3,35 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.683,
-        "y": 7.364102272727273
+        "x": 4.456477272727272,
+        "y": 0.6852840909090911
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.433384911698647,
-        "y": 7.377969777632905
+        "x": 5.456477272727274,
+        "y": 0.6852840909090911
       },
       "isLocked": false,
-      "linkedName": "BSLNT1"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.127,
-        "y": 7.364102272727273
+        "x": 8.836875,
+        "y": 0.9944886363636363
       },
       "prevControl": {
-        "x": 3.437519352531442,
-        "y": 7.3895988736382785
+        "x": 8.610125,
+        "y": 0.5203750000000003
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "BSLNSP"
+      "linkedName": "BRSN"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.8757861635220158,
-      "rotationDegrees": 180.0
+      "waypointRelativePos": 0.5911949685534602,
+      "rotationDegrees": 0.0
     }
   ],
   "constraintZones": [],
@@ -47,13 +47,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -167.98852161402982
+    "rotation": 90.0
   },
   "reversed": false,
   "folder": "BRoboAuto",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }
