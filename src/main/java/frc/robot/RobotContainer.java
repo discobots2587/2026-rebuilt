@@ -186,6 +186,10 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         //Driver Controller Commands
+        //Makes wheels enter an X shape for defense
+        m_driverController.x().whileTrue(new RunCommand(
+                () -> m_robotDrive.setX(), 
+                m_robotDrive));
         //Reset Heading
         m_driverController.start().onTrue(new InstantCommand(
                 () -> m_robotDrive.zeroHeading(),
@@ -225,17 +229,17 @@ public class RobotContainer {
         // Shooter Commands
         m_operatorController.y().toggleOnTrue(m_shooter.runShooterCommand()); 
         m_operatorController.b().toggleOnTrue(m_spindexer.runSpindexerCommand(false)); //runs the spinsdexer and the indexer(feeder) 
-        
+
         // More Manual Shooter Commands
         m_operatorController.rightBumper().toggleOnTrue(m_shooter.increaseFlywheelVoltageCommand());
         m_operatorController.leftBumper().toggleOnTrue(m_shooter.decreaseFlywheelVoltageCommand()); 
         m_operatorController.a().toggleOnTrue(m_shooter.runTeleOpShooterCommand());
         
         // Hood Controls
-        // m_operatorController.pov(0).whileTrue(m_hood.runHoodCommand());
-        // m_operatorController.pov(180).whileTrue(m_hood.runbackHoodCommand()); 
+        m_operatorController.pov(0).whileTrue(m_hood.runHoodCommand());
+        m_operatorController.pov(180).whileTrue(m_hood.runbackHoodCommand()); 
 
-        // Unkown Command
+        // Unknown Command
         // m_operatorController.a().toggleOnTrue(m_intake.runArmCyclePositionCommand(0, 0, 0)); //who added this??
     }
 

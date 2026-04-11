@@ -140,10 +140,10 @@ public final class Constants {
   }
 
   public static final class IntakeConstants {
-    public static final int kIntakeMotorCanId = 55; // change later
+    public static final int kIntakeMotorCanId = 55; 
     public static final int kIntakeMotorFollowerCanId = 59;
-    public static final int kIntakeArmMotorCanId = 51; // change later
-    public static final int kIntakeArmMotorFollowerCanId = 52; // change later
+    public static final int kIntakeArmMotorCanId = 51; 
+    public static final int kIntakeArmMotorFollowerCanId = 52; 
 
     public static final class IntakeSetPoints {
       public static final double kIntake = 1; // adjust motor speed later
@@ -205,7 +205,7 @@ public final class Constants {
   }
 
   public static final class ClimberSubsystemConstants {
-    public static final int kClimberMotorCanId = 60; // change later
+    public static final int kClimberMotorCanId = 60; 
 
     public static final int kClimberLimitSwitchPort = 0;  // dio port for limit switch
 
