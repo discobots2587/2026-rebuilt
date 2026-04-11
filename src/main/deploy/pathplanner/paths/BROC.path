@@ -1,0 +1,99 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 8.960556818181818,
+        "y": 0.75
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 8.909022727272728,
+        "y": 2.801056818181812
+      },
+      "isLocked": false,
+      "linkedName": "BROCS"
+    },
+    {
+      "anchor": {
+        "x": 8.837,
+        "y": 3.592
+      },
+      "prevControl": {
+        "x": 8.828404194247906,
+        "y": 3.3421478194542433
+      },
+      "nextControl": {
+        "x": 8.88840909090909,
+        "y": 5.086295454545454
+      },
+      "isLocked": false,
+      "linkedName": "BROC"
+    },
+    {
+      "anchor": {
+        "x": 7.079,
+        "y": 3.5918068181818184
+      },
+      "prevControl": {
+        "x": 7.295443181818182,
+        "y": 5.735625
+      },
+      "nextControl": {
+        "x": 6.862556818181817,
+        "y": 1.447988636363637
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.883,
+        "y": 0.75
+      },
+      "prevControl": {
+        "x": 6.932308028122597,
+        "y": 0.9950892049084603
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "BROCE"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1.0,
+      "rotationDegrees": 90.0
+    },
+    {
+      "waypointRelativePos": 1.5377358490566047,
+      "rotationDegrees": 180.0
+    },
+    {
+      "waypointRelativePos": 2.0047169811320806,
+      "rotationDegrees": -90.0
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 1.5,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -90.0
+  },
+  "reversed": false,
+  "folder": "BRoboAuto",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 89.02897806892092
+  },
+  "useDefaultConstraints": false
+}

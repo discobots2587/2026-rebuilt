@@ -1,0 +1,63 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 6.883,
+        "y": 7.4
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.633216079391344,
+        "y": 7.410391968310606
+      },
+      "isLocked": false,
+      "linkedName": "BLOC"
+    },
+    {
+      "anchor": {
+        "x": 3.415488636363636,
+        "y": 7.4
+      },
+      "prevControl": {
+        "x": 3.6634484808592247,
+        "y": 7.368126570348904
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.3569182389937107,
+      "rotationDegrees": 180.0
+    },
+    {
+      "waypointRelativePos": 0.7500000000000028,
+      "rotationDegrees": 180.0
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -167.06733604168014
+  },
+  "reversed": false,
+  "folder": "BRoboAuto",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 90.0
+  },
+  "useDefaultConstraints": true
+}
