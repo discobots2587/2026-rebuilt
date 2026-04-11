@@ -35,7 +35,7 @@ public class ShooterWithParametersCommand extends Command {
     @Override
     public void end(boolean interrupted) {
         m_shooter.setFlywheelVelocity(0.0);
-        m_hood.setHoodMotorPower(0.0);
+        m_hood.setHoodPower(0.0);
     }
 
     @Override

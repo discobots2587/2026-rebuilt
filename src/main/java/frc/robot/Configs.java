@@ -137,7 +137,7 @@ public final class Configs {
     
           // Configure the follower flywheel motor to follow the main flywheel motor
           flywheelFollowerConfig.apply(flywheelConfig)
-            .follow(Constants.ShooterSubsystemConstants.kFlywheelMotorCanId, false);
+            .follow(Constants.ShooterSubsystemConstants.kFlywheelMotorCanId, true);
 
 
     
@@ -149,7 +149,7 @@ public final class Configs {
             .smartCurrentLimit(60);
           hoodConfig
             .inverted(true)
-            .idleMode(IdleMode.kCoast)
+            .idleMode(IdleMode.kBrake)
             .openLoopRampRate(1.0)
             .smartCurrentLimit(60); // change later
         }

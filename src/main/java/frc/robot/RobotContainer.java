@@ -107,7 +107,7 @@ public class RobotContainer {
                 new ShooterWithParametersCommand(m_shooter, m_hood, 0.675, 0.0)); // 80% speed, 35° hood
         
         NamedCommands.registerCommand("ShooterTrench", 
-                new ShooterWithParametersCommand(m_shooter, m_hood, 0.675, 35.0)); // 60% speed, 25° hood
+                new ShooterWithParametersCommand(m_shooter, m_hood, 1.66, 0.0).withTimeout(11.0)); // 60% speed, 25° hood
         
         NamedCommands.registerCommand("ShooterClimb", 
                 new ShooterWithParametersCommand(m_shooter, m_hood, 0.6, 15.0)); // Close range
@@ -168,7 +168,7 @@ public class RobotContainer {
                 if (Math.abs(y) < 0.05) {
                         y = 0;
                 }
-                m_shooter.setFlywheelVelocity(y * 12 * -1);
+                m_shooter.setFlywheelVelocity(y * 12);
                 },
                 m_shooter )
         );
@@ -244,8 +244,8 @@ public class RobotContainer {
         m_operatorController.a().toggleOnTrue(m_shooter.runTeleOpShooterCommand());
         
         // Hood Controls
-        m_operatorController.pov(0).whileTrue(m_hood.runHoodCommand());
-        m_operatorController.pov(180).whileTrue(m_hood.runbackHoodCommand()); 
+        m_operatorController.pov(0).whileTrue(m_hood.autoUpCommand());
+        m_operatorController.pov(180).whileTrue(m_hood.autoDownCommand()); 
 
         // Unknown Command
         // m_operatorController.a().toggleOnTrue(m_intake.runArmCyclePositionCommand(0, 0, 0)); //who added this??

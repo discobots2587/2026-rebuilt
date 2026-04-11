@@ -54,7 +54,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "ShooterHub"
+                  "name": "ShooterTrench"
                 }
               },
               {
@@ -148,7 +148,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "ShooterHub"
+                  "name": "ShooterTrench"
                 }
               },
               {

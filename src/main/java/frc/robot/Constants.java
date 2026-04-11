@@ -188,7 +188,7 @@ public final class Constants {
     }
 
     public static final class SpindexerSetpoints {
-      public static final double kSpindex = -0.475; // adjust motor speed later
+      public static final double kSpindex = -0.8; // adjust motor speed later
       public static final double kSpindexVolt= -10.8;
     }
 
