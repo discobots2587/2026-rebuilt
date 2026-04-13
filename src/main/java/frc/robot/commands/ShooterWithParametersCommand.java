@@ -24,7 +24,7 @@ public class ShooterWithParametersCommand extends Command {
     @Override
     public void initialize() {
         m_shooter.setFlywheelVelocity(FlywheelSetpoints.kShootVoltage * flywheelSpeedPercent);
-        m_hood.moveHoodToAngle(hoodAngle);
+        m_hood.hoodUp();
     }
 
     @Override
