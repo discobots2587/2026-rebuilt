@@ -148,10 +148,11 @@ public final class Configs {
             .openLoopRampRate(1.0)
             .smartCurrentLimit(60);
           hoodConfig
-            .inverted(true)
-            .idleMode(IdleMode.kBrake)
-            .openLoopRampRate(1.0)
-            .smartCurrentLimit(60); // change later
+            .closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+            .p(Constants.HoodSubsystemConstants.kHoodP)
+            .i(Constants.HoodSubsystemConstants.kHoodI)
+            .d(Constants.HoodSubsystemConstants.kHoodD);
+            hoodConfig.idleMode(IdleMode.kBrake).smartCurrentLimit(40);
         }
       }
 

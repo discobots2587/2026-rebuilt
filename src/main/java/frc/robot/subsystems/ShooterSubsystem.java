@@ -22,6 +22,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.ShooterSubsystemConstants.FeederSetpoints;
 import frc.robot.Constants.ShooterSubsystemConstants.FlywheelSetpoints;
 import frc.robot.Constants.IntakeConstants.IntakeSetPoints;
+import frc.robot.Constants.HoodSubsystemConstants;
 import frc.robot.Constants.ShooterSubsystemConstants;
 import edu.wpi.first.wpilibj.Timer;
 
@@ -39,6 +40,7 @@ public class ShooterSubsystem extends SubsystemBase {
   private SparkMax flywheelFollowerMotor = new SparkMax(ShooterSubsystemConstants.kFlywheelFollowerMotorCanId, MotorType.kBrushless);
   private SparkClosedLoopController flywheelFollowerController = flywheelMotor.getClosedLoopController();
   private RelativeEncoder flywheelFollowerEncoder = flywheelMotor.getEncoder();
+
 
   // Member variables for subsystem state management
   private double flywheelTargetVelocity = 0.0;

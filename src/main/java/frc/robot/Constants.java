@@ -160,11 +160,22 @@ public final class Constants {
   }
   public static final class HoodSubsystemConstants{
     public static final int kHoodCanID = 9; // SPARK Flex CAN ID
+    public static final double kHoodP = 0.0; //TODO: If p == 0, THE HOOD WILL NOT MOVE!!!! Change incrementally...
+    public static final double kHoodI = 0.0;
+    public static final double kHoodD = 0.0;
 
 
     public static final class HoodMotorSetPoints {
-      public static final double kMove = 0.5;
-      public static final double kBackMove = -0.5;
+      public static final double kMove = 0.5; //for duty cycle
+      public static final double kBackMove = -0.5; //For duty cycle
+
+      /*
+      PLEASE READ THIS BEFORE RUNNING THE HOOD
+      For the following values, calculate how many rotations are needed based on total ratio or system. 
+      The total reduction is 10.5:1 --> Every 10.5 rotations, the HOOD rotates one revolution
+      */
+      public static final double kUp = (20/360)*10.5;
+      public static final double kDown = 0;
     }
 
   }

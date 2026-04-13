@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
+import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
@@ -16,16 +17,22 @@ import frc.robot.Constants.ClimberSubsystemConstants;
 import frc.robot.Constants.HoodSubsystemConstants;
 import frc.robot.Constants.HoodSubsystemConstants.HoodMotorSetPoints;
 import frc.robot.Configs;
+import frc.robot.Constants;
 
 public class HoodSubsystem extends SubsystemBase{
-    private final SparkMax hoodMotor;
-    private RelativeEncoder hoodEncoder;
+    //private final SparkMax hoodMotor;
+    //private RelativeEncoder hoodEncoder;
+    private SparkMax hoodMotor = new SparkMax(HoodSubsystemConstants.kHoodCanID, MotorType.kBrushless);
+    private SparkClosedLoopController hoodController = hoodMotor.getClosedLoopController();
+    private RelativeEncoder hoodEncoder = hoodMotor.getEncoder();
     public HoodSubsystem() {
-        hoodMotor = new SparkMax(HoodSubsystemConstants.kHoodCanID, MotorType.kBrushless);
-        hoodMotor.configure(Configs.ShooterSubsystem.hoodConfig, ResetMode.kNoResetSafeParameters,PersistMode.kPersistParameters);
-
-        hoodEncoder = hoodMotor.getEncoder();
-        hoodEncoder.setPosition(0);
+        //hoodMotor = new SparkMax(HoodSubsystemConstants.kHoodCanID, MotorType.kBrushless);
+        
+      hoodEncoder.setPosition(0);
+      hoodMotor.configure(
+        Configs.ShooterSubsystem.hoodConfig,
+        ResetMode.kResetSafeParameters,
+        PersistMode.kPersistParameters);
     }
     
     /**
@@ -68,10 +75,6 @@ public void setHoodPower(double power) {
     hoodMotor.set(power);
   }
 
-
-public void moveHoodToAngle(double targetAngle){
-
-}
 public Command autoUpCommand() {
     return this.run(
         () -> this.setHoodPower(HoodSubsystemConstants.HoodMotorSetPoints.kBackMove))
@@ -103,29 +106,26 @@ public Command autoUpCommand() {
    */
   
   
-  private SparkClosedLoopController hoodClosedLoopController;
-  private double targetHoodAngle = 0.0;
+  //private SparkClosedLoopController hoodClosedLoopController;
+  //private double targetHoodAngle = 0.0;
   
   // Conversion factor from motor rotations to degrees
   // TODO: Calculate based on your hood gearing
   // private static final double ROTATIONS_TO_DEGREES = 360.0; // Adjust based on gearing
   
-  public void initializeClosedLoopControl() {
-    hoodClosedLoopController = hoodMotor.getClosedLoopController();
-    hoodEncoder = hoodMotor.getEncoder();
-    hoodEncoder.setPosition(0);
+  public void setHoodPosition(double position)
+  {
+    hoodController.setSetpoint(position, ControlType.kPosition);
   }
   
-  public void setHoodAngleClosed(double targetAngleDegrees) {
-    targetHoodAngle = targetAngleDegrees;
-    // Convert degrees to motor rotations
-    // double targetRotations = targetAngleDegrees / ROTATIONS_TO_DEGREES;
-    // hoodClosedLoopController.setSetpoint(targetRotations, ControlType.kPosition);
+  public Command hoodDown()
+  {
+    return this.runOnce(() -> setHoodPosition(Constants.HoodSubsystemConstants.HoodMotorSetPoints.kDown));
   }
-  
-  public double getHoodAngle() {
-    // return hoodEncoder.getPosition() * ROTATIONS_TO_DEGREES;
-    return 0.0; // Placeholder
+
+  public Command hoodUp()
+  {
+    return this.runOnce(() -> setHoodPosition(Constants.HoodSubsystemConstants.HoodMotorSetPoints.kUp));
   }
   
 

@@ -244,8 +244,10 @@ public class RobotContainer {
         m_operatorController.a().toggleOnTrue(m_shooter.runTeleOpShooterCommand());
         
         // Hood Controls
-        m_operatorController.pov(0).whileTrue(m_hood.autoUpCommand());
-        m_operatorController.pov(180).whileTrue(m_hood.autoDownCommand()); 
+        m_operatorController.pov(0).onTrue(m_hood.hoodUp());
+        m_operatorController.pov(180).onTrue(m_hood.hoodDown()); 
+
+
 
         // Unknown Command
         // m_operatorController.a().toggleOnTrue(m_intake.runArmCyclePositionCommand(0, 0, 0)); //who added this??
