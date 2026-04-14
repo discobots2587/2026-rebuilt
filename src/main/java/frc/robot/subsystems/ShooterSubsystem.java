@@ -337,3 +337,294 @@ public Command runTeleOpShooterCommand() {
 
 
 }
+
+/*TEST THIS CODE 
+
+package frc.robot.subsystems;
+
+import com.revrobotics.PersistMode;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.ResetMode;
+import com.revrobotics.spark.SparkBase.ControlType;
+import com.revrobotics.spark.SparkClosedLoopController;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+// Trigger not used directly; boolean helpers are preferred for compatibility
+import frc.robot.Configs;
+import frc.robot.Constants.ShooterSubsystemConstants.FlywheelSetpoints;
+import frc.robot.Constants.ShooterSubsystemConstants;
+import edu.wpi.first.math.controller.PIDController;
+
+
+public class ShooterSubsystem extends SubsystemBase {
+
+  // Leader flywheel motor, controller, and encoder
+  private final SparkMax flywheelMotor =
+      new SparkMax(ShooterSubsystemConstants.kFlywheelMotorCanId, MotorType.kBrushless);
+  private final SparkClosedLoopController flywheelController =
+      flywheelMotor.getClosedLoopController();
+  private final RelativeEncoder flywheelEncoder =
+      flywheelMotor.getEncoder();
+
+  // FIX #1: Follower controller and encoder now correctly reference the FOLLOWER motor,
+  // not the leader. Previously both pointed to flywheelMotor, making follower
+  // telemetry a duplicate of leader data and making isFlywheelFollowerAt() meaningless.
+  private final SparkMax flywheelFollowerMotor =
+      new SparkMax(ShooterSubsystemConstants.kFlywheelFollowerMotorCanId, MotorType.kBrushless);
+  private final SparkClosedLoopController flywheelFollowerController =
+      flywheelFollowerMotor.getClosedLoopController(); // was flywheelMotor
+  private final RelativeEncoder flywheelFollowerEncoder =
+      flywheelFollowerMotor.getEncoder();              // was flywheelMotor
+
+  // State variables
+  private double flywheelTargetVelocity = 0.0;
+  public double flywheelVoltOffset = 0.0;
+
+  // RoboRIO-side PID controller (RPM → voltage output)
+  private final PIDController flywheelPid;
+  private boolean flywheelPidEnabled = false;
+
+  // PID gains — tunable live via SmartDashboard
+  private double pidP  = 0.001;
+  private double pidI  = 0.0;
+  private double pidD  = 0.0;
+  private double pidFF = 0.0; // volts per RPM feedforward multiplier
+
+  public ShooterSubsystem() {
+    flywheelMotor.configure(
+        Configs.ShooterSubsystem.flywheelConfig,
+        ResetMode.kResetSafeParameters,
+        PersistMode.kPersistParameters);
+
+    flywheelFollowerMotor.configure(
+        Configs.ShooterSubsystem.flywheelFollowerConfig,
+        ResetMode.kResetSafeParameters,
+        PersistMode.kPersistParameters);
+
+    // NOTE: If flywheelFollowerConfig already sets this motor to hardware-follow
+    // the leader via .follow(), you can remove ALL flywheelFollowerController
+    // setSetpoint() calls below — hardware following makes them redundant.
+    // If it does NOT use hardware follow, the fixed references above ensure
+    // the follower gets its own independent setpoints correctly.
+
+    flywheelEncoder.setPosition(0);
+    flywheelFollowerEncoder.setPosition(0);
+
+    flywheelPid = new PIDController(pidP, pidI, pidD);
+
+    SmartDashboard.putNumber("Shooter/P",  pidP);
+    SmartDashboard.putNumber("Shooter/I",  pidI);
+    SmartDashboard.putNumber("Shooter/D",  pidD);
+    SmartDashboard.putNumber("Shooter/FF", pidFF);
+    SmartDashboard.putBoolean("Shooter/PID Enabled", flywheelPidEnabled);
+
+    System.out.println("---> ShooterSubsystem initialized");
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // Velocity checks
+  // ─────────────────────────────────────────────────────────────────────────────
+
+  private boolean isFlywheelAt(double rpm) {
+    return MathUtil.isNear(flywheelEncoder.getVelocity(), rpm, FlywheelSetpoints.kVelocityTolerance);
+  }
+
+  private boolean isFlywheelFollowerAt(double rpm) {
+    return MathUtil.isNear(flywheelFollowerEncoder.getVelocity(), rpm, FlywheelSetpoints.kVelocityTolerance);
+  }
+
+  // Simple boolean helpers for subsystem state. We avoid creating Trigger
+  // objects here to be compatible with the project's WPILib version and to
+  // keep these checks local to the subsystem.
+  public boolean isFlywheelSpinning() {
+    return flywheelEncoder.getVelocity() >= FlywheelSetpoints.kShootRpm - FlywheelSetpoints.kVelocityTolerance;
+}
+
+  public boolean isFlywheelStopped() {
+    return isFlywheelAt(0);
+  }
+
+  public boolean isFlywheelFollowerSpinning() {
+    return isFlywheelFollowerAt(flywheelTargetVelocity) || flywheelFollowerEncoder.getVelocity() > flywheelTargetVelocity;
+  }
+
+  public boolean isFlywheelFollowerStopped() {
+    return isFlywheelFollowerAt(0);
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // Core motor control
+  // ─────────────────────────────────────────────────────────────────────────────
+
+  
+  //  * Directly sets both flywheel motors to a voltage setpoint.
+  //  * Only called when PID is DISABLED. When PID is enabled, periodic() drives the motors.
+  //  *
+  //  * FIX #3: The original code had setFlywheelVelocity() and the PID loop in periodic()
+  //  * both writing to the motor controller every loop, fighting each other every 20ms.
+  //  * Now, direct voltage commands are gated — they only apply when PID is off.
+   
+  private void applyVoltage(double voltage) {
+    double clamped = MathUtil.clamp(voltage, -12.0, 12.0);
+    flywheelController.setSetpoint(clamped, ControlType.kVoltage);
+    flywheelFollowerController.setSetpoint(clamped, ControlType.kVoltage);
+  }
+
+  
+  //  Sets the target voltage for direct (non-PID) control.
+  //  If PID is enabled, this updates the target RPM used by the PID loop instead.
+   
+  public void setFlywheelVelocity(double value) {
+    flywheelTargetVelocity = value;
+    if (!flywheelPidEnabled) {
+      applyVoltage(value);
+    }
+    // If PID is enabled, periodic() will read flywheelTargetVelocity and drive output.
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // Commands
+  // ─────────────────────────────────────────────────────────────────────────────
+
+  public Command stopShooterCommand() {
+    return this.run(() -> setFlywheelVelocity(0.0))
+        .withName("Stop Flywheel");
+}
+
+  public Command runFlywheelCommand() {
+    return this.startEnd(
+        () -> setFlywheelVelocity(FlywheelSetpoints.kShootVoltage),
+        () -> setFlywheelVelocity(0.0)
+    ).withName("Spinning Up Flywheel");
+  }
+
+  // FIX #4: autoShootCommand() previously used a while loop inside runOnce(),
+  // which blocks the main robot thread for 6 seconds — freezing all robot code.
+  // The correct approach is withTimeout(), which lets the scheduler handle timing.
+  public Command autoShootCommand() {
+    return runFlywheelCommand()
+        .withTimeout(6.0)
+        .withName("Auto Shoot");
+  }
+
+  public Command runShooterCommand() {
+    return this.startEnd(
+        () -> setFlywheelVelocity(FlywheelSetpoints.kShootVoltage),
+        () -> setFlywheelVelocity(0.0)
+    ).withName("Shooting");
+  }
+
+  // D-pad voltage trim commands
+  public Command increaseFlywheelVoltageCommand() {
+    return this.runOnce(() -> {
+      flywheelVoltOffset = MathUtil.clamp(
+          flywheelVoltOffset + FlywheelSetpoints.kVoltStep, -12.0, 12.0);
+    }).withName("Increase Flywheel Voltage");
+  }
+
+  public Command decreaseFlywheelVoltageCommand() {
+    return this.runOnce(() -> {
+      flywheelVoltOffset = MathUtil.clamp(
+          flywheelVoltOffset - FlywheelSetpoints.kVoltStep, -12.0, 12.0);
+    }).withName("Decrease Flywheel Voltage");
+  }
+
+  public Command runTeleOpShooterCommand() {
+    return this.startEnd(
+        () -> setFlywheelVelocity(FlywheelSetpoints.kShootVoltage + flywheelVoltOffset),
+        () -> setFlywheelVelocity(0.0)
+    ).withName("TeleOp Shooting");
+  }
+
+  public double getFlywheelVoltageOffset() {
+    return flywheelVoltOffset;
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // PID velocity control API
+  // ─────────────────────────────────────────────────────────────────────────────
+
+  //  Switch to PID velocity control and set a target RPM.
+  public void enableFlywheelVelocityPID(double targetRpm) {
+    flywheelTargetVelocity = targetRpm;
+    flywheelPid.reset();
+    flywheelPidEnabled = true;
+    SmartDashboard.putBoolean("Shooter/PID Enabled", true);
+  }
+
+  //  Switch back to direct voltage control.
+  public void disableFlywheelVelocityPID() {
+    flywheelPidEnabled = false;
+    SmartDashboard.putBoolean("Shooter/PID Enabled", false);
+  }
+
+  //  Update PID gains programmatically (also reflects on SmartDashboard).
+  public void setFlywheelPidGains(double p, double i, double d, double ff) {
+    pidP = p; pidI = i; pidD = d; pidFF = ff;
+    flywheelPid.setPID(pidP, pidI, pidD);
+    SmartDashboard.putNumber("Shooter/P",  pidP);
+    SmartDashboard.putNumber("Shooter/I",  pidI);
+    SmartDashboard.putNumber("Shooter/D",  pidD);
+    SmartDashboard.putNumber("Shooter/FF", pidFF);
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // Periodic
+  // ─────────────────────────────────────────────────────────────────────────────
+
+  @Override
+  public void periodic() {
+    // Live-tune PID gains from SmartDashboard
+    double newP       = SmartDashboard.getNumber("Shooter/P",          pidP);
+    double newI       = SmartDashboard.getNumber("Shooter/I",          pidI);
+    double newD       = SmartDashboard.getNumber("Shooter/D",          pidD);
+    double newFF      = SmartDashboard.getNumber("Shooter/FF",         pidFF);
+    boolean newEnabled = SmartDashboard.getBoolean("Shooter/PID Enabled", flywheelPidEnabled);
+    
+    if (newP != pidP || newI != pidI || newD != pidD) {
+      pidP = newP; pidI = newI; pidD = newD;
+      flywheelPid.setPID(pidP, pidI, pidD);
+    }
+    pidFF = newFF;
+
+    
+    //Enable or  disable PID based on SmartDashboard toggle
+    flywheelPidEnabled = newEnabled;
+
+    // FIX #3 (continued): PID output is the ONLY thing writing to the motor when
+    // PID is enabled. setFlywheelVelocity() is blocked from writing in that mode,
+    // so there is no longer a conflict between the two control paths.
+    if (flywheelPidEnabled) {
+      double currentRpm = flywheelEncoder.getVelocity();
+      double pidOut     = flywheelPid.calculate(currentRpm, flywheelTargetVelocity);
+      double ff         = pidFF * flywheelTargetVelocity;
+      double outVolt    = MathUtil.clamp(pidOut + ff, -12.0, 12.0);
+      applyVoltage(outVolt);
+      SmartDashboard.putNumber("Shooter | Flywheel | PID Voltage", outVolt);
+    }
+
+    // Telemetry
+    SmartDashboard.putNumber("Shooter | Flywheel | Target Velocity",          flywheelTargetVelocity);
+    SmartDashboard.putNumber("Shooter | Flywheel | Actual Velocity",          flywheelEncoder.getVelocity());
+    SmartDashboard.putNumber("Shooter | Flywheel Follower | Actual Velocity", flywheelFollowerEncoder.getVelocity());
+
+    SmartDashboard.putNumber("Shooter | Flywheel | Applied Output",           flywheelMotor.getAppliedOutput());
+    SmartDashboard.putNumber("Shooter | Flywheel | Current",                  flywheelMotor.getOutputCurrent());
+    SmartDashboard.putNumber("Shooter | Flywheel | Voltage",                  flywheelMotor.getBusVoltage());
+    SmartDashboard.putNumber("Shooter | Flywheel | Voltage Offset",           flywheelVoltOffset);
+
+    SmartDashboard.putNumber("Shooter | Flywheel Follower | Applied Output",  flywheelFollowerMotor.getAppliedOutput());
+    SmartDashboard.putNumber("Shooter | Flywheel Follower | Current",         flywheelFollowerMotor.getOutputCurrent());
+    SmartDashboard.putNumber("Shooter | Flywheel Follower | Voltage",         flywheelFollowerMotor.getBusVoltage());
+
+  SmartDashboard.putBoolean("Is Flywheel Spinning",          isFlywheelSpinning());
+  SmartDashboard.putBoolean("Is Flywheel Stopped",           isFlywheelStopped());
+  SmartDashboard.putBoolean("Is Flywheel Follower Spinning", isFlywheelFollowerSpinning());
+  SmartDashboard.putBoolean("Is Flywheel Follower Stopped",  isFlywheelFollowerStopped());
+  }
+}
+ */

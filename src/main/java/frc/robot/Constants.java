@@ -185,6 +185,7 @@ public final class Constants {
       public static final double kVoltStep = kShootVoltage*.1;
       public static final double kVelocityTolerance = 100;
       public static final double kStallCurrentThreshehold = 20;
+      public static final double kShootRpm = -5000;
     }
 
     public static final class SpindexerSetpoints {
