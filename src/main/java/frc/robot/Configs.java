@@ -152,7 +152,7 @@ public final class Configs {
             .p(Constants.HoodSubsystemConstants.kHoodP)
             .i(Constants.HoodSubsystemConstants.kHoodI)
             .d(Constants.HoodSubsystemConstants.kHoodD);
-            hoodConfig.idleMode(IdleMode.kBrake).smartCurrentLimit(40);
+            hoodConfig.idleMode(IdleMode.kBrake).smartCurrentLimit(20);
         }
       }
 
