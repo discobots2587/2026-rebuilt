@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 12.074205298013247,
-        "y": 0.6155711920529803
+        "x": 12.43062134502924,
+        "y": 0.6244444444444446
       },
       "prevControl": null,
       "nextControl": {
-        "x": 8.415198675496688,
-        "y": 0.7825496688741713
+        "x": 8.77161472251268,
+        "y": 0.7914229212656356
       },
       "isLocked": false,
       "linkedName": "rrs2c-gobackendpoint"
@@ -53,7 +53,7 @@
   "folder": "RedState2CyclePath",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 4.0
   },
   "useDefaultConstraints": true
 }

@@ -5,6 +5,12 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "Hood Up"
+          }
+        },
+        {
           "type": "parallel",
           "data": {
             "commands": [

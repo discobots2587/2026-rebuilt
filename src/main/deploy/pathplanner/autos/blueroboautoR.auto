@@ -5,15 +5,28 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "BRSN"
+            "name": "Hood Up"
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "Intake Arm Lower"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "BRSN"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Arm Lower"
+                }
+              }
+            ]
           }
         },
         {

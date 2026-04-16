@@ -95,12 +95,13 @@ public class RobotContainer {
         NamedCommands.registerCommand("StopShooter", m_shooter.stopShooter());
         NamedCommands.registerCommand("Spindexer", m_spindexer.runSpindexerCommand(false).withTimeout(2.7)); //non-timer 
         NamedCommands.registerCommand("Intake", m_intake.runIntakeCommand().withTimeout(1.8)); //non-timer
-        NamedCommands.registerCommand("Intake Arm Raise", m_intake.runRaiseCommand().withTimeout(1.5)); //non-timer 
-        NamedCommands.registerCommand("Intake Arm Lower", m_intake.runLowerCommand().withTimeout(1.0)); //non-timer 
+        NamedCommands.registerCommand("Intake Arm Raise", m_intake.runRaiseCommand().withTimeout(1.2)); //non-timer 
+        NamedCommands.registerCommand("Intake Arm Lower", m_intake.runLowerCommand().withTimeout(0.8)); //non-timer 
         //NamedCommands.registerCommand("Spindexer", m_spindexer.autoSpinCommand());
-
+        //NamedCommands.registerCommand("Hood Down", m_hood.hoodDown().withTimeout(1));
+        NamedCommands.registerCommand("Hood Up", m_hood.hoodUp().withTimeout(0.2));
         // Register preset shooter configurations for different positions
-         NamedCommands.registerCommand("ShooterHub", 
+        NamedCommands.registerCommand("ShooterHub", 
                  new ShooterWithParametersCommand(m_shooter, m_hood, 1.0, 0.0).withTimeout(11.0)); 
         
         NamedCommands.registerCommand("ShooterLR", 
@@ -153,9 +154,9 @@ public class RobotContainer {
                 new RunCommand(
                         () -> m_robotDrive.drive(
                                 // The * .# limits the driver controller input by ##%
-                                -MathUtil.applyDeadband(m_driverController.getLeftY() * .8, OIConstants.kDriveDeadband),
-                                -MathUtil.applyDeadband(m_driverController.getLeftX() * .8, OIConstants.kDriveDeadband),
-                                -MathUtil.applyDeadband(m_driverController.getRightX() * .8, OIConstants.kDriveDeadband),
+                                -MathUtil.applyDeadband(m_driverController.getLeftY() * 1, OIConstants.kDriveDeadband),
+                                -MathUtil.applyDeadband(m_driverController.getLeftX() * 1, OIConstants.kDriveDeadband),
+                                -MathUtil.applyDeadband(m_driverController.getRightX() * 1, OIConstants.kDriveDeadband),
                                 true),
                         m_robotDrive));
 

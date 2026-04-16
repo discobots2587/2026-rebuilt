@@ -3,32 +3,37 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 9.083112582781457,
-        "y": 3.563104304635761
+        "x": 9.129049707602338,
+        "y": 3.2592909356725146
       },
       "prevControl": null,
       "nextControl": {
-        "x": 8.89435430463939,
-        "y": 2.691912251659261
+        "x": 8.94029142946027,
+        "y": 2.3880988826960143
       },
       "isLocked": false,
       "linkedName": "rrs2c-gofuelendpoint"
     },
     {
       "anchor": {
-        "x": 12.074205298013247,
-        "y": 0.6155711920529803
+        "x": 12.43062134502924,
+        "y": 0.6244444444444446
       },
       "prevControl": {
-        "x": 8.930653973513563,
-        "y": 0.35421357616257254
+        "x": 8.68029239766082,
+        "y": 0.23338450292397633
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "rrs2c-gobackendpoint"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.946454413892909,
+      "rotationDegrees": 0.0
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
@@ -42,7 +47,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 4.0
   },
   "reversed": false,
   "folder": "RedState2CyclePath",
