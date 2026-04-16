@@ -135,12 +135,20 @@ public class ShooterSubsystem extends SubsystemBase {
    * Drive the flywheels to their set velocity. This will use MAXMotion
    * velocity control which will allow for a smooth acceleration and deceleration to the mechanism's
    * setpoint.
+   * 
+   * NOTE: When PID is enabled, this only sets the target velocity for the PID loop.
+   * When PID is disabled, this directly applies voltage to the motors.
    */
   public void setFlywheelVelocity(double velocity) {
-    // flywheelController.setSetpoint(velocity, ControlType.kMAXMotionVelocityControl);
-    flywheelController.setSetpoint(velocity, ControlType.kVoltage); //was duty cycle for percentage
-    flywheelFollowerController.setSetpoint(velocity, ControlType.kVoltage); //was duty cycle for percentage
     flywheelTargetVelocity = velocity;
+    
+    // Only apply voltage directly if PID is DISABLED
+    if (!flywheelPidEnabled) {
+      // flywheelController.setSetpoint(velocity, ControlType.kMAXMotionVelocityControl);
+      flywheelController.setSetpoint(velocity, ControlType.kVoltage); //was duty cycle for percentage
+      flywheelFollowerController.setSetpoint(velocity, ControlType.kVoltage); //was duty cycle for percentage
+    }
+    // If PID is enabled, periodic() will handle the voltage application via the PID loop
   }
   
   /**
