@@ -411,14 +411,24 @@ public Command runTeleOpShooterCommand() {
 
     // ───────────────────────────────────────────────────────────────────────
     // PID Control Logic (when enabled)
+    // FIXED: Now compares voltage (duty cycle * 12V) against voltage target
+    // This eliminates the RPM vs Voltage unit mismatch that caused oscillation
     // ───────────────────────────────────────────────────────────────────────
     if (flywheelPidEnabled) {
-      double currentVelocity = flywheelEncoder.getVelocity();
-      double pidOutput = flywheelPid.calculate(currentVelocity, flywheelTargetVelocity);
-      double ffOutput = pidFF * flywheelTargetVelocity;
-      double finalVoltage = MathUtil.clamp(pidOutput + ffOutput, -12.0, 12.0);
+      // Get current applied voltage (convert duty cycle to volts)
+      double currentVoltage = flywheelMotor.getAppliedOutput() * 12.0;
+      
+      // PID calculates error between current and target voltage
+      double pidOutput = flywheelPid.calculate(currentVoltage, flywheelTargetVelocity);
+      
+      // Clamp and apply the voltage
+      double finalVoltage = MathUtil.clamp(pidOutput, -12.0, 12.0);
       applyVoltage(finalVoltage);
+      
+      // Telemetry for debugging
+      SmartDashboard.putNumber("Shooter | PID Current Voltage", currentVoltage);
       SmartDashboard.putNumber("Shooter | PID Output Voltage", finalVoltage);
+      SmartDashboard.putNumber("Shooter | PID Error (V)", currentVoltage - flywheelTargetVelocity);
     }
 
     // ───────────────────────────────────────────────────────────────────────
