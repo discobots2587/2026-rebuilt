@@ -1,0 +1,70 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 9.148451986754967,
+        "y": 4.564975165562913
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 9.264610927152317,
+        "y": 7.069652317880793
+      },
+      "isLocked": false,
+      "linkedName": "lrs2c-gofuelendpoint"
+    },
+    {
+      "anchor": {
+        "x": 11.065074503311257,
+        "y": 7.389089403973509
+      },
+      "prevControl": {
+        "x": 10.781310444048696,
+        "y": 7.4000034062528375
+      },
+      "nextControl": {
+        "x": 11.314889796969085,
+        "y": 7.379481123448209
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 12.09598509933775,
+        "y": 7.389089403973509
+      },
+      "prevControl": {
+        "x": 11.84598509933775,
+        "y": 7.389089403973509
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "lrs2c-start1startpoint"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.5,
+    "maxAcceleration": 3.5,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "reversed": false,
+  "folder": "RedState2CyclePath",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -90.0
+  },
+  "useDefaultConstraints": true
+}

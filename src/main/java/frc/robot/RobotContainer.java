@@ -94,7 +94,7 @@ public class RobotContainer {
         //NamedCommands.registerCommand("ShooterHub", m_shooter.autoShootCommand());
         NamedCommands.registerCommand("StopShooter", m_shooter.stopShooter());
         NamedCommands.registerCommand("Spindexer", m_spindexer.runSpindexerCommand(false).withTimeout(2.7)); //non-timer 
-        NamedCommands.registerCommand("Intake", m_intake.runIntakeCommand().withTimeout(2.0)); //non-timer
+        NamedCommands.registerCommand("Intake", m_intake.runIntakeCommand().withTimeout(1.8)); //non-timer
         NamedCommands.registerCommand("Intake Arm Raise", m_intake.runRaiseCommand().withTimeout(1.5)); //non-timer 
         NamedCommands.registerCommand("Intake Arm Lower", m_intake.runLowerCommand().withTimeout(1.0)); //non-timer 
         //NamedCommands.registerCommand("Spindexer", m_spindexer.autoSpinCommand());
