@@ -84,6 +84,11 @@ public class RobotContainer {
         vision.setVisionMeasurementConsumer(m_robotDrive::addVisionMeasurement);
         vision.setPreciseVisionMeasurementConsumer(m_robotDrive::addPreciseVisionMeasurement);
 
+        // Enable Flywheel PID Control with default target of 0
+        // NOTE: kP will be live-tuned via SmartDashboard during testing
+        // Start with kP = 0.15, then adjust based on response
+        m_shooter.enableFlywheelVelocityPID(0.0);
+
         // Configure the button bindings
         configureButtonBindings();
 

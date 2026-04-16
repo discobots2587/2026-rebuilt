@@ -12,6 +12,7 @@ import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -45,6 +46,17 @@ public class ShooterSubsystem extends SubsystemBase {
   // Member variables for subsystem state management
   private double flywheelTargetVelocity = 0.0;
   public double flywheelVoltOffset = 0.0;
+  
+  // PID controller for flywheel voltage control
+  private final PIDController flywheelPid;
+  private boolean flywheelPidEnabled = false;
+  
+  // PID gains — primary tuning is kP via SmartDashboard
+  private double pidKp  = 0.15;  // Primary tuning parameter
+  private double pidKi  = 0.0;   // Set to 0 for simpler control
+  private double pidKd  = 0.0;   // Set to 0 for simpler control
+  private double pidFF  = 0.0;   // Feedforward (optional)
+  
   /** Creates a new ShooterSubsystem. */
   public ShooterSubsystem() {
     /*
@@ -70,6 +82,16 @@ public class ShooterSubsystem extends SubsystemBase {
     // Zero flywheel encoder on initialization
     flywheelEncoder.setPosition(0);
     flywheelFollowerEncoder.setPosition(0);
+    
+    // Initialize PID controller
+    flywheelPid = new PIDController(pidKp, pidKi, pidKd);
+    
+    // Initialize SmartDashboard with tuning values
+    SmartDashboard.putNumber("Shooter/kP",  pidKp);
+    SmartDashboard.putNumber("Shooter/kI",  pidKi);
+    SmartDashboard.putNumber("Shooter/kD",  pidKd);
+    SmartDashboard.putNumber("Shooter/FF",  pidFF);
+    SmartDashboard.putBoolean("Shooter/PID Enabled", flywheelPidEnabled);
 
     System.out.println("---> ShooterSubsystem initialized");
   }
@@ -216,6 +238,59 @@ public Command runTeleOpShooterCommand() {
     ).withName("Shooting");
 }
 
+  // ============ PID CONTROL METHODS ============
+  
+  /**
+   * Enable PID-based flywheel voltage control.
+   * When enabled, periodic() will use the PID loop to regulate flywheel voltage.
+   * 
+   * @param targetVelocity The target velocity/voltage setpoint for the flywheel
+   */
+  public void enableFlywheelVelocityPID(double targetVelocity) {
+    flywheelTargetVelocity = targetVelocity;
+    flywheelPidEnabled = true;
+    flywheelPid.reset();
+    SmartDashboard.putBoolean("Shooter/PID Enabled", flywheelPidEnabled);
+  }
+
+  /**
+   * Disable PID-based flywheel voltage control.
+   * When disabled, setFlywheelVelocity() calls drive the motors directly.
+   */
+  public void disableFlywheelVelocityPID() {
+    flywheelPidEnabled = false;
+    flywheelPid.reset();
+    SmartDashboard.putBoolean("Shooter/PID Enabled", flywheelPidEnabled);
+  }
+
+  /**
+   * Update PID gains from values (typically read from SmartDashboard).
+   * 
+   * @param kp Proportional gain
+   * @param ki Integral gain
+   * @param kd Derivative gain
+   * @param ff Feedforward multiplier (volts per RPM)
+   */
+  public void setFlywheelPidGains(double kp, double ki, double kd, double ff) {
+    pidKp = kp;
+    pidKi = ki;
+    pidKd = kd;
+    pidFF = ff;
+    flywheelPid.setPID(pidKp, pidKi, pidKd);
+  }
+
+  /**
+   * Apply voltage directly to both flywheel motors.
+   * Used by PID output and other control modes.
+   * 
+   * @param voltage Voltage to apply (-12V to 12V)
+   */
+  private void applyVoltage(double voltage) {
+    double clampedVoltage = MathUtil.clamp(voltage, -12.0, 12.0);
+    flywheelMotor.setVoltage(clampedVoltage);
+    flywheelFollowerMotor.setVoltage(clampedVoltage);
+  }
+
   // ============ DYNAMIC SHOOTER CONTROL (TELEOP) ============
   // This section handles distance-based flywheel and hood control
   
@@ -307,7 +382,40 @@ public Command runTeleOpShooterCommand() {
 
   @Override
   public void periodic() {
-    // Display subsystem values
+    // ───────────────────────────────────────────────────────────────────────
+    // Live-tune PID gains from SmartDashboard
+    // ───────────────────────────────────────────────────────────────────────
+    double newKp       = SmartDashboard.getNumber("Shooter/kP",          pidKp);
+    double newKi       = SmartDashboard.getNumber("Shooter/kI",          pidKi);
+    double newKd       = SmartDashboard.getNumber("Shooter/kD",          pidKd);
+    double newFF       = SmartDashboard.getNumber("Shooter/FF",          pidFF);
+    boolean newEnabled  = SmartDashboard.getBoolean("Shooter/PID Enabled", flywheelPidEnabled);
+    
+    // Update PID controller if gains have changed
+    if (newKp != pidKp || newKi != pidKi || newKd != pidKd) {
+      pidKp = newKp;
+      pidKi = newKi;
+      pidKd = newKd;
+      flywheelPid.setPID(pidKp, pidKi, pidKd);
+    }
+    pidFF = newFF;
+    flywheelPidEnabled = newEnabled;
+
+    // ───────────────────────────────────────────────────────────────────────
+    // PID Control Logic (when enabled)
+    // ───────────────────────────────────────────────────────────────────────
+    if (flywheelPidEnabled) {
+      double currentVelocity = flywheelEncoder.getVelocity();
+      double pidOutput = flywheelPid.calculate(currentVelocity, flywheelTargetVelocity);
+      double ffOutput = pidFF * flywheelTargetVelocity;
+      double finalVoltage = MathUtil.clamp(pidOutput + ffOutput, -12.0, 12.0);
+      applyVoltage(finalVoltage);
+      SmartDashboard.putNumber("Shooter | PID Output Voltage", finalVoltage);
+    }
+
+    // ───────────────────────────────────────────────────────────────────────
+    // Telemetry and Dashboard Logging
+    // ───────────────────────────────────────────────────────────────────────
     SmartDashboard.putNumber("Shooter | Flywheel | Applied Output", flywheelMotor.getAppliedOutput());
     SmartDashboard.putNumber("Shooter | Flywheel | Current", flywheelMotor.getOutputCurrent());
     SmartDashboard.putNumber("Shooter | Flywheel Follower | Applied Output", flywheelFollowerMotor.getAppliedOutput());
